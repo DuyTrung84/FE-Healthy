@@ -23,7 +23,8 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src"
+    "src",
+    "src/pages/site/med-services/.tsx"
   ],
   "references": [
     {

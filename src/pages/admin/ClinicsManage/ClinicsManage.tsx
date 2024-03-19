@@ -38,7 +38,7 @@ const ClinicsManage = () => {
         {
             title: 'STT',
             key: 'index',
-            width: 10,
+            width: 100,
             render: (_text, _record, index) => index + 1,
         },
         {
@@ -88,7 +88,7 @@ const ClinicsManage = () => {
                 return (
                     <div className="flex gap-2">
                         <Space size="middle">
-                            <Dropdown menu={{ items }} trigger={['click']}>
+                            <Dropdown menu={{ items }} trigger={['hover']}>
                                 <a>
                                     <MoreOutlined />
                                 </a>
@@ -109,10 +109,10 @@ const ClinicsManage = () => {
                 </Button>
             </div>
             <Table
-                style={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
                 columns={columns}
-                dataSource={data ? [data] : []}
+                dataSource={data?.data}
                 loading={isLoading}
+                scroll={{ y: 400 }}
                 className="h-[90%]" />
         </div>
     )

@@ -4,20 +4,21 @@ import { AiFillCustomerService, AiOutlineCaretDown, AiOutlineHistory } from 'rea
 import { LstCategories } from '../../interface/ListCategories';
 import { useNavigate } from 'react-router-dom';
 import { convertToSlug } from '../../utils/convertToSlug';
+import { useGetAllSpecialtyQuery } from '../../api/admin/Specialty';
+import { useGetAllClinicsQuery } from '../../api/site/Clinics';
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [, setSelectedLanguage] = useState('');
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const slides: any = [
-        { title: "Xương khớp", image: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101627-co-xuong-khop.png" },
-        { title: "Thần kinh", image: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101739-than-kinh.png" },
-        { title: "Tiêu hoá", image: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tieu-hoa.png" },
-        { title: "Tim mạch", image: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tim-mach.png" },
-        { title: "Tai, Mũi, Họng", image: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tai-mui-hong.png" },
-        { title: "Cột sống", image: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tim-mach.png" },
-    ];
+
+    const { data } = useGetAllSpecialtyQuery();
+    const { data: clinics } = useGetAllClinicsQuery();//Phòng khám
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const specialty: any = data?.data
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const clinicsData: any = clinics?.data
 
     const changeLanguage = (language: string) => {
         i18n.changeLanguage(language);
@@ -35,6 +36,10 @@ const Header = () => {
 
 
     const handleClick2 = (slug: string, data: LstCategories) => {
+        navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
+    };
+
+    const handleClick3 = (slug: string, data: LstCategories) => {
         navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
     };
 
@@ -63,11 +68,11 @@ const Header = () => {
                                 </svg>
                             </button>
                         </div> */}
-                        <button className='text-start leading-5' onClick={() => handleClick2('specialty', slides)}>
+                        <button className='text-start leading-5' onClick={() => handleClick2('specialty', specialty)}>
                             <p className='text-[13px] font-bold'>{t('header.specialty')}</p>
                             <p className='text-[10px]'>{t('header.searchDoctor')}</p>
                         </button>
-                        <a href="" className='text-start leading-5'>
+                        <a href="" className='text-start leading-5' onClick={() => handleClick3('clinics', clinicsData)}>
                             <p className='text-[13px] font-bold'>{t('header.medFacilities')}</p>
                             <p className='text-[10px]'>{t('header.hospital')}</p>
                         </a>

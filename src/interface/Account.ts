@@ -5,5 +5,6 @@ export interface IAccount {
     id?: string;
     role?: string;
     status?: number;
-    data?: IAccount
+    data?: IAccount | []
+
 }

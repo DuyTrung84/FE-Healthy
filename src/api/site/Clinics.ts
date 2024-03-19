@@ -5,7 +5,15 @@ const clinicsApi = createApi({
     reducerPath: "clinics",
     tagTypes: ["CLINICS"],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://103.148.57.141:8888/api/v1"
+        baseUrl: "http://103.148.57.141:8888/api/v1",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                console.log(token);
+                headers.set('authorization', `Bearer ${token}`);
+            }
+            return headers
+        }
     }),
     endpoints: (builder) => ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

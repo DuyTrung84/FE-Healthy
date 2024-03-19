@@ -28,8 +28,12 @@ const uploadApi = createApi({
         getAccount: builder.query<IAccount, void>({
             query: () => "/account/me",
             providesTags: ["UPLOAD"],
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getStatus: builder.query<any, void>({
+            query: () => "/public/objectStatus",
+            providesTags: ["UPLOAD"],
         })
-
 
     }),
 });
@@ -38,6 +42,7 @@ const uploadApi = createApi({
 export const {
     useUploadMutation,
     useGetAccountQuery,
+    useGetStatusQuery
 
 } = uploadApi;
 

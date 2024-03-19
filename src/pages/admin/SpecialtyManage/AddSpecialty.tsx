@@ -15,7 +15,6 @@ const AddSpecialty = () => {
     const [form] = Form.useForm();
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
     const [fileImg, setFile] = useState<File | null>(null);//Lưu file ảnh
-
     const [isImageUploading, setIsImageUploading] = useState(false);
 
     const [uploadImage, { isLoading }] = useUploadMutation();
@@ -34,7 +33,11 @@ const AddSpecialty = () => {
     const onFinish = async (values: ISpecialty) => {
         try {
             delete values.imageObjectId;
-            const response = await addSpecialty(values);
+            const request = {
+                ...values,
+                status: 1
+            }
+            const response = await addSpecialty(request);
             const responseData = response?.data?.data;
             const formData = new FormData();
             if (fileImg) {

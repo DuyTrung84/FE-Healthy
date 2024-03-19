@@ -13,6 +13,7 @@ const Home = React.lazy(() => import('./pages/site/Home'));
 const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
 const AppointmentHist = React.lazy(() => import('./pages/site/AppointmentHist'));
 const MedExamination = React.lazy(() => import('./pages/site/med-services/MedExamination'));
+const ClinicsDetail = React.lazy(() => import('./pages/site/med-services/ClinicsDetail'))
 const LayoutAdmin = React.lazy(() => import('./layout/admin/LayoutAdmin'));
 const SpecialtyManage = React.lazy(() => import('./pages/admin/SpecialtyManage/SpecialtyManage'));
 const AddSpecialtyManage = React.lazy(() => import('./pages/admin/SpecialtyManage/AddSpecialty'));
@@ -21,6 +22,7 @@ const ClinicsManage = React.lazy(() => import('./pages/admin/ClinicsManage/Clini
 const ClinicsAdd = React.lazy(() => import('./pages/admin/ClinicsManage/ClinicsAdd'));
 const ClinicsUpdate = React.lazy(() => import('./pages/admin/ClinicsManage/ClinicsUpdate'));
 const AccountManage = React.lazy(() => import('./pages/admin/AccountManage/AccountManage'));
+const AddAccount = React.lazy(() => import('./pages/admin/AccountManage/AddAccount'));
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
               <Route path='danh-sach/:slug' element={<ListCategories />} />
               <Route path='lich-hen' element={<AppointmentHist />} />
               <Route path='dich-vu-y-te/:slug/:slug' element={<MedExamination />} />
+              <Route path='co-so-y-te/:slug' element={<ClinicsDetail />} />
             </Route>
             <Route path="/admin" element={<LayoutAdmin />}>
               <Route path='quan-ly-chuyen-khoa' element={<SpecialtyManage />} />
@@ -42,6 +45,7 @@ function App() {
               <Route path='them-phong-kham' element={<ClinicsAdd />} />
               <Route path='sua-phong-kham/:id' element={<ClinicsUpdate />} />
               <Route path='quan-ly-tai-khoan' element={<AccountManage />} />
+              <Route path='them-tai-khoan' element={<AddAccount />} />
             </Route>
             <Route path='/login' element={<Signin />} />
             <Route path='/register' element={<Signup />} />

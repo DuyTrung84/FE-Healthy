@@ -30,7 +30,6 @@ const Signup = () => {
             })
     };
     return (
-
         <section className="bg-white">
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                 <aside
@@ -167,7 +166,6 @@ const Signup = () => {
                 </main>
             </div>
         </section>
-
     )
 }
 

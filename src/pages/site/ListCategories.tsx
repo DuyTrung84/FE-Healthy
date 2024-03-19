@@ -54,7 +54,7 @@ const ListCategories = () => {
                         >
                             <Option value="">Toàn Quốc</Option>
                             {provinces &&
-                                provinces.map((province: IProvinces) => (
+                                provinces?.data?.map((province: IProvinces) => (
                                     <Option key={province.code} value={province.name}>
                                         {i18n.language === "vi" ? province.name : province.nameEn}
                                     </Option>

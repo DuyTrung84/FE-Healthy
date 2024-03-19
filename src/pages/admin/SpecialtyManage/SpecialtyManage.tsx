@@ -40,7 +40,7 @@ const SpecialtyManage = () => {
         {
             title: 'STT',
             key: 'index',
-            width: 10,
+            width: 100,
             render: (_text, _record, index) => index + 1,
         },
         {
@@ -85,7 +85,7 @@ const SpecialtyManage = () => {
                 return (
                     <div className="flex gap-2">
                         <Space size="middle">
-                            <Dropdown menu={{ items }} trigger={['click']}>
+                            <Dropdown menu={{ items }} trigger={['hover']}>
                                 <a>
                                     <MoreOutlined />
                                 </a>
@@ -106,11 +106,10 @@ const SpecialtyManage = () => {
                 </Button>
             </div>
             <Table
-                style={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
                 columns={columns}
                 dataSource={Array.isArray(data?.data) ? data?.data : []}
                 loading={isLoading}
-                className="h-[90%]" />
+                scroll={{ y: 400 }} />
         </div>
     )
 }

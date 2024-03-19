@@ -29,9 +29,9 @@ const MedExamination = () => {
                     <a href="/" className="flex gap-1"><AiFillHome className="text-xl" />/</a>
                     <p>{t(location.state.slug)}</p>
                 </div>
-                <h1 className='text-xl font-medium'>{getDetail?.name}</h1>
+                <h1 className='text-xl font-medium'>{getDetail?.data?.name}</h1>
                 <div className={`${showMore ? "max-h-full" : "max-h-32 overflow-hidden"} transition-max-h duration-500 ease-in-out ml-3`}>
-                    <p dangerouslySetInnerHTML={{ __html: getDetail?.descriptionHtml }} />
+                    <p dangerouslySetInnerHTML={{ __html: getDetail?.data?.descriptionHtml || '' }} />
                 </div>
                 <button
                     className="mt-2 flex text-[#288AD6] font-light"
@@ -58,7 +58,7 @@ const MedExamination = () => {
                     >
                         <Option value="">Toàn Quốc</Option>
                         {provinces &&
-                            provinces.map((province: IProvinces) => (
+                            provinces?.data?.map((province: IProvinces) => (
                                 <Option key={province.code} value={province.code}>
                                     {i18n.language === "vi" ? province.name : province.nameEn}
                                 </Option>

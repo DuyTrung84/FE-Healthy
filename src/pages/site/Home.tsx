@@ -29,9 +29,9 @@ const Home = () => {
         { url: "https://cdn.bookingcare.vn/fo/2023/07/06/163421-153524-near-home-01.png", title: "Y tế gần bạn" },
     ]
 
-    const newSpecialty = specialty ? specialty?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) : [];
+    const newSpecialty = specialty ? specialty?.data?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) : [];
 
-    const newClinics = clinics ? clinics.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
+    const newClinics = clinics ? clinics?.data?.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const doctor: any = [
         { imageUrl: "https://cdn.bookingcare.vn/fo/w128/2022/07/18/160559-161139-bs-huyen.png", name: "Bác sĩ 1", desc: "Bác sĩ 1 ahihii" },
@@ -42,7 +42,6 @@ const Home = () => {
 
 
     return (
-
         <div>
             <div className='bg-[#EDFFFA] h-80 pt-3'>
                 <img src="https://cdn.bookingcare.vn/fo/2023/11/02/134537-group-12314.png" className="max-w-screen-xl mx-auto w-[1200px] h-[400px] object-cover rounded-[30px]" alt="" />

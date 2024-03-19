@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button, Table, Space, Dropdown, Modal, Tag, Select, Input, Form } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineLock } from "react-icons/ai";
 import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
@@ -12,14 +12,14 @@ import { useEffect } from "react";
 
 const { confirm } = Modal;
 const AccountManage = () => {
-
+    const [form] = Form.useForm();
     const [searchAccount, { data, isLoading }] = useGetAllAccountMutation();
     const [deleteAccount] = useDeleteAccountMutation();
     const { data: selectRole, isLoading: loadingRole } = useGetRoleQuery();
 
     useEffect(() => {
         // Gọi API để tìm kiếm tài khoản với giá trị ban đầu
-        searchAccount({ keyword: 'A', role: 'ADMIN', page: 0, resultLimit: 10 });
+        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
     }, []);
 
     const showDeleteConfirm = (id: string | undefined) => {
@@ -27,22 +27,23 @@ const AccountManage = () => {
             confirm({
                 title: 'Xác nhận xoá',
                 icon: <ExclamationCircleFilled />,
-                content: 'Bạn có muốn xoá tài khoản này không??',
+                content: 'Bạn có muốn khoá khoản này không??',
                 okText: 'Có',
                 cancelText: 'Không',
                 okType: 'danger',
                 async onOk() {
                     try {
                         await deleteAccount(id);
-                        Notifn("success", "Thành công", "Đã xoá tài khoản thành công");
+                        Notifn("success", "Thành công", "Đã khoá tài khoản thành công!");
+                        form.submit();
                     } catch (error) {
-                        Notifn("error", "Lỗi", "Lỗi xoá");
+                        Notifn("error", "Lỗi", "Lỗi khoá");
                     }
                 },
             });
         }
     };
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSearch = (values: any) => {
         searchAccount({
             keyword: values.keyword,
@@ -52,23 +53,30 @@ const AccountManage = () => {
         });
     };
 
+    const handleReset = () => {
+        form.resetFields();
+        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
+    };
+
+    const handlePaginationChange = (currentPage: number, pageSize?: number) => {
+        searchAccount({
+            keyword: form.getFieldValue('keyword'),
+            role: form.getFieldValue('role'),
+            page: currentPage - 1, // Trừ 1 vì API thường sử dụng index bắt đầu từ 0
+            resultLimit: pageSize || 10, // Số lượng mục trên mỗi trang
+        });
+    };
     const columns: ColumnsType<IAccount> = [
         {
             title: 'STT',
             key: 'index',
-            width: 10,
+            width: 60,
             render: (_text, _record, index) => index + 1,
         },
         {
             title: 'Tên người dùng',
             dataIndex: 'name',
             key: 'name',
-
-        },
-        {
-            title: 'Email tài khoản',
-            dataIndex: 'email',
-            key: 'email',
 
         },
         {
@@ -93,17 +101,19 @@ const AccountManage = () => {
                     tagColor = 'default_color';
                 }
                 return <Tag color={tagColor}>{role}</Tag>;
-            }
+            },
+            width: 100
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string) => (
-                <Tag color={status === '1' ? 'red' : 'green'}>
-                    {status === '1' ? 'INACTIVE' : 'ACTIVE'}
+            render: (status: number) => (
+                <Tag color={status === 0 ? 'red' : 'green'}>
+                    {status === 0 ? 'INACTIVE' : 'ACTIVE'}
                 </Tag>
             ),
+            width: 100
         },
         {
             title: 'Ảnh',
@@ -123,8 +133,8 @@ const AccountManage = () => {
                     {
                         key: 'delete',
                         label: (
-                            <button onClick={() => { showDeleteConfirm(record.id) }}>
-                                <p className=""><AiOutlineDelete className="inline-block mr-2 text-xl " />Xoá</p>
+                            <button onClick={() => { showDeleteConfirm(record.id) }} disabled={record.status === 0}>
+                                <p className=""><AiOutlineLock className="inline-block mr-2 text-xl " />Khoá</p>
                             </button>
                         ),
                     },
@@ -132,7 +142,7 @@ const AccountManage = () => {
                 return (
                     <div className="flex gap-2">
                         <Space size="middle">
-                            <Dropdown menu={{ items }} trigger={['click']}>
+                            <Dropdown menu={{ items }} trigger={['hover']}>
                                 <a>
                                     <MoreOutlined />
                                 </a>
@@ -148,13 +158,13 @@ const AccountManage = () => {
         <div className="">
             <div className="flex justify-between mb-6">
                 <h2 className="text-2xl font-semibold">Quản lý tài khoản</h2>
-                <Button type="primary" className="bg-blue-500">
-                    <Link to="/admin/them-chuyen-khoa">Tạo tài khoản</Link>
+                <Button type="primary" className="bg-blue-600">
+                    <Link to="/admin/them-tai-khoan">Tạo tài khoản</Link>
                 </Button>
             </div>
-            <Form onFinish={handleSearch}>
+            <Form onFinish={handleSearch} form={form}>
                 <div>
-                    <div className="my-8 grid grid-cols-3 gap-10 mx-8">
+                    <div className="mb-8 grid grid-cols-3 gap-10 mx-8">
                         <div>
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên người dùng:</p>
                             <Form.Item name="keyword">
@@ -165,8 +175,9 @@ const AccountManage = () => {
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Vai trò:</p>
                             <Form.Item name="role">
                                 <Select defaultValue="" className="w-full" loading={loadingRole}>
-                                    <Option value="">---Select---</Option>
-                                    {selectRole?.data?.map(role => (
+                                    <Option value="" className="">---Select---</Option>
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {selectRole?.data?.map((role: any) => (
                                         <Option key={role.value} value={role.value}>{role.name}</Option>
                                     ))}
                                 </Select>
@@ -174,7 +185,7 @@ const AccountManage = () => {
                         </div>
                     </div>
                     <div className="mb-8 float-right mr-8 flex items-center gap-3">
-                        <Button icon={<ReloadOutlined />}>Đặt lại</Button>
+                        <Button icon={<ReloadOutlined />} onClick={handleReset}>Đặt lại</Button>
                         <Button type="primary" icon={<SearchOutlined />} className="bg-blue-600" htmlType="submit">
                             Tìm kiếm
                         </Button>
@@ -182,11 +193,18 @@ const AccountManage = () => {
                 </div>
             </Form>
             <Table
-                style={{ maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}
                 columns={columns}
                 dataSource={data?.data?.data}
                 loading={isLoading}
-                className="h-[90%]" />
+                className="h-[90%]"
+                scroll={{ y: 240 }}
+                pagination={{
+                    current: data?.data.currentPage + 1,
+                    total: data?.data?.totalItems,
+                    pageSize: 10,
+                    onChange: handlePaginationChange,
+                }}
+            />
         </div>
     )
 }
