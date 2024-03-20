@@ -14,6 +14,7 @@ const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
 const AppointmentHist = React.lazy(() => import('./pages/site/AppointmentHist'));
 const MedExamination = React.lazy(() => import('./pages/site/med-services/MedExamination'));
 const ClinicsDetail = React.lazy(() => import('./pages/site/med-services/ClinicsDetail'))
+const ClinicsChildren = React.lazy(() => import('./pages/site/med-services/ClinicsChildren'))
 const LayoutAdmin = React.lazy(() => import('./layout/admin/LayoutAdmin'));
 const SpecialtyManage = React.lazy(() => import('./pages/admin/SpecialtyManage/SpecialtyManage'));
 const AddSpecialtyManage = React.lazy(() => import('./pages/admin/SpecialtyManage/AddSpecialty'));
@@ -36,6 +37,7 @@ function App() {
               <Route path='lich-hen' element={<AppointmentHist />} />
               <Route path='dich-vu-y-te/:slug/:slug' element={<MedExamination />} />
               <Route path='co-so-y-te/:slug' element={<ClinicsDetail />} />
+              <Route path='co-so-y-te/:slug/:id' element={<ClinicsChildren />} />
             </Route>
             <Route path="/admin" element={<LayoutAdmin />}>
               <Route path='quan-ly-chuyen-khoa' element={<SpecialtyManage />} />

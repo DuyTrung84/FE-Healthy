@@ -26,6 +26,10 @@ const clinicsApi = createApi({
             query: (id) => "/public/clinics/get/" + id,
             providesTags: ['CLINICS']
         }),
+        getChildrenClinics: builder.query<IClinics, number | string>({
+            query: (id) => "/public/clinics/children/all/" + id,
+            providesTags: ['CLINICS']
+        }),
         addClinics: builder.mutation({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             query: (packages: any) => ({
@@ -59,6 +63,7 @@ const clinicsApi = createApi({
 export const {
     useGetAllClinicsQuery,
     useGetByIdClinicsQuery,
+    useGetChildrenClinicsQuery,
     useAddClinicsMutation,
     useUpdateClinicsMutation,
     useDeleteClinicsMutation

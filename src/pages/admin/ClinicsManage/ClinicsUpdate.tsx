@@ -1,78 +1,279 @@
-import React, { useState } from 'react';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { message, Upload } from 'antd';
-import type { GetProp, UploadProps } from 'antd';
+import { Link, useNavigate } from "react-router-dom";
+import { EnterOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Radio, RadioChangeEvent, Row, Select, Upload } from 'antd';
+import { useUploadMutation } from "../../../api/share/upload";
+import { useState } from "react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Notifn } from "../../../components/Notification";
+import { IClinics } from "../../../interface/Clinics";
+import { useAddClinicsMutation, useGetAllClinicsQuery } from "../../../api/site/Clinics";
+import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../../api/share/area";
+import { Option } from "antd/es/mentions";
 
-type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+const ClinicsUpdate = () => {
+    const navigate = useNavigate();
+    const [form] = Form.useForm();
+    const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
+    const [fileImg, setFile] = useState<File | null>(null);//Lưu file ảnh
+    const [isImageUploading, setIsImageUploading] = useState(false);
+    const [selectedProvince, setSelectedProvince] = useState<string>("");//Lưu mã trỉnh thành phố
+    const [selectedDistricts, setSelectedDistricts] = useState<string>("");//Lưu mã quạn huyện
+    const [isClinicCurved, setIsClinicCurved] = useState(false);
 
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result as string));
-    reader.readAsDataURL(img);
-};
+    const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
+    const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
+    const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
+    const [addClinic] = useAddClinicsMutation();
+    const [uploadImage, { isLoading }] = useUploadMutation();
 
-const beforeUpload = (file: FileType) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-    if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error('Image must smaller than 2MB!');
-    }
-    return isJpgOrPng && isLt2M;
-};
+    const handleProvinceChange = (value: string) => {
+        setSelectedProvince(value); // Cập nhật mã tỉnh/thành phố được chọn
+    };
 
-const ClinicsUpdate: React.FC = () => {
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState<string>();
+    const handleDistrictsChange = (value: string) => {
+        setSelectedDistricts(value); // Cập nhật mã tỉnh/thành phố được chọn
+    };
 
-    const handleChange: UploadProps['onChange'] = (info) => {
-        if (info.file.status === 'uploading') {
-            setLoading(true);
-            return;
-        }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj as FileType, (url) => {
-                setLoading(false);
-                setImageUrl(url);
-            });
+    const handleCurvedChange = (e: RadioChangeEvent) => {
+        setIsClinicCurved(e.target.value);
+    };
+
+    const handleUpload = async (file: File) => {
+        setFile(file)
+        setIsImageUploading(true);
+        setTimeout(() => {
+            const url = URL.createObjectURL(file);
+            setImageUrl(url);
+            setIsImageUploading(false); // Hoàn thành upload
+        }, 2000); // Thời gian loading là 2 giây
+    };
+
+    const onFinish = async (values: IClinics) => {
+        try {
+            delete values.imageObjectId;
+            const request = {
+                ...values,
+                status: 1
+            };
+            const response = await addClinic(request);
+            const responseData = response?.data?.data;
+            const formData = new FormData();
+            if (fileImg) {
+                formData.append('image', fileImg);
+            }
+            if (responseData) {
+                formData.append('id', responseData);
+            }
+            await uploadImage(formData)
+            Notifn("success", "Thành công", "Thêm thành công");
+            navigate("/admin/quan-ly-phong-kham");
+        } catch (error) {
+            console.error('Error adding specialty:', error);
+            Notifn("error", "Lỗi", "Thêm không thành công");
         }
     };
 
-    const uploadButton = (
-        <button style={{ border: 0, background: 'none' }} type="button">
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <div style={{ marginTop: 8 }}>Upload</div>
-        </button>
-    );
 
     return (
-        <>
-            <Upload
-                name="avatar"
-                listType="picture-card"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
+        <div className="">
+            <Link to="/admin/quan-ly-phong-kham">Quay lại <EnterOutlined /></Link>
+            <h2 className="my-6 mx-16 text-2xl font-semibold">Sửa phòng khám</h2>
+            <Form className="mx-40"
+                form={form}
+                name="basic"
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                onFinish={onFinish}
+                labelWrap={true}
+                autoComplete="off"
             >
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
-            <Upload
-                name="avatar"
-                listType="picture-circle"
-                className="avatar-uploader"
-                showUploadList={false}
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-            >
-                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
-        </>
+                <Row gutter={16}>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Tên phòng khám"
+                            name="name"
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                                { min: 3, message: "Tối thiểu 3 ký tự!" }
+                            ]}
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Ảnh"
+                            name="imageObjectId"
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                            ]}
+                        >
+                            <Upload
+                                beforeUpload={(file) => { handleUpload(file) }}
+                                showUploadList={false}
+                                listType="picture-card" // Thay đổi kiểu hiển thị thành avatar
+                                accept="image/*"
+                            >
+                                {imageUrl ? (
+                                    isImageUploading ? (
+                                        <div>
+                                            <LoadingOutlined />
+                                            <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
+                                        </div>
+                                    ) : (
+                                        <img src={imageUrl} alt="Ảnh đã upload" style={{ width: '100%' }} />
+                                    )
+                                ) : (
+                                    <div>
+                                        {isImageUploading ? (
+                                            <div>
+                                                <LoadingOutlined />
+                                                <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>Upload</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </Upload>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="province"
+                            label="Tỉnh/Thành phố"
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                            ]}
+                        >
+                            <Select defaultValue="---Select---" className="w-full h-11"
+                                onChange={handleProvinceChange}
+                            >
+
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {provinces?.data?.map((role: any) => (
+                                    <Option key={role.code} value={role.code}>{role.name}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="district"
+                            label="Quận/Huyện"
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                            ]}
+                        >
+                            <Select
+                                defaultValue="---Select---"
+                                className="w-full h-11"
+                                loading={loadingDistricts}
+                                onChange={handleDistrictsChange}
+                            >
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {districts?.data?.map((district: any) => (
+                                    <Option key={district.code} value={district.code}>{district.name}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="ward"
+                            label="Phường/Xã"
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                            ]}
+                        >
+                            <Select
+                                defaultValue="---Select---"
+                                className="w-full h-11"
+                                loading={loadingWards}
+                            >
+
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {wards?.data?.map((wards: any) => (
+                                    <Option key={wards.code} value={wards.code}>{wards.name}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            label="Địa chỉ"
+                            name="address"
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                            ]}
+                        >
+                            <Input placeholder="Địa chỉ" className="p-3" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item
+                            name="isCurved"
+                            label="Đây có phải là phòng khám con không?"
+                        >
+                            <Radio.Group onChange={handleCurvedChange} value={isClinicCurved} defaultValue={false}>
+                                <Radio value={true}>Có</Radio>
+                                <Radio value={false}>Không</Radio>
+                            </Radio.Group>
+                        </Form.Item>
+                    </Col>
+                    {isClinicCurved && (
+                        <Col span={12}>
+                            <Form.Item
+                                name="clinicsId"
+                                label="Phòng khám cha"
+                                rules={[
+                                    { required: isClinicCurved, message: 'Trường này không được bỏ trống !' },
+                                ]}
+                            >
+                                <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {clinics?.data?.map((role: any) => (
+                                        <Option key={role.id} value={role.id}>{role.name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    )}
+                </Row>
+
+                <Form.Item
+                    name="descriptionHtml"
+                    label="Mô tả"
+                    rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
+                >
+                    <CKEditor
+                        editor={ClassicEditor}
+                        onChange={(_event, editor) => {
+                            const data = editor.getData();
+                            form.setFieldsValue({
+                                descriptionHtml: data
+                            });
+                        }}
+                    />
+                </Form.Item>
+
+                <Form.Item labelAlign="left">
+                    <Button type="primary" htmlType="submit" className="bg-blue-500">
+                        {isLoading ? (
+                            <AiOutlineLoading3Quarters className="animate-spin" />
+                        ) : (
+                            "Cập nhật"
+                        )}
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div>
     );
 };
 
