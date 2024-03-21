@@ -24,6 +24,7 @@ const ClinicsAdd = React.lazy(() => import('./pages/admin/ClinicsManage/ClinicsA
 const ClinicsUpdate = React.lazy(() => import('./pages/admin/ClinicsManage/ClinicsUpdate'));
 const AccountManage = React.lazy(() => import('./pages/admin/AccountManage/AccountManage'));
 const AddAccount = React.lazy(() => import('./pages/admin/AccountManage/AddAccount'));
+const MakeAppt = React.lazy(() => import('./pages/site/MakeAppt'));
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               <Route path='dich-vu-y-te/:slug/:slug' element={<MedExamination />} />
               <Route path='co-so-y-te/:slug' element={<ClinicsDetail />} />
               <Route path='co-so-y-te/:slug/:id' element={<ClinicsChildren />} />
+              <Route path='dat-lich/:id' element={<MakeAppt />} />
             </Route>
             <Route path="/admin" element={<LayoutAdmin />}>
               <Route path='quan-ly-chuyen-khoa' element={<SpecialtyManage />} />

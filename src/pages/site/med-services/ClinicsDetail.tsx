@@ -3,18 +3,15 @@ import { AiFillHome } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
 import { useGetByIdClinicsQuery } from "../../../api/site/Clinics";
 import { Link } from "react-router-dom";
+import { Spin } from "antd";
 
 const ClinicsDetail = () => {
     const location = useLocation();
     const { t } = useTranslation();
 
-    const { data } = useGetByIdClinicsQuery(location.state.id)
-
-    const handleChooseSpecialty = () => {
-        window.location.href = `/${data?.data?.id}`// Chuyển hướng đến đường dẫn phù hợp
-    };
+    const { data, isLoading } = useGetByIdClinicsQuery(location.state.id)
     return (
-        <div>
+        <Spin spinning={isLoading}>
             <div className='max-w-screen-xl mx-auto p-12'>
                 <div className="flex items-center gap-1 my-4 text-[#45C3D2] ">
                     <a href="/" className="flex gap-1"><AiFillHome className="text-xl" />/</a>
@@ -40,7 +37,7 @@ const ClinicsDetail = () => {
                 </div>
             </div >
             <div className="fixed bottom-0 w-full bg-white py-3 px-14">
-                {data?.data?.hasChildren === 1 ? (
+                {data?.data?.hasChildren === 0 ? (
                     <button
                         className="bg-yellow-400 text-white w-full justify-between py-2 rounded-md text-lg hover:brightness-105">
                         Đặt lịch khám
@@ -54,8 +51,7 @@ const ClinicsDetail = () => {
                     </Link>
                 )}
             </div>
-
-        </div >
+        </Spin >
     )
 }
 

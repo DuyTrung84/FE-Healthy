@@ -15,8 +15,11 @@ const viTranslation = {
     telemedicine: "Khám từ xa",
     history: "Lịch hẹn đã đặt",
     doctor: "Bác sĩ",
-    clinics: "Cơ sở y tế"
-
+    clinics: "Cơ sở y tế",
+    chilldrenClinics: {
+        title: "Chọn chuyên khoa",
+        search: "Tìm kiếm chuyên khoa"
+    }
 };
 
 export default viTranslation;

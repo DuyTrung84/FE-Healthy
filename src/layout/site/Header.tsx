@@ -90,7 +90,7 @@ const Header = () => {
                             <a className="" href="#">
                                 <AiFillCustomerService className="text-[#45C3D2] text-4xl" />
                             </a>
-                            <a className="" href='lich-hen'>
+                            <a className="" href='/lich-hen'>
                                 <AiOutlineHistory className="text-[#45C3D2] text-4xl" />
                             </a>
                             <div className="relative">

@@ -20,6 +20,7 @@ const LayoutAdmin = () => {
                     // Lưu token vào Local Storage
                     localStorage.setItem('token', response.data!.token);
                     localStorage.setItem('rfToken', response.data!.refreshToken);
+                    window.location.reload();
                 }).catch((error) => {
                     console.error('Error refreshing token:', error);
                 });

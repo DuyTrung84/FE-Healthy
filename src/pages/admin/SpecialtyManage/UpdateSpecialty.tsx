@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { EnterOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Row, Upload } from 'antd';
+import { Button, Col, Form, Input, Row, Spin, Upload } from 'antd';
 import { useUploadMutation } from "../../../api/share/upload";
 import { useEffect, useState } from "react";
 import { ISpecialty } from "../../../interface/Specialty";
@@ -14,7 +14,7 @@ const UpdateSpecialty = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const { data: specialtyData } = useGetByIdSpecialtyQuery(id || "");
+    const { data: specialtyData, isLoading: loadingData } = useGetByIdSpecialtyQuery(id || "");
     console.log(specialtyData)
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
     const [fileImg, setFile] = useState<File | null>(null);//Lưu file ảnh
@@ -49,7 +49,7 @@ const UpdateSpecialty = () => {
             delete values.imageObjectId;
             if (fileImg == null) {
                 await updateSpecialty({ ...values, id: id })
-                Notifn("success", "Thành công", "Thêm thành công");
+                Notifn("success", "Thành công", "Cập nhật thành công");
                 navigate("/admin/quan-ly-chuyen-khoa");
             } else {
                 const response = await updateSpecialty({ ...values, id: id });
@@ -62,7 +62,7 @@ const UpdateSpecialty = () => {
                     formData.append('id', responseData);
                 }
                 await uploadImage(formData);
-                Notifn("success", "Thành công", "Thêm thành công");
+                Notifn("success", "Thành công", "Cập nhật thành công");
                 navigate("/admin/quan-ly-chuyen-khoa");
             }
         } catch (error) {
@@ -75,95 +75,97 @@ const UpdateSpecialty = () => {
         <div className="">
             <Link to="/admin/quan-ly-chuyen-khoa">Quay lại <EnterOutlined /></Link>
             <h2 className="my-6 mx-16 text-2xl font-semibold">Cập nhật chuyên khoa</h2>
-            <Form className="mx-40"
-                form={form}
-                name="basic"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                onFinish={onFinish}
-                labelWrap={true}
-                autoComplete="off"
-            >
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Tên chuyên khoa"
-                            name="name"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                                { min: 3, message: "Tối thiểu 3 ký tự!" }
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Ảnh"
-                            name="imageObjectId"
-                        >
-                            <Upload
-                                beforeUpload={(file) => { handleUpload(file) }}
-                                showUploadList={false}
-                                listType="picture-card" // Thay đổi kiểu hiển thị thành avatar
-                                accept="image/*"
+            <Spin spinning={loadingData}>
+                <Form className="mx-40"
+                    form={form}
+                    name="basic"
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    onFinish={onFinish}
+                    labelWrap={true}
+                    autoComplete="off"
+                >
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Tên chuyên khoa"
+                                name="name"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                    { min: 3, message: "Tối thiểu 3 ký tự!" }
+                                ]}
                             >
-                                {imageUrl ? (
-                                    isImageUploading ? (
-                                        <div>
-                                            <LoadingOutlined />
-                                            <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
-                                        </div>
-                                    ) : (
-                                        <img src={imageUrl} alt="Ảnh đã upload" style={{ width: '100%' }} />
-                                    )
-                                ) : (
-                                    <div>
-                                        {isImageUploading ? (
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Ảnh"
+                                name="imageObjectId"
+                            >
+                                <Upload
+                                    beforeUpload={(file) => { handleUpload(file) }}
+                                    showUploadList={false}
+                                    listType="picture-card" // Thay đổi kiểu hiển thị thành avatar
+                                    accept="image/*"
+                                >
+                                    {imageUrl ? (
+                                        isImageUploading ? (
                                             <div>
                                                 <LoadingOutlined />
                                                 <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
                                             </div>
                                         ) : (
-                                            <div>
-                                                <PlusOutlined />
-                                                <div style={{ marginTop: 8 }}>Upload</div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </Upload>
-                        </Form.Item>
-                    </Col>
-                </Row>
+                                            <img src={imageUrl} alt="Ảnh đã upload" style={{ width: '100%' }} />
+                                        )
+                                    ) : (
+                                        <div>
+                                            {isImageUploading ? (
+                                                <div>
+                                                    <LoadingOutlined />
+                                                    <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <PlusOutlined />
+                                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </Upload>
+                            </Form.Item>
+                        </Col>
+                    </Row>
 
-                <Form.Item
-                    name="descriptionHtml"
-                    label="Mô tả"
-                    rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                >
-                    <CKEditor
-                        data={specialtyData?.data?.descriptionHtml}
-                        editor={ClassicEditor}
-                        onChange={(_event, editor) => {
-                            const data = editor.getData();
-                            form.setFieldsValue({
-                                descriptionHtml: data
-                            });
-                        }}
-                    />
-                </Form.Item>
+                    <Form.Item
+                        name="descriptionHtml"
+                        label="Mô tả"
+                        rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
+                    >
+                        <CKEditor
+                            data={specialtyData?.data?.descriptionHtml}
+                            editor={ClassicEditor}
+                            onChange={(_event, editor) => {
+                                const data = editor.getData();
+                                form.setFieldsValue({
+                                    descriptionHtml: data
+                                });
+                            }}
+                        />
+                    </Form.Item>
 
-                <Form.Item labelAlign="left">
-                    <Button type="primary" htmlType="submit" className="bg-blue-500">
-                        {isLoading ? (
-                            <AiOutlineLoading3Quarters className="animate-spin" />
-                        ) : (
-                            "Cập nhật"
-                        )}
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item labelAlign="left">
+                        <Button type="primary" htmlType="submit" className="bg-blue-500">
+                            {isLoading ? (
+                                <AiOutlineLoading3Quarters className="animate-spin" />
+                            ) : (
+                                "Cập nhật"
+                            )}
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Spin>
         </div>
     );
 };
