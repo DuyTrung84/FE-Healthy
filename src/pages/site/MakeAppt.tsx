@@ -1,5 +1,5 @@
 import { EnvironmentFilled, PhoneOutlined, UserOutlined } from "@ant-design/icons"
-import { Button, DatePicker, Form, Input, Radio, Select } from "antd"
+import { Button, DatePicker, Form, Input, Radio, RadioChangeEvent, Select } from "antd"
 import { Option } from "antd/es/mentions"
 import { useState } from "react";
 import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../api/share/area";
@@ -21,8 +21,7 @@ const MakeAppt = () => {
     const handleDistrictsChange = (value: string) => {
         setSelectedDistricts(value); // Cập nhật mã tỉnh/thành phố được chọn
     };
-
-    const handleRadioChange = (e: any) => {
+    const handleRadioChange = (e: RadioChangeEvent) => {
         setIsRelative(e.target.value === "relative"); // Cập nhật trạng thái khi radio thay đổi
     };
 
@@ -54,14 +53,14 @@ const MakeAppt = () => {
                             <h2 className="font-bold text-sm text-blue-500 mb-2">Thông tin người đặt lịch</h2>
                             <Form.Item
                                 name="name"
-                                rules={[{ required: true, message: 'Vui lòng nhập họ tên bênh nhân' }]}
+                                rules={[{ required: isRelative, message: 'Vui lòng nhập họ tên bênh nhân' }]}
                             >
                                 <Input placeholder="Tên người đặt (bắt buộc)" prefix={<UserOutlined className="p-2" />} />
                             </Form.Item>
                             <Form.Item
                                 name="tel"
                                 rules={[
-                                    { required: true, message: 'Vui lòng nhập số điện thoại' },
+                                    { required: isRelative, message: 'Vui lòng nhập số điện thoại' },
                                     { pattern: /^(0[0-9]{9,10})$/, message: "Số điện thoại không đúng định dạng" }
                                 ]}
                             >
