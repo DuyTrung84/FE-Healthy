@@ -238,7 +238,7 @@ const ClinicsAdd = () => {
                             >
                                 <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {clinics?.data?.map((role: any) => (
+                                    {clinics?.data?.data?.map((role: any) => (
                                         <Option key={role.id} value={role.id}>{role.name}</Option>
                                     ))}
                                 </Select>

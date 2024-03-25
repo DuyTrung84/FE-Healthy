@@ -1,18 +1,19 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { EnterOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Radio, RadioChangeEvent, Row, Select, Upload } from 'antd';
-import { useUploadMutation } from "../../../api/share/upload";
-import { useState } from "react";
+import { Button, Col, Form, Input, Radio, RadioChangeEvent, Row, Select, Spin, Upload } from 'antd';
+import { useGetStatusQuery, useUploadMutation } from "../../../api/share/upload";
+import { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Notifn } from "../../../components/Notification";
 import { IClinics } from "../../../interface/Clinics";
-import { useAddClinicsMutation, useGetAllClinicsQuery } from "../../../api/site/Clinics";
+import { useAddClinicsMutation, useGetAllClinicsQuery, useGetByIdClinicsQuery } from "../../../api/site/Clinics";
 import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../../api/share/area";
 import { Option } from "antd/es/mentions";
 
 const ClinicsUpdate = () => {
+    const { id } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
@@ -22,12 +23,28 @@ const ClinicsUpdate = () => {
     const [selectedDistricts, setSelectedDistricts] = useState<string>("");//Lưu mã quạn huyện
     const [isClinicCurved, setIsClinicCurved] = useState(false);
 
+    const { data: clinicsData, isLoading: dataLoading } = useGetByIdClinicsQuery(id || "")
+    console.log(clinicsData)
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
     const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
     const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
     const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
+    const { data: status } = useGetStatusQuery() //status
     const [addClinic] = useAddClinicsMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
+
+    useEffect(() => {
+        form.setFieldsValue({
+            descriptionHtml: clinicsData?.data?.descriptionHtml,
+            name: clinicsData?.data?.name,
+            status: clinicsData?.data?.status,
+            hasChildren: clinicsData?.data?.hasChildren,
+            imageObjectId: ""
+        });
+        if (clinicsData?.data?.imageUrl) {
+            setImageUrl(clinicsData?.data?.imageUrl);
+        }
+    }, [clinicsData]);
 
     const handleProvinceChange = (value: string) => {
         setSelectedProvince(value); // Cập nhật mã tỉnh/thành phố được chọn
@@ -68,11 +85,11 @@ const ClinicsUpdate = () => {
                 formData.append('id', responseData);
             }
             await uploadImage(formData)
-            Notifn("success", "Thành công", "Thêm thành công");
+            Notifn("success", "Thành công", "Sửa thành công");
             navigate("/admin/quan-ly-phong-kham");
         } catch (error) {
             console.error('Error adding specialty:', error);
-            Notifn("error", "Lỗi", "Thêm không thành công");
+            Notifn("error", "Lỗi", "Sửa không thành công");
         }
     };
 
@@ -81,198 +98,218 @@ const ClinicsUpdate = () => {
         <div className="">
             <Link to="/admin/quan-ly-phong-kham">Quay lại <EnterOutlined /></Link>
             <h2 className="my-6 mx-16 text-2xl font-semibold">Sửa phòng khám</h2>
-            <Form className="mx-40"
-                form={form}
-                name="basic"
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                onFinish={onFinish}
-                labelWrap={true}
-                autoComplete="off"
-            >
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Tên phòng khám"
-                            name="name"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                                { min: 3, message: "Tối thiểu 3 ký tự!" }
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Ảnh"
-                            name="imageObjectId"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                            ]}
-                        >
-                            <Upload
-                                beforeUpload={(file) => { handleUpload(file) }}
-                                showUploadList={false}
-                                listType="picture-card" // Thay đổi kiểu hiển thị thành avatar
-                                accept="image/*"
+            <Spin spinning={dataLoading}>
+                <Form className="mx-40"
+                    form={form}
+                    name="basic"
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    onFinish={onFinish}
+                    labelWrap={true}
+                    autoComplete="off"
+                >
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Tên phòng khám"
+                                name="name"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                    { min: 3, message: "Tối thiểu 3 ký tự!" }
+                                ]}
                             >
-                                {imageUrl ? (
-                                    isImageUploading ? (
-                                        <div>
-                                            <LoadingOutlined />
-                                            <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
-                                        </div>
-                                    ) : (
-                                        <img src={imageUrl} alt="Ảnh đã upload" style={{ width: '100%' }} />
-                                    )
-                                ) : (
-                                    <div>
-                                        {isImageUploading ? (
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Ảnh"
+                                name="imageObjectId"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                ]}
+                            >
+                                <Upload
+                                    beforeUpload={(file) => { handleUpload(file) }}
+                                    showUploadList={false}
+                                    listType="picture-card" // Thay đổi kiểu hiển thị thành avatar
+                                    accept="image/*"
+                                >
+                                    {imageUrl ? (
+                                        isImageUploading ? (
                                             <div>
                                                 <LoadingOutlined />
                                                 <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
                                             </div>
                                         ) : (
-                                            <div>
-                                                <PlusOutlined />
-                                                <div style={{ marginTop: 8 }}>Upload</div>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </Upload>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="province"
-                            label="Tỉnh/Thành phố"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                            ]}
-                        >
-                            <Select defaultValue="---Select---" className="w-full h-11"
-                                onChange={handleProvinceChange}
-                            >
-
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                {provinces?.data?.map((role: any) => (
-                                    <Option key={role.code} value={role.code}>{role.name}</Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="district"
-                            label="Quận/Huyện"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                            ]}
-                        >
-                            <Select
-                                defaultValue="---Select---"
-                                className="w-full h-11"
-                                loading={loadingDistricts}
-                                onChange={handleDistrictsChange}
-                            >
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                {districts?.data?.map((district: any) => (
-                                    <Option key={district.code} value={district.code}>{district.name}</Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="ward"
-                            label="Phường/Xã"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                            ]}
-                        >
-                            <Select
-                                defaultValue="---Select---"
-                                className="w-full h-11"
-                                loading={loadingWards}
-                            >
-
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                {wards?.data?.map((wards: any) => (
-                                    <Option key={wards.code} value={wards.code}>{wards.name}</Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            label="Địa chỉ"
-                            name="address"
-                            rules={[
-                                { required: true, message: 'Trường này không được bỏ trống !' },
-                            ]}
-                        >
-                            <Input placeholder="Địa chỉ" className="p-3" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                        <Form.Item
-                            name="isCurved"
-                            label="Đây có phải là phòng khám con không?"
-                        >
-                            <Radio.Group onChange={handleCurvedChange} value={isClinicCurved} defaultValue={false}>
-                                <Radio value={true}>Có</Radio>
-                                <Radio value={false}>Không</Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                    </Col>
-                    {isClinicCurved && (
+                                            <img src={imageUrl} alt="Ảnh đã upload" style={{ width: '100%' }} />
+                                        )
+                                    ) : (
+                                        <div>
+                                            {isImageUploading ? (
+                                                <div>
+                                                    <LoadingOutlined />
+                                                    <div style={{ marginTop: 8 }}>Đang tải ảnh...</div>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <PlusOutlined />
+                                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </Upload>
+                            </Form.Item>
+                        </Col>
                         <Col span={12}>
                             <Form.Item
-                                name="clinicsId"
-                                label="Phòng khám cha"
+                                name="province"
+                                label="Tỉnh/Thành phố"
                                 rules={[
-                                    { required: isClinicCurved, message: 'Trường này không được bỏ trống !' },
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
                                 ]}
                             >
-                                <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
+                                <Select defaultValue="---Select---" className="w-full h-11"
+                                    onChange={handleProvinceChange}
+                                >
+
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {clinics?.data?.map((role: any) => (
-                                        <Option key={role.id} value={role.id}>{role.name}</Option>
+                                    {provinces?.data?.map((role: any) => (
+                                        <Option key={role.code} value={role.code}>{role.name}</Option>
                                     ))}
                                 </Select>
                             </Form.Item>
                         </Col>
-                    )}
-                </Row>
+                        <Col span={12}>
+                            <Form.Item
+                                name="district"
+                                label="Quận/Huyện"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                ]}
+                            >
+                                <Select
+                                    defaultValue="---Select---"
+                                    className="w-full h-11"
+                                    loading={loadingDistricts}
+                                    onChange={handleDistrictsChange}
+                                >
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {districts?.data?.map((district: any) => (
+                                        <Option key={district.code} value={district.code}>{district.name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="ward"
+                                label="Phường/Xã"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                ]}
+                            >
+                                <Select
+                                    defaultValue="---Select---"
+                                    className="w-full h-11"
+                                    loading={loadingWards}
+                                >
 
-                <Form.Item
-                    name="descriptionHtml"
-                    label="Mô tả"
-                    rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
-                >
-                    <CKEditor
-                        editor={ClassicEditor}
-                        onChange={(_event, editor) => {
-                            const data = editor.getData();
-                            form.setFieldsValue({
-                                descriptionHtml: data
-                            });
-                        }}
-                    />
-                </Form.Item>
-
-                <Form.Item labelAlign="left">
-                    <Button type="primary" htmlType="submit" className="bg-blue-500">
-                        {isLoading ? (
-                            <AiOutlineLoading3Quarters className="animate-spin" />
-                        ) : (
-                            "Cập nhật"
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {wards?.data?.map((wards: any) => (
+                                        <Option key={wards.code} value={wards.code}>{wards.name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Địa chỉ"
+                                name="address"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                ]}
+                            >
+                                <Input placeholder="Địa chỉ" className="p-3" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="isCurved"
+                                label="Đây có phải là phòng khám con không?"
+                            >
+                                <Radio.Group onChange={handleCurvedChange} value={isClinicCurved} defaultValue={false}>
+                                    <Radio value={true}>Có</Radio>
+                                    <Radio value={false}>Không</Radio>
+                                </Radio.Group>
+                            </Form.Item>
+                        </Col>
+                        {isClinicCurved && (
+                            <Col span={12}>
+                                <Form.Item
+                                    name="clinicsId"
+                                    label="Phòng khám cha"
+                                    rules={[
+                                        { required: isClinicCurved, message: 'Trường này không được bỏ trống !' },
+                                    ]}
+                                >
+                                    <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                        {clinics?.data?.data?.map((role: any) => (
+                                            <Option key={role.id} value={role.id}>{role.name}</Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
                         )}
-                    </Button>
-                </Form.Item>
-            </Form>
+                        <Col span={12}>
+                            <Form.Item
+                                label="Trạng thái"
+                                name="status"
+                                rules={[
+                                    { required: true, message: 'Trường này không được bỏ trống !' },
+                                ]}
+                                initialValue={clinicsData?.data?.status}
+                            >
+                                <Select className="w-full">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {status?.data?.map((role: any) => (
+                                        <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Form.Item
+                        name="descriptionHtml"
+                        label="Mô tả"
+                        rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
+                    >
+                        <CKEditor
+                            data={clinicsData?.data?.descriptionHtml}
+                            editor={ClassicEditor}
+                            onChange={(_event, editor) => {
+                                const data = editor.getData();
+                                form.setFieldsValue({
+                                    descriptionHtml: data
+                                });
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item labelAlign="left">
+                        <Button type="primary" htmlType="submit" className="bg-blue-500">
+                            {isLoading ? (
+                                <AiOutlineLoading3Quarters className="animate-spin" />
+                            ) : (
+                                "Cập nhật"
+                            )}
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Spin>
         </div>
     );
 };

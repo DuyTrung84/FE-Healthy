@@ -17,7 +17,7 @@ const accountApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getAllAccount: builder.mutation<IAccount[], { keyword: string | null; role: string | null; page: number; resultLimit: number }>({
+        getAllAccount: builder.mutation<IAccount, { keyword: string | null; role: string | null; page: number; resultLimit: number }>({
             query: ({ keyword, role, page, resultLimit }) => ({
                 url: "/getAll",
                 method: "POST",

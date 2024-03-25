@@ -42,8 +42,8 @@ const ListCategories = () => {
             </div>
             <div className="flex justify-between items-center">
                 <h2 className="font-bold text-xl mt-2 mb-4">{t(data.slug)}</h2>
-                {data.slug === "clinics" && (
-                    <div>
+                <div>
+                    {data.slug === "clinics" && (
                         <Select
                             showSearch
                             defaultValue=""
@@ -60,14 +60,14 @@ const ListCategories = () => {
                                     </Option>
                                 ))}
                         </Select>
-                        <Input
-                            style={{ width: 200, marginLeft: 10 }}
-                            placeholder="Tìm kiếm"
-                            prefix={<AiOutlineSearch />}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                        />
-                    </div>
-                )}
+                    )}
+                    <Input
+                        style={{ width: 200, marginLeft: 10 }}
+                        placeholder="Tìm kiếm"
+                        prefix={<AiOutlineSearch />}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                    />
+                </div>
             </div>
             <div className="grid grid-cols-1 gap-4 ">
                 {filteredData?.length ? (
@@ -81,7 +81,7 @@ const ListCategories = () => {
                         </button>
                     ))
                 ) : (
-                    <p className="text-red-500 font-semibold text-lg ml-3">Không tìm thấy cơ sở y tế phù hợp.</p>
+                    <p className="text-red-500 font-semibold text-lg ml-3">Không tìm thấy từ khoá phù hợp.</p>
                 )}
             </div>
         </div>

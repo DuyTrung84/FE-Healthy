@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { EnterOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Row, Spin, Upload } from 'antd';
-import { useUploadMutation } from "../../../api/share/upload";
+import { Button, Col, Form, Input, Row, Select, Spin, Upload } from 'antd';
+import { useGetStatusQuery, useUploadMutation } from "../../../api/share/upload";
 import { useEffect, useState } from "react";
 import { ISpecialty } from "../../../interface/Specialty";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -14,18 +14,20 @@ const UpdateSpecialty = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const { data: specialtyData, isLoading: loadingData } = useGetByIdSpecialtyQuery(id || "");
-    console.log(specialtyData)
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
     const [fileImg, setFile] = useState<File | null>(null);//Lưu file ảnh
     const [isImageUploading, setIsImageUploading] = useState(false);
+
+    const { data: specialtyData, isLoading: loadingData } = useGetByIdSpecialtyQuery(id || "");
     const [uploadImage, { isLoading }] = useUploadMutation();
     const [updateSpecialty] = useUpdateSpecialtyMutation();
-
+    const { data: status } = useGetStatusQuery()
+    console.log(status)
     useEffect(() => {
         form.setFieldsValue({
             descriptionHtml: specialtyData?.data?.descriptionHtml,
             name: specialtyData?.data?.name,
+            status: specialtyData?.data?.status,
             imageObjectId: ""
         });
         if (specialtyData?.data?.imageUrl) {
@@ -84,6 +86,7 @@ const UpdateSpecialty = () => {
                     onFinish={onFinish}
                     labelWrap={true}
                     autoComplete="off"
+                    initialValues={{ remember: true }}
                 >
                     <Row gutter={16}>
                         <Col span={12}>
@@ -136,6 +139,21 @@ const UpdateSpecialty = () => {
                                 </Upload>
                             </Form.Item>
                         </Col>
+
+                        <Col span={12}>
+                            <Form.Item
+                                label="Trạng thái"
+                                name="status"
+                                initialValue={specialtyData?.data?.status}
+                            >
+                                <Select className="w-full">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {status?.data?.map((role: any) => (
+                                        <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </Col>
                     </Row>
 
                     <Form.Item
@@ -144,7 +162,7 @@ const UpdateSpecialty = () => {
                         rules={[{ required: true, message: 'Vui lòng không bỏ trống' }]}
                     >
                         <CKEditor
-                            data={specialtyData?.data?.descriptionHtml}
+                            data={specialtyData?.data?.descriptionHtml?.toString()}
                             editor={ClassicEditor}
                             onChange={(_event, editor) => {
                                 const data = editor.getData();

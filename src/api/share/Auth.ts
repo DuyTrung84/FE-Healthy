@@ -55,7 +55,7 @@ const authApi = createApi({
             }),
         }),
         emailVerificaiton: builder.query<string, string>({
-            query: (token) => "/email-verification" + token,
+            query: (token) => "/email-verification/" + token,
             providesTags: ["AUTH"],
         }),
     }),

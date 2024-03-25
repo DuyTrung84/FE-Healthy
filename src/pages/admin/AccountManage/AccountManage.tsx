@@ -174,8 +174,7 @@ const AccountManage = () => {
                         <div>
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Vai trò:</p>
                             <Form.Item name="role">
-                                <Select defaultValue="" className="w-full" loading={loadingRole}>
-                                    <Option value="" className="">---Select---</Option>
+                                <Select placeholder="---Select---" className="w-full" loading={loadingRole}>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {selectRole?.data?.map((role: any) => (
                                         <Option key={role.value} value={role.value}>{role.name}</Option>
@@ -194,12 +193,11 @@ const AccountManage = () => {
             </Form>
             <Table
                 columns={columns}
-                dataSource={data?.data?.data}
+                dataSource={Array.isArray(data?.data?.data) ? data?.data?.data : []}
                 loading={isLoading}
-                className="h-[90%]"
                 scroll={{ y: 240 }}
                 pagination={{
-                    current: data?.data.currentPage + 1,
+                    current: data?.data?.currentPage ? data.data.currentPage + 1 : 1,
                     total: data?.data?.totalItems,
                     pageSize: 10,
                     onChange: handlePaginationChange,

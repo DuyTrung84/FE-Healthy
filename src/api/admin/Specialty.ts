@@ -16,16 +16,25 @@ const specialtyApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getAllSpecialty: builder.query<ISpecialty, void>({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getAllSpecialty: builder.query<ISpecialty, void | any>({
             query: () => "public/specialities/all",
             providesTags: ['SPECIALTY']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        searchAllSpecialty: builder.mutation<ISpecialty, { name: string | null; status: string | null; page: number; resultLimit: number }>({
+            query: ({ name, status, page, resultLimit }) => ({
+                url: 'public/specialities/all',
+                method: 'GET',
+                params: { name, status, page, resultLimit },
+            }),
+
+            invalidatesTags: ['SPECIALTY']
+        }),
         getByIdSpecialty: builder.query<ISpecialty, number | string>({
             query: (id) => "/public/specialities/get/" + id,
             providesTags: ['SPECIALTY']
         }),
-
         addSpecialty: builder.mutation<ISpecialty, ISpecialty>({
             query: (specialty: ISpecialty) => ({
                 url: "/admin/specialities/create",
@@ -59,6 +68,7 @@ export const {
     useAddSpecialtyMutation,
     useUpdateSpecialtyMutation,
     useDeleteSpecialtyMutation,
+    useSearchAllSpecialtyMutation
 
 } = specialtyApi;
 

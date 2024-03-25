@@ -27,9 +27,9 @@ const AddAccount = () => {
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
     const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
     const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
-    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery();//Chuyên khoa
+    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery(undefined);//Chuyên khoa
     const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
-    console.log(specialty)
+
     const [addAccount] = useAddAccountMutation(); //hàm thêm tài khoản
     const [uploadImage, { isLoading }] = useUploadMutation();
 
@@ -72,8 +72,8 @@ const AddAccount = () => {
                     address: values.address,
                 } : null // Nếu không phải vai trò "DOCTOR", gán giá trị undefined cho doctorInfoDTO
             };
-            console.log(requestData)
             const response = await addAccount(requestData);
+            Notifn("success", "Thành công", "Thêm thành công");
             const responseData = response?.data?.data;
             const formData = new FormData();
             if (fileImg) {
@@ -83,11 +83,21 @@ const AddAccount = () => {
                 formData.append('id', responseData);
             }
             await uploadImage(formData);
-            Notifn("success", "Thành công", "Thêm thành công");
-            navigate("/admin/quan-ly-tai-khoan");
+
+            // navigate("/admin/quan-ly-tai-khoan");
         } catch (error) {
-            console.error('Error adding specialty:', error);
-            Notifn("error", "Lỗi", "Thêm không thành công");
+            console.log(error)
+            if (error.response) {
+                // Server trả về lỗi
+                const errorMessage = error.response.data.message;
+                Notifn("error", "Lỗi", errorMessage);
+            } else if (error.request) {
+                // Yêu cầu không nhận được phản hồi từ server
+                Notifn("error", "Lỗi", "Yêu cầu không nhận được phản hồi từ server");
+            } else {
+                // Lỗi khác
+                Notifn("error", "Lỗi", "Đã xảy ra lỗi không xác định");
+            }
         }
     };
 
@@ -332,7 +342,7 @@ const AddAccount = () => {
                                 >
                                     <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
                                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                        {clinics?.data?.map((role: any) => (
+                                        {clinics?.data?.data?.map((role: any) => (
                                             <Option key={role.id} value={role.id}>{role.name}</Option>
                                         ))}
                                     </Select>
@@ -348,7 +358,7 @@ const AddAccount = () => {
                                 >
                                     <Select defaultValue="---Select---" className="w-full h-11" loading={loadingSpecialty}                                    >
                                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                        {specialty?.data?.map((role: any) => (
+                                        {specialty?.data?.data?.map((role: any) => (
                                             <Option key={role.id} value={role.id}>{role.name}</Option>
                                         ))}
                                     </Select>

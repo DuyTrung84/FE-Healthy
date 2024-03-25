@@ -12,7 +12,7 @@ const Home = () => {
     const handleClick2 = (slug: string, data: LstCategories) => {
         navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
     };
-    const { data: specialty } = useGetAllSpecialtyQuery();
+    const { data: specialty } = useGetAllSpecialtyQuery(undefined);
     const { data: clinics } = useGetAllClinicsQuery();
 
 
@@ -29,9 +29,10 @@ const Home = () => {
         { url: "https://cdn.bookingcare.vn/fo/2023/07/06/163421-153524-near-home-01.png", title: "Y tế gần bạn" },
     ]
 
-    const newSpecialty = specialty ? specialty?.data?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) : [];
+    const newSpecialty = specialty?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) || [];
 
-    const newClinics = clinics ? clinics?.data?.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
+
+    const newClinics = clinics ? clinics?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const doctor: any = [
         { imageUrl: "https://cdn.bookingcare.vn/fo/w128/2022/07/18/160559-161139-bs-huyen.png", name: "Bác sĩ 1", desc: "Bác sĩ 1 ahihii" },

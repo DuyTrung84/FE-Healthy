@@ -22,6 +22,15 @@ const clinicsApi = createApi({
             providesTags: ['CLINICS']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        searchSpecialty: builder.mutation<IClinics, { search: string | null; province: string | null; status: string | null; page: number; resultLimit: number }>({
+            query: ({ search, status, page, resultLimit, province }) => ({
+                url: 'public/clinics/all',
+                method: 'GET',
+                params: { search, status, page, resultLimit, province },
+            }),
+
+            invalidatesTags: ['CLINICS']
+        }),
         getByIdClinics: builder.query<IClinics, number | string>({
             query: (id) => "/public/clinics/get/" + id,
             providesTags: ['CLINICS']
@@ -66,7 +75,8 @@ export const {
     useGetChildrenClinicsQuery,
     useAddClinicsMutation,
     useUpdateClinicsMutation,
-    useDeleteClinicsMutation
+    useDeleteClinicsMutation,
+    useSearchSpecialtyMutation
 
 } = clinicsApi;
 

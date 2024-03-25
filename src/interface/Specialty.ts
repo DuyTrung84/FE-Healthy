@@ -6,5 +6,7 @@ export interface ISpecialty {
     imageObjectId?: string;
     descriptionHtml?: string | TrustedHTML;
     status?: number;
-    data?: ISpecialty
+    data?: ISpecialty;
+    currentPage?: number;
+    totalItems?: number;
 }

@@ -9,5 +9,6 @@ export interface IClinics {
     address?: string;
     hasChildren?: number;
     data?: IClinics
-    map?: CallableFunction
+    currentPage?: number;
+    totalItems?: number
 }

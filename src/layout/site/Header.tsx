@@ -13,12 +13,12 @@ const Header = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
-    const { data } = useGetAllSpecialtyQuery();
+    const { data } = useGetAllSpecialtyQuery(undefined);
     const { data: clinics } = useGetAllClinicsQuery();//Phòng khám
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const specialty: any = data?.data
+    const specialty: any = data?.data?.data
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clinicsData: any = clinics?.data
+    const clinicsData: any = clinics?.data?.data
 
     const changeLanguage = (language: string) => {
         i18n.changeLanguage(language);

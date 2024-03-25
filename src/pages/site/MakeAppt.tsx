@@ -1,4 +1,4 @@
-import { EnvironmentFilled, PhoneOutlined, UserOutlined } from "@ant-design/icons"
+import { CalendarOutlined, EnvironmentOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons"
 import { Button, DatePicker, Form, Input, Radio, RadioChangeEvent, Select } from "antd"
 import { Option } from "antd/es/mentions"
 import { useState } from "react";
@@ -53,14 +53,14 @@ const MakeAppt = () => {
                             <h2 className="font-bold text-sm text-blue-500 mb-2">Thông tin người đặt lịch</h2>
                             <Form.Item
                                 name="name"
-                                rules={[{ required: isRelative, message: 'Vui lòng nhập họ tên bênh nhân' }]}
+                                rules={[{ required: isRelative, message: 'Vui lòng nhập họ tên người đặt' }]}
                             >
                                 <Input placeholder="Tên người đặt (bắt buộc)" prefix={<UserOutlined className="p-2" />} />
                             </Form.Item>
                             <Form.Item
                                 name="tel"
                                 rules={[
-                                    { required: isRelative, message: 'Vui lòng nhập số điện thoại' },
+                                    { required: isRelative, message: 'Vui lòng nhập số điện thoại người đặt' },
                                     { pattern: /^(0[0-9]{9,10})$/, message: "Số điện thoại không đúng định dạng" }
                                 ]}
                             >
@@ -72,7 +72,7 @@ const MakeAppt = () => {
 
                     <Form.Item
                         name="name"
-                        rules={[{ required: true, message: 'Vui lòng nhập họ tên bênh nhân' }]}
+                        rules={[{ required: true, message: 'Vui lòng nhập họ tên bệnh nhân' }]}
                     >
                         <Input placeholder="Họ tên bệnh nhân (bắt buộc)" prefix={<UserOutlined className="p-2" />} />
                     </Form.Item>
@@ -97,15 +97,15 @@ const MakeAppt = () => {
                     <Form.Item
                         name="birthday"
                         rules={[
-                            { required: true, message: 'Vui lòng nhập số điện thoại' },
+                            { required: true, message: 'Vui chọn ngày tháng năm sinh' },
                         ]}
                     >
-                        <DatePicker placeholder="Ngày tháng năm sinh" className="w-full p-2" />
+                        <DatePicker placeholder="---Ngày/ tháng/ năm sinh---" className="w-full p-2" suffixIcon={<CalendarOutlined />} />
                     </Form.Item>
                     <Form.Item
                         name="province"
                         rules={[
-                            { required: true, message: 'Trường này không được bỏ trống !' },
+                            { required: true, message: 'Vui lòng chọn tỉnh thành phố!' },
                         ]}
                     >
                         <Select placeholder="---Chọn tỉnh/thành phố---" className="w-full h-11" loading={loadingProvince}
@@ -122,7 +122,7 @@ const MakeAppt = () => {
                     <Form.Item
                         name="district"
                         rules={[
-                            { required: true, message: 'Trường này không được bỏ trống !' },
+                            { required: true, message: 'Vui lòng chọn quận huyện !' },
                         ]}
                     >
                         <Select
@@ -140,7 +140,7 @@ const MakeAppt = () => {
                     <Form.Item
                         name="wards"
                         rules={[
-                            { required: true, message: 'Trường này không được bỏ trống !' },
+                            { required: true, message: 'Vui lòng chọn phường xã' },
                         ]}
                     >
                         <Select
@@ -158,11 +158,35 @@ const MakeAppt = () => {
                     <Form.Item
                         name="address"
                         rules={[
-                            { required: true, message: 'Trường này không được bỏ trống !' },
+                            { required: true, message: 'Vui lòng nhập địa chỉ tổ/ khu/ thôn/ xóm!' },
                         ]}
                     >
-                        <Input placeholder="Nhâp địa chỉ tổ/ khu/ thôn/ xóm" prefix={<EnvironmentFilled className="p-2" />} />
+                        <Input placeholder="Nhập địa chỉ tổ/ khu/ thôn/ xóm" prefix={<EnvironmentOutlined className="p-2" />} />
                     </Form.Item>
+                    <Form.Item
+                        name="reason"
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập lý do khám!' },
+                        ]}
+                    >
+                        <div style={{ position: 'relative' }}>
+                            <Input.TextArea
+                                placeholder="Nhập lý do khám"
+                                style={{ paddingLeft: '40px' }}
+                                className="py-1"
+                            />
+                            <EnvironmentOutlined style={{ position: 'absolute', top: '10px', left: '19px' }} />
+                        </div>
+                    </Form.Item>
+                    <div className="bg-[#D4EFFC] py-4 px-8 leading-8 mb-8">
+                        <p className="font-medium text-lg uppercase">Lưu ý</p>
+                        <p>Thông tin anh/chị vui lòng cung cấp sẽ được sử dụng làm hồ sở khám bệnh, khi điền thông tin anh/chị vui lòng:</p>
+                        <ul className="list-disc pl-4 ml-4">
+                            <li><span>Ghi rõ họ và tên, viết hoa những chữ cái đầu tiên, ví dụ: Trần Văn Phú </span></li>
+                            <li><span>Điền đầy đủ, đúng và vui lòng kiểm tra lại thông tin trước khi ấn "Xác nhận" </span></li>
+                        </ul>
+                    </div>
+
 
                     <Form.Item labelAlign="left">
                         <Button type="primary" htmlType="submit" className="bg-blue-500 w-full" size="large">
@@ -174,8 +198,8 @@ const MakeAppt = () => {
                         </Button>
                     </Form.Item>
                 </Form>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
