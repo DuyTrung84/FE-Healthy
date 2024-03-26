@@ -256,7 +256,7 @@ const ClinicsUpdate = () => {
                         {isClinicCurved && (
                             <Col span={12}>
                                 <Form.Item
-                                    name="clinicsId"
+                                    name="parentClinicId"
                                     label="Phòng khám cha"
                                     rules={[
                                         { required: isClinicCurved, message: 'Trường này không được bỏ trống !' },
