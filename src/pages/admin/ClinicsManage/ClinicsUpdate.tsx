@@ -133,9 +133,6 @@ const ClinicsUpdate = () => {
                             <Form.Item
                                 label="Ảnh"
                                 name="imageObjectId"
-                                rules={[
-                                    { required: true, message: 'Trường này không được bỏ trống !' },
-                                ]}
                             >
                                 <Upload
                                     beforeUpload={(file) => { handleUpload(file) }}

@@ -2,10 +2,10 @@ import { Link } from "react-router-dom"
 import { Button, Table, Space, Dropdown, Modal, Tag, Form, Input, Select } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineEdit, AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
-import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { DownOutlined, ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
-import { useDeleteClinicsMutation, useSearchSpecialtyMutation } from "../../../api/site/Clinics";
+import { useDeleteClinicsMutation, useSearchClinicsMutation } from "../../../api/site/Clinics";
 import { IClinics } from "../../../interface/Clinics";
 import { useGetStatusQuery } from "../../../api/share/upload";
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ import { useGetProvincesQuery } from "../../../api/share/area";
 const { confirm } = Modal;
 const ClinicsManage = () => {
     const [form] = Form.useForm();
-    const [searchClinics, { data, isLoading }] = useSearchSpecialtyMutation();
+    const [searchClinics, { data, isLoading }] = useSearchClinicsMutation();
     const [deleteClinics] = useDeleteClinicsMutation();
     const { data: statusData } = useGetStatusQuery();
     const { data: provinces } = useGetProvincesQuery();
@@ -22,7 +22,7 @@ const ClinicsManage = () => {
     useEffect(() => {
         // Gọi API để tìm kiếm với giá trị ban đầu
         searchClinics({ search: "", province: "", status: "", page: 0, resultLimit: 10 });
-    }, []);
+    }, [searchClinics]);
 
     const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
@@ -155,6 +155,14 @@ const ClinicsManage = () => {
         },
     ];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const expandIcon = ({ expanded, onExpand, record }: { expanded: any, onExpand: any, record: any }) => {
+        if (!record.children || record.children.length === 0) {
+            return null;
+        }
+        return expanded ? <UpOutlined onClick={(e) => onExpand(record, e)} className="mr-3" /> : <DownOutlined onClick={(e) => onExpand(record, e)} className="mr-3" />;
+    };
+
     return (
         <div className="">
             <div className="flex justify-between mb-6">
@@ -211,6 +219,10 @@ const ClinicsManage = () => {
                 dataSource={Array.isArray(data?.data?.data) ? data?.data?.data : []}
                 loading={isLoading}
                 scroll={{ y: 400 }}
+                expandable={{
+                    expandIcon,
+                }}
+
                 pagination={{
                     current: data?.data?.currentPage ? data.data.currentPage + 1 : 1,
                     total: data?.data?.totalItems,

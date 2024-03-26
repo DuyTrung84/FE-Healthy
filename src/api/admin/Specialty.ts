@@ -16,9 +16,12 @@ const specialtyApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getAllSpecialty: builder.query<ISpecialty, void | any>({
-            query: () => "public/specialities/all",
+        getAllSpecialty: builder.query<ISpecialty, { name?: string | null; status?: string | null; page?: number; resultLimit?: number }>({
+            query: ({ name, status, page, resultLimit }) => ({
+                url: 'public/specialities/all',
+                method: 'GET',
+                params: { name, status, page, resultLimit },
+            }),
             providesTags: ['SPECIALTY']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

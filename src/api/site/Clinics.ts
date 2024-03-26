@@ -17,12 +17,16 @@ const clinicsApi = createApi({
     }),
     endpoints: (builder) => ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getAllClinics: builder.query<IClinics, void>({
-            query: () => "public/clinics/all",
+        getAllClinics: builder.query<IClinics, { search?: string | null; province?: string | null; status?: string | null; page?: number; resultLimit?: number }>({
+            query: ({ search, status, page, resultLimit, province }) => ({
+                url: 'public/clinics/all',
+                method: 'GET',
+                params: { search, status, page, resultLimit, province },
+            }),
             providesTags: ['CLINICS']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        searchSpecialty: builder.mutation<IClinics, { search: string | null; province: string | null; status: string | null; page: number; resultLimit: number }>({
+        searchClinics: builder.mutation<IClinics, { search: string | null; province: string | null; status: string | null; page: number; resultLimit: number }>({
             query: ({ search, status, page, resultLimit, province }) => ({
                 url: 'public/clinics/all',
                 method: 'GET',
@@ -77,7 +81,7 @@ export const {
     useAddClinicsMutation,
     useUpdateClinicsMutation,
     useDeleteClinicsMutation,
-    useSearchSpecialtyMutation
+    useSearchClinicsMutation
 
 } = clinicsApi;
 

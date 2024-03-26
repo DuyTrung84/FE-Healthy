@@ -5,6 +5,9 @@ import { LstCategories } from '../../interface/ListCategories';
 import { convertToSlug } from '../../utils/convertToSlug';
 import { useGetAllSpecialtyQuery } from '../../api/admin/Specialty';
 import { useGetAllClinicsQuery } from '../../api/site/Clinics';
+import { useSearchDoctorsMutation } from '../../api/admin/Doctor';
+import { useEffect } from 'react';
+import { Spin } from 'antd';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -12,8 +15,13 @@ const Home = () => {
     const handleClick2 = (slug: string, data: LstCategories) => {
         navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
     };
-    const { data: specialty } = useGetAllSpecialtyQuery(undefined);
-    const { data: clinics } = useGetAllClinicsQuery();
+    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: '', status: "1", page: 0, resultLimit: 10 });
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: '', province: '', status: '1', page: 0, resultLimit: 10 });
+    const [search, { data: doctor, isLoading: loadingDoctor }] = useSearchDoctorsMutation();
+
+    useEffect(() => {
+        search({ name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
+    }, [search])
 
 
     const data = [
@@ -34,12 +42,8 @@ const Home = () => {
 
     const newClinics = clinics ? clinics?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const doctor: any = [
-        { imageUrl: "https://cdn.bookingcare.vn/fo/w128/2022/07/18/160559-161139-bs-huyen.png", name: "Bác sĩ 1", desc: "Bác sĩ 1 ahihii" },
-        { imageUrl: "https://cdn.bookingcare.vn/fo/w128/2021/05/20/141836-bs-le-quoc-viet.png", name: "Bác sĩ 2", desc: "Bác sĩ 2 ahihii" },
-        { imageUrl: "https://cdn.bookingcare.vn/fo/w128/2017/12/23/162751bac-si-nguyen-xuan-thanh.jpg", name: "Bác sĩ 3", desc: "Bác sĩ 3 ahihii" },
-        { imageUrl: "https://cdn.bookingcare.vn/fo/w128/2017/12/22/155419nguyen-thi-kim-loan.jpg", name: "Bác sĩ 4", desc: "Bác sĩ 4 ahihii" },
-    ]
+
+    const newDoctor = doctor ? doctor?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "doctor", name: item.doctorName, descriptionHtml: item.specialityName })) : [];
 
 
     return (
@@ -68,7 +72,9 @@ const Home = () => {
                         <button onClick={() => handleClick2('specialty', newSpecialty)}>{t('more')}</button>
                     </div>
                 </div>
-                <SlickCarousel slides={newSpecialty} />
+                <Spin spinning={loadingSpecialty}>
+                    <SlickCarousel slides={newSpecialty} />
+                </Spin>
             </div>
 
             <div className="max-w-screen-xl mx-44 mt-20">
@@ -78,7 +84,9 @@ const Home = () => {
                         <button onClick={() => handleClick2('clinics', newClinics)} >{t('more')} </button>
                     </div>
                 </div>
-                <SlickCarousel slides={newClinics} />
+                <Spin spinning={loadingClinics}>
+                    <SlickCarousel slides={newClinics} />
+                </Spin>
             </div>
 
             <div className="max-w-screen-xl mx-44 mt-20">
@@ -88,7 +96,9 @@ const Home = () => {
                         <button onClick={() => handleClick2('doctor', doctor)} >{t('more')} </button>
                     </div>
                 </div>
-                <SlickCarousel slides={doctor} />
+                <Spin spinning={loadingDoctor}>
+                    <SlickCarousel slides={newDoctor} />
+                </Spin>
             </div>
         </div>
 

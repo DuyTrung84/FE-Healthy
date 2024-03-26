@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AiFillCustomerService, AiOutlineCaretDown, AiOutlineHistory } from 'react-icons/ai';
-import { LstCategories } from '../../interface/ListCategories';
 import { useNavigate } from 'react-router-dom';
 import { convertToSlug } from '../../utils/convertToSlug';
-import { useGetAllSpecialtyQuery } from '../../api/admin/Specialty';
-import { useGetAllClinicsQuery } from '../../api/site/Clinics';
+
 
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,12 +11,6 @@ const Header = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
-    const { data } = useGetAllSpecialtyQuery(undefined);
-    const { data: clinics } = useGetAllClinicsQuery();//Phòng khám
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const specialty: any = data?.data?.data
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const clinicsData: any = clinics?.data?.data
 
     const changeLanguage = (language: string) => {
         i18n.changeLanguage(language);
@@ -35,12 +27,8 @@ const Header = () => {
     };
 
 
-    const handleClick2 = (slug: string, data: LstCategories) => {
-        navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
-    };
-
-    const handleClick3 = (slug: string, data: LstCategories) => {
-        navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
+    const handleClick = (slug: string) => {
+        navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { slug } });
     };
 
     return (
@@ -68,15 +56,15 @@ const Header = () => {
                                 </svg>
                             </button>
                         </div> */}
-                        <button className='text-start leading-5' onClick={() => handleClick2('specialty', specialty)}>
+                        <button className='text-start leading-5' onClick={() => handleClick('specialty')}>
                             <p className='text-[13px] font-bold'>{t('header.specialty')}</p>
                             <p className='text-[10px]'>{t('header.searchDoctor')}</p>
                         </button>
-                        <a href="" className='text-start leading-5' onClick={() => handleClick3('clinics', clinicsData)}>
+                        <a href="" className='text-start leading-5' onClick={() => handleClick('clinics')}>
                             <p className='text-[13px] font-bold'>{t('header.medFacilities')}</p>
                             <p className='text-[10px]'>{t('header.hospital')}</p>
                         </a>
-                        <a href="" className='text-start leading-5'>
+                        <a href="" className='text-start leading-5' onClick={() => handleClick('doctor')}>
                             <p className='text-[13px] font-bold'>{t('header.doctor')}</p>
                             <p className='text-[10px]'>{t('header.choosingDoctor')}</p>
                         </a>

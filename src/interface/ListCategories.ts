@@ -5,4 +5,6 @@ export interface LstCategories {
     descriptionHtml?: string;
     cateCode?: string;
     address?: string;
+    specialityName?: string;
+    doctorName?: string;
 }
