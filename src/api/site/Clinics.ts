@@ -58,10 +58,11 @@ const clinicsApi = createApi({
             }),
             invalidatesTags: ['CLINICS']
         }),
-        deleteClinics: builder.mutation<void, number | string>({
-            query: (id) => ({
+        deleteClinics: builder.mutation<void, { id: number | string; status: string }>({
+            query: ({ id, status }) => ({
                 url: `/admin/clinics/delete/${id}`,
                 method: "DELETE",
+                params: { status }
             }),
             invalidatesTags: ['CLINICS']
         }),

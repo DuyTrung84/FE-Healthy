@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button, Table, Space, Dropdown, Modal, Tag, Select, Input, Form } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { AiOutlineLock } from "react-icons/ai";
+import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
@@ -22,19 +22,22 @@ const AccountManage = () => {
         searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
     }, []);
 
-    const showDeleteConfirm = (id: string | undefined) => {
+    const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
+            const contentMessage = status === "1"
+                ? 'Bạn có muốn chuyển trạng thái tài khoản này sang Active không??'
+                : 'Bạn có muốn chuyển trạng thái tài khoản này sang Inactive không??';
             confirm({
                 title: 'Xác nhận xoá',
                 icon: <ExclamationCircleFilled />,
-                content: 'Bạn có muốn khoá khoản này không??',
+                content: contentMessage,
                 okText: 'Có',
                 cancelText: 'Không',
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await deleteAccount(id);
-                        Notifn("success", "Thành công", "Đã khoá tài khoản thành công!");
+                        await deleteAccount({ id, status });
+                        Notifn("success", "Thành công", "Đã chuyển trạng thái tài khoản thành công!");
                         form.submit();
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi khoá");
@@ -131,13 +134,16 @@ const AccountManage = () => {
             render: (_text, record) => {
                 const items: MenuItemType[] = [
                     {
-                        key: 'delete',
+                        key: record.status === "1" ? 'active' : 'inactive',
                         label: (
-                            <button onClick={() => { showDeleteConfirm(record.id) }} disabled={record.status === 0}>
-                                <p className=""><AiOutlineLock className="inline-block mr-2 text-xl " />Khoá</p>
+                            <button onClick={() => { showDeleteConfirm(record.id, record.status === "1" ? "0" : "1") }}>
+                                <p className="">
+                                    {record.status === "1" ? <AiOutlineLock className="inline-block mr-2 text-xl" /> : <AiOutlineUnlock className="inline-block mr-2 text-xl" />}
+                                    {record.status === "1" ? 'Inactive' : 'Active'}
+                                </p>
                             </button>
                         ),
-                    },
+                    }
                 ];
                 return (
                     <div className="flex gap-2">
@@ -175,6 +181,7 @@ const AccountManage = () => {
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Vai trò:</p>
                             <Form.Item name="role">
                                 <Select placeholder="---Select---" className="w-full" loading={loadingRole}>
+                                    <Select.Option value="">All</Select.Option>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {selectRole?.data?.map((role: any) => (
                                         <Option key={role.value} value={role.value}>{role.name}</Option>

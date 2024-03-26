@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button, Table, Space, Dropdown, Modal, Tag, Form, Input, Select } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
@@ -24,21 +24,25 @@ const ClinicsManage = () => {
         searchClinics({ search: "", province: "", status: "", page: 0, resultLimit: 10 });
     }, []);
 
-    const showDeleteConfirm = (id: string | undefined) => {
+    const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
+            const contentMessage = status === "1"
+                ? 'Bạn có muốn chuyển trạng thái phòng khám này sang Active không??'
+                : 'Bạn có muốn chuyển trạng thái phòng khám này sang Inactive không??';
             confirm({
-                title: 'Xác nhận xoá',
+                title: 'Xác nhận đổi trạng thái',
                 icon: <ExclamationCircleFilled />,
-                content: 'Bạn có muốn xoá phòng khám này không??',
+                content: contentMessage,
                 okText: 'Có',
                 cancelText: 'Không',
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await deleteClinics(id);
-                        Notifn("success", "Thành công", "Đã xoá phòng khám thành công");
+                        await deleteClinics({ id, status });
+                        searchClinics({ search: "", province: "", status: "", page: 0, resultLimit: 10 });
+                        Notifn("success", "Thành công", "Đã đổi trạng thái phòng khám thành công");
                     } catch (error) {
-                        Notifn("error", "Lỗi", "Lỗi xoá");
+                        Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }
                 },
             });
@@ -125,13 +129,16 @@ const ClinicsManage = () => {
                         ),
                     },
                     {
-                        key: 'delete',
+                        key: record.status === "1" ? 'active' : 'inactive',
                         label: (
-                            <button onClick={() => { showDeleteConfirm(record.id) }}>
-                                <p className=""><AiOutlineDelete className="inline-block mr-2 text-xl " />Xoá</p>
+                            <button onClick={() => { showDeleteConfirm(record.id, record.status === "1" ? "0" : "1") }}>
+                                <p className="">
+                                    {record.status === "1" ? <AiOutlineLock className="inline-block mr-2 text-xl" /> : <AiOutlineUnlock className="inline-block mr-2 text-xl" />}
+                                    {record.status === "1" ? 'Inactive' : 'Active'}
+                                </p>
                             </button>
                         ),
-                    },
+                    }
                 ];
                 return (
                     <div className="flex gap-2">
@@ -169,6 +176,7 @@ const ClinicsManage = () => {
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái:</p>
                             <Form.Item name="status">
                                 <Select placeholder="---Select---" className="w-full">
+                                    <Select.Option value="">All</Select.Option>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {statusData?.data?.map((status: any) => (
                                         <Select.Option key={status.value} value={status.value}>{status.name}</Select.Option>
@@ -177,9 +185,10 @@ const ClinicsManage = () => {
                             </Form.Item>
                         </div>
                         <div>
-                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái:</p>
+                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Quận/Huyện:</p>
                             <Form.Item name="province">
                                 <Select placeholder="---Select---">
+                                    <Select.Option value="">All</Select.Option>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {provinces?.data?.map((province: any) => (
                                         <Select.Option key={province.code} value={province.code}>{province.name}</Select.Option>

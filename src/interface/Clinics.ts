@@ -5,7 +5,7 @@ export interface IClinics {
     imageUrl?: string;
     imageObjectId?: string;
     descriptionHtml?: string;
-    status?: number;
+    status?: string;
     address?: string;
     hasChildren?: number;
     data?: IClinics

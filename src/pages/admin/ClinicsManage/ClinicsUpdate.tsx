@@ -8,7 +8,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Notifn } from "../../../components/Notification";
 import { IClinics } from "../../../interface/Clinics";
-import { useAddClinicsMutation, useGetAllClinicsQuery, useGetByIdClinicsQuery } from "../../../api/site/Clinics";
+import { useGetAllClinicsQuery, useGetByIdClinicsQuery, useUpdateClinicsMutation } from "../../../api/site/Clinics";
 import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../../api/share/area";
 import { Option } from "antd/es/mentions";
 
@@ -30,7 +30,7 @@ const ClinicsUpdate = () => {
     const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
     const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
     const { data: status } = useGetStatusQuery() //status
-    const [addClinic] = useAddClinicsMutation();
+    const [addClinic] = useUpdateClinicsMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
 
     useEffect(() => {
@@ -73,7 +73,7 @@ const ClinicsUpdate = () => {
             delete values.imageObjectId;
             const request = {
                 ...values,
-                status: 1
+                id: id
             };
             const response = await addClinic(request);
             const responseData = response?.data?.data;

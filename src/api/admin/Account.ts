@@ -33,10 +33,11 @@ const accountApi = createApi({
             }),
             invalidatesTags: ['ACCOUNT']
         }),
-        deleteAccount: builder.mutation<void, number | string>({
-            query: (id) => ({
+        deleteAccount: builder.mutation<void, { id: string; status: string }>({
+            query: ({ id, status }) => ({
                 url: `${id}`,
                 method: "DELETE",
+                params: { status }
             }),
             invalidatesTags: ['ACCOUNT']
         }),

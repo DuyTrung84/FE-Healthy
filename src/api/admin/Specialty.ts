@@ -28,7 +28,6 @@ const specialtyApi = createApi({
                 method: 'GET',
                 params: { name, status, page, resultLimit },
             }),
-
             invalidatesTags: ['SPECIALTY']
         }),
         getByIdSpecialty: builder.query<ISpecialty, number | string>({
@@ -51,10 +50,11 @@ const specialtyApi = createApi({
             }),
             invalidatesTags: ['SPECIALTY']
         }),
-        deleteSpecialty: builder.mutation<void, number | string>({
-            query: (id) => ({
+        deleteSpecialty: builder.mutation<void, { id: string; status: string }>({
+            query: ({ id, status }) => ({
                 url: `/admin/specialities/delete/${id}`,
                 method: "DELETE",
+                params: { status }
             }),
             invalidatesTags: ['SPECIALTY']
         }),

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { Button, Table, Space, Dropdown, Modal, Form, Select, Input, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { useDeleteSpecialtyMutation, useSearchAllSpecialtyMutation } from "../../../api/admin/Specialty";
 import { Notifn } from "../../../components/Notification";
@@ -19,25 +19,28 @@ const SpecialtyManage = () => {
     const { data: statusData } = useGetStatusQuery()
 
     useEffect(() => {
-        // Gọi API để tìm kiếm với giá trị ban đầu
         searchSpecialty({ name: "", status: "", page: 0, resultLimit: 10 });
     }, []);
 
-    const showDeleteConfirm = (id: string | undefined) => {
+    const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
+            const contentMessage = status === "1"
+                ? 'Bạn có muốn chuyển trạng thái chuyên khoa này sang Active không??'
+                : 'Bạn có muốn chuyển trạng thái chuyên khoa này sang Inactive không??';
             confirm({
-                title: 'Xác nhận xoá',
+                title: 'Xác nhận chuyển trạng thái',
                 icon: <ExclamationCircleFilled />,
-                content: 'Bạn có muốn xoá chuyên khoa này không??',
+                content: contentMessage,
                 okText: 'Có',
                 cancelText: 'Không',
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await deleteSpecialty(id);
-                        Notifn("success", "Thành công", "Đã xoá chuyên khoa thành công");
+                        await deleteSpecialty({ id, status });
+                        searchSpecialty({ name: "", status: "", page: 0, resultLimit: 10 });
+                        Notifn("success", "Thành công", "Đổi trạng thái thành công!!");
                     } catch (error) {
-                        Notifn("error", "Lỗi", "Lỗi xoá");
+                        Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }
                 },
             });
@@ -117,13 +120,17 @@ const SpecialtyManage = () => {
                         ),
                     },
                     {
-                        key: 'delete',
+                        key: record.status === "1" ? 'active' : 'inactive',
                         label: (
-                            <button onClick={() => { showDeleteConfirm(record.id) }}>
-                                <p className=""><AiOutlineDelete className="inline-block mr-2 text-xl " />Xoá</p>
+                            <button onClick={() => { showDeleteConfirm(record.id, record.status === "1" ? "0" : "1") }}>
+                                <p className="">
+                                    {record.status === "1" ? <AiOutlineLock className="inline-block mr-2 text-xl" /> : <AiOutlineUnlock className="inline-block mr-2 text-xl" />}
+                                    {record.status === "1" ? 'Inactive' : 'Active'}
+                                </p>
                             </button>
                         ),
-                    },
+                    }
+
                 ];
                 return (
                     <div className="flex gap-2">
@@ -161,6 +168,7 @@ const SpecialtyManage = () => {
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái:</p>
                             <Form.Item name="status">
                                 <Select placeholder="---Select---" className="w-full">
+                                    <Select.Option value="">All</Select.Option>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {statusData?.data?.map((status: any) => (
                                         <Select.Option key={status.value} value={status.value}>{status.name}</Select.Option>
