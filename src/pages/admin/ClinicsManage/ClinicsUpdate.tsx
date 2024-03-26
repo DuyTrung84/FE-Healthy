@@ -26,8 +26,8 @@ const ClinicsUpdate = () => {
     const { data: clinicsData, isLoading: dataLoading } = useGetByIdClinicsQuery(id || "")
     console.log(clinicsData)
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
-    const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
-    const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
+    const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince || "");//Quận huyện
+    const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts || "");//Phường Xã
     const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
     const { data: status } = useGetStatusQuery() //status
     const [addClinic] = useUpdateClinicsMutation();
@@ -39,12 +39,20 @@ const ClinicsUpdate = () => {
             name: clinicsData?.data?.name,
             status: clinicsData?.data?.status,
             hasChildren: clinicsData?.data?.hasChildren,
+            province: clinicsData?.data?.province,
+            district: clinicsData?.data?.district,
+            ward: clinicsData?.data?.ward,
+            address: clinicsData?.data?.addressName,
             imageObjectId: ""
         });
         if (clinicsData?.data?.imageUrl) {
             setImageUrl(clinicsData?.data?.imageUrl);
         }
-    }, [clinicsData]);
+        if (!selectedProvince && !selectedDistricts) {
+            setSelectedProvince(clinicsData?.data?.province || "");
+            setSelectedDistricts(clinicsData?.data?.district || "");
+        }
+    }, [clinicsData, selectedProvince, selectedDistricts]);
 
     const handleProvinceChange = (value: string) => {
         setSelectedProvince(value); // Cập nhật mã tỉnh/thành phố được chọn

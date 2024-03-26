@@ -10,5 +10,9 @@ export interface IClinics {
     hasChildren?: number;
     data?: IClinics
     currentPage?: number;
-    totalItems?: number
+    totalItems?: number;
+    province?: string;
+    district?: string;
+    ward?: string;
+    addressName?: string;
 }
