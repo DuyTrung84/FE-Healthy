@@ -94,9 +94,9 @@ const SpecialtyManage = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (status: number) => (
-                <Tag color={status === 0 ? 'red' : 'green'}>
-                    {status === 0 ? 'INACTIVE' : 'ACTIVE'}
+            render: (status: string) => (
+                <Tag color={status === "0" ? 'red' : 'green'}>
+                    {status === "0" ? 'INACTIVE' : 'ACTIVE'}
                 </Tag>
             ),
             width: 100
