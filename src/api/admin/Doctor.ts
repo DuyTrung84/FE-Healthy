@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ISpecialty } from "../../interface/Specialty";
 
 const doctorApi = createApi({
     reducerPath: "doctor",
@@ -24,13 +23,16 @@ const doctorApi = createApi({
             }),
             invalidatesTags: ['DOCTOR']
         }),
-        getByIdDoctor: builder.query<ISpecialty, number | string>({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getByIdDoctor: builder.query<any, number | string>({
             query: (id) => "/public/doctors/get/" + id,
             providesTags: ['DOCTOR']
         }),
-        updateDoctor: builder.mutation<ISpecialty, ISpecialty>({
-            query: (doctor: ISpecialty) => ({
-                url: `admin/doctors/update`,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        updateDoctor: builder.mutation<any, any>({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            query: (doctor: any) => ({
+                url: `admin/user/update`,
                 method: "PUT",
                 body: doctor
             }),
@@ -43,7 +45,7 @@ const doctorApi = createApi({
 export const {
     useGetByIdDoctorQuery,
     useSearchDoctorsMutation,
-    useUpdateDoctorMutation
+    useUpdateDoctorMutation,
 
 } = doctorApi;
 

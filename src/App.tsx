@@ -8,6 +8,7 @@ import { Skeleton } from 'antd';
 const Signin = React.lazy(() => import('./pages/auth/Signin'));
 const Signup = React.lazy(() => import('./pages/auth/Signup'));
 const EmailVerify = React.lazy(() => import('./pages/auth/EmailVerify'));
+const IsCheckAdmin = React.lazy(() => import('./pages/auth/IsCheckAdmin'));
 const LayoutSite = React.lazy(() => import('./layout/site/LayoutSite'));
 const Home = React.lazy(() => import('./pages/site/Home'));
 const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
@@ -24,7 +25,9 @@ const ClinicsAdd = React.lazy(() => import('./pages/admin/ClinicsManage/ClinicsA
 const ClinicsUpdate = React.lazy(() => import('./pages/admin/ClinicsManage/ClinicsUpdate'));
 const AccountManage = React.lazy(() => import('./pages/admin/AccountManage/AccountManage'));
 const AddAccount = React.lazy(() => import('./pages/admin/AccountManage/AddAccount'));
+const UpdateDoctor = React.lazy(() => import('./pages/admin/AccountManage/UpdateDoctor'));
 const MakeAppt = React.lazy(() => import('./pages/site/MakeAppt'));
+const DoctorDetail = React.lazy(() => import('./pages/site/med-services/DoctorDetail'));
 
 function App() {
   return (
@@ -40,16 +43,20 @@ function App() {
               <Route path='co-so-y-te/:slug' element={<ClinicsDetail />} />
               <Route path='co-so-y-te/:slug/:id' element={<ClinicsChildren />} />
               <Route path='dat-lich/:id' element={<MakeAppt />} />
+              <Route path='bac-si/:slug' element={<DoctorDetail />} />
             </Route>
-            <Route path="/admin" element={<LayoutAdmin />}>
-              <Route path='quan-ly-chuyen-khoa' element={<SpecialtyManage />} />
-              <Route path='them-chuyen-khoa' element={<AddSpecialtyManage />} />
-              <Route path='sua-chuyen-khoa/:id' element={<UpdateSpecialty />} />
-              <Route path='quan-ly-phong-kham' element={<ClinicsManage />} />
-              <Route path='them-phong-kham' element={<ClinicsAdd />} />
-              <Route path='sua-phong-kham/:id' element={<ClinicsUpdate />} />
-              <Route path='quan-ly-tai-khoan' element={<AccountManage />} />
-              <Route path='them-tai-khoan' element={<AddAccount />} />
+            <Route element={<IsCheckAdmin />}>
+              <Route path="/admin" element={<LayoutAdmin />}>
+                <Route path='quan-ly-chuyen-khoa' element={<SpecialtyManage />} />
+                <Route path='them-chuyen-khoa' element={<AddSpecialtyManage />} />
+                <Route path='sua-chuyen-khoa/:id' element={<UpdateSpecialty />} />
+                <Route path='quan-ly-phong-kham' element={<ClinicsManage />} />
+                <Route path='them-phong-kham' element={<ClinicsAdd />} />
+                <Route path='sua-phong-kham/:id' element={<ClinicsUpdate />} />
+                <Route path='quan-ly-tai-khoan' element={<AccountManage />} />
+                <Route path='them-tai-khoan' element={<AddAccount />} />
+                <Route path='cap-nhat-bac-si/:id' element={<UpdateDoctor />} />
+              </Route>
             </Route>
             <Route path='/login' element={<Signin />} />
             <Route path='/register' element={<Signup />} />

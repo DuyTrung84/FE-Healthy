@@ -1,26 +1,28 @@
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { Button, Table, Space, Dropdown, Modal, Tag, Select, Input, Form } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
-import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { EditOutlined, ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { IAccount } from "../../../interface/Account";
 import { useDeleteAccountMutation, useGetAllAccountMutation, useGetRoleQuery } from "../../../api/admin/Account";
 import { Option } from "antd/es/mentions";
 import { useEffect } from "react";
+import { CiStethoscope } from "react-icons/ci";
 
 const { confirm } = Modal;
 const AccountManage = () => {
+    const { id } = useParams();
     const [form] = Form.useForm();
     const [searchAccount, { data, isLoading }] = useGetAllAccountMutation();
     const [deleteAccount] = useDeleteAccountMutation();
     const { data: selectRole, isLoading: loadingRole } = useGetRoleQuery();
 
+
     useEffect(() => {
-        // Gọi API để tìm kiếm tài khoản với giá trị ban đầu
         searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
-    }, []);
+    }, [searchAccount]);
 
     const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
@@ -123,7 +125,7 @@ const AccountManage = () => {
             dataIndex: 'avatar',
             key: 'avatar',
             render: (avatar: string) => (
-                <img src={`http://${avatar}`} alt="Ảnh" style={{ maxWidth: '80px', maxHeight: '80px' }} />
+                <img src={`${avatar}`} alt="Ảnh" style={{ maxWidth: '80px', maxHeight: '80px' }} />
             ),
         },
         {
@@ -143,8 +145,18 @@ const AccountManage = () => {
                                 </p>
                             </button>
                         ),
-                    }
+                    },
                 ];
+                if (record.role === "DOCTOR") {
+                    items.push({
+                        key: 'edit',
+                        label: (
+                            <a href={`cap-nhat-bac-si/${record.id}`}>
+                                <p className=""><EditOutlined className="inline-block mr-2 text-xl" />Sửa</p>
+                            </a>
+                        ),
+                    });
+                }
                 return (
                     <div className="flex gap-2">
                         <Space size="middle">

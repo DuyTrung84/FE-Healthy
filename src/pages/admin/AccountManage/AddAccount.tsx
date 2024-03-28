@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { EnterOutlined, LoadingOutlined, LockOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { EnterOutlined, LoadingOutlined, MailOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select, Upload } from 'antd';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Option } from "antd/es/mentions";
@@ -27,9 +27,9 @@ const AddAccount = () => {
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
     const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
     const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
-    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery(undefined);//Chuyên khoa
-    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
-    console.log(specialty)
+    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 10 });//Chuyên khoa
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 10 });//Phòng khám
+    console.log(clinics)
     const [addAccount] = useAddAccountMutation(); //hàm thêm tài khoản
     const [uploadImage, { isLoading }] = useUploadMutation();
 
@@ -59,8 +59,6 @@ const AddAccount = () => {
                 name: values.name,
                 lastName: values.lastName,
                 email: values.email,
-                password: values.password,
-                passwordConfirm: values.passwordConfirm,
                 doctorInfoDTO: selectedRole === "DOCTOR" ? {
                     province: values.province,
                     district: values.district,
@@ -72,19 +70,29 @@ const AddAccount = () => {
                     address: values.address,
                 } : null // Nếu không phải vai trò "DOCTOR", gán giá trị undefined cho doctorInfoDTO
             };
-            console.log(requestData)
-            const response = await addAccount(requestData);
-            const responseData = response?.data?.data;
-            const formData = new FormData();
-            if (fileImg) {
-                formData.append('image', fileImg);
-            }
-            if (responseData) {
-                formData.append('id', responseData);
-            }
-            await uploadImage(formData);
-            Notifn("success", "Thành công", "Thêm thành công");
-            navigate("/admin/quan-ly-tai-khoan");
+            addAccount(requestData)
+                .then(response => {
+                    if (response?.data) {
+                        const responseData = response?.data?.data;
+                        const formData = new FormData();
+                        if (fileImg) {
+                            formData.append('image', fileImg);
+                        }
+                        if (responseData) {
+                            formData.append('id', responseData);
+                        }
+                        uploadImage(formData);
+                        Notifn("success", "Thành công", "Thêm thành công");
+                        navigate("/admin/quan-ly-tai-khoan");
+                    } else {
+                        Notifn("error", "Lỗi", response?.error?.data?.message);
+                    }
+                })
+                .catch(error => {
+                    // Xử lý lỗi khi gọi API addAccount
+                    console.error('Error adding account:', error);
+                    Notifn("error", "Lỗi", "Thêm không thành công");
+                });
         } catch (error) {
             console.error('Error adding specialty:', error);
             Notifn("error", "Lỗi", "Thêm không thành công");
@@ -116,51 +124,8 @@ const AddAccount = () => {
                         >
                             <Input
                                 placeholder="Nhập email"
-                                prefix={<LockOutlined className=" site-form-item-icon p-3 text-blue-500" />}
+                                prefix={<MailOutlined className=" site-form-item-icon p-3 text-blue-500" />}
                             />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={12}>
-                        <Form.Item
-                            label="Mật khẩu"
-                            name="password"
-                            rules={[
-                                { required: true, message: 'Mật khẩu không được bỏ trống!' },
-                                { min: 6, message: 'Mật khẩu phải tối thiểu 6 ký tự!' },
-                                { validator: (_, value) => !/\s/.test(value) ? Promise.resolve() : Promise.reject(new Error('Mật khẩu không được chứa dấu cách!')) },
-                            ]}
-                        >
-                            <Input
-                                prefix={<LockOutlined className=" site-form-item-icon p-3 text-blue-500" />}
-                                type="password"
-                                placeholder="Mật khẩu"
-                            />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={12}>
-                        <Form.Item
-                            label="Nhập lại mật khẩu"
-                            name="passwordConfirm"
-                            dependencies={['password']}
-                            rules={[
-                                {
-                                    required: true, message: "Không được bỏ trống!!"
-                                },
-                                ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                        if (!value || getFieldValue('password') === value) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(new Error('Mật khẩu nhập lại không khớp!'));
-                                    },
-                                }),
-                            ]}
-                        >
-                            <Input prefix={<LockOutlined className="site-form-item-icon p-3 text-blue-500" />}
-                                type="password"
-                                placeholder="Nhập lại mật khẩu" />
                         </Form.Item>
                     </Col>
 
@@ -192,10 +157,13 @@ const AddAccount = () => {
                         <Form.Item
                             name="roles"
                             label="Vai trò"
-
+                            rules={[
+                                { required: true, message: 'Trường này không được bỏ trống !' },
+                            ]}
                         >
-                            <Select defaultValue="ADMIN" className="w-full h-11" loading={loadingRole}
+                            <Select className="w-full h-11" loading={loadingRole}
                                 onChange={(value) => setSelectedRole(value)}
+                                placeholder="---Select---"
                             >
                                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {selectRole?.data?.map((role: any) => (
@@ -332,7 +300,7 @@ const AddAccount = () => {
                                 >
                                     <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
                                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                        {clinics?.data?.map((role: any) => (
+                                        {clinics?.data?.data?.map((role: any) => (
                                             <Option key={role.id} value={role.id}>{role.name}</Option>
                                         ))}
                                     </Select>
@@ -348,7 +316,7 @@ const AddAccount = () => {
                                 >
                                     <Select defaultValue="---Select---" className="w-full h-11" loading={loadingSpecialty}                                    >
                                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                        {specialty?.data?.map((role: any) => (
+                                        {specialty?.data?.data?.map((role: any) => (
                                             <Option key={role.id} value={role.id}>{role.name}</Option>
                                         ))}
                                     </Select>
