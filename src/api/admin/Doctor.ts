@@ -15,11 +15,11 @@ const doctorApi = createApi({
     }),
     endpoints: (builder) => ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        searchDoctors: builder.mutation<any, { name: string | null; clinic: string | null; speciality: string | null; page: number; resultLimit: number }>({
-            query: ({ name, clinic, speciality, page, resultLimit }) => ({
+        searchDoctors: builder.mutation<any, { type: number, name: string | null; clinic: string | null; speciality: string | null; page: number; resultLimit: number }>({
+            query: ({ name, clinic, speciality, page, resultLimit, type }) => ({
                 url: 'public/doctors/all',
                 method: 'GET',
-                params: { name, clinic, speciality, page, resultLimit },
+                params: { name, clinic, speciality, page, resultLimit, type },
             }),
             invalidatesTags: ['DOCTOR']
         }),

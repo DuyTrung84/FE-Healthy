@@ -20,7 +20,7 @@ const Home = () => {
     const [search, { data: doctor, isLoading: loadingDoctor }] = useSearchDoctorsMutation();
 
     useEffect(() => {
-        search({ name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
+        search({ type: 1, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
     }, [search])
 
     const newSpecialty = specialty?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) || [];

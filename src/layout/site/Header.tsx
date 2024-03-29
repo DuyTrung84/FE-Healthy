@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AiFillCustomerService, AiOutlineCaretDown, AiOutlineHistory } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { convertToSlug } from '../../utils/convertToSlug';
 import { Link } from 'react-router-dom';
+import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { useGetAllProfileQuery } from '../../api/site/Profile';
+import { useRefreshTokenMutation } from '../../api/share/area';
 
 
 const Header = () => {
@@ -11,7 +15,23 @@ const Header = () => {
     const [, setSelectedLanguage] = useState('');
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const { error } = useGetAllProfileQuery();
+    const [refreshToken] = useRefreshTokenMutation();
 
+    useEffect(() => {
+        if (error) {
+            if ('status' in error && error.status === 401) {
+                refreshToken().unwrap().then((response) => {
+                    // Lưu token vào Local Storage
+                    localStorage.setItem('token', response.data!.token);
+                    localStorage.setItem('rfToken', response.data!.refreshToken);
+                    window.location.reload();
+                }).catch((error) => {
+                    console.error('Error refreshing token:', error);
+                });
+            }
+        }
+    }, [error]);
 
     const changeLanguage = (language: string) => {
         i18n.changeLanguage(language);
@@ -55,14 +75,14 @@ const Header = () => {
                             <p className='text-[13px] font-bold'>{t('header.specialty')}</p>
                             <p className='text-[10px]'>{t('header.searchDoctor')}</p>
                         </button>
-                        <a href="" className='text-start leading-5' onClick={() => handleClick('clinics')}>
+                        <button className='text-start leading-5' onClick={() => handleClick('clinics')}>
                             <p className='text-[13px] font-bold'>{t('header.medFacilities')}</p>
                             <p className='text-[10px]'>{t('header.hospital')}</p>
-                        </a>
-                        <a href="" className='text-start leading-5' onClick={() => handleClick('doctor')}>
+                        </button>
+                        <button className='text-start leading-5' onClick={() => handleClick('doctor')}>
                             <p className='text-[13px] font-bold'>{t('header.doctor')}</p>
                             <p className='text-[10px]'>{t('header.choosingDoctor')}</p>
-                        </a>
+                        </button>
                         <a href="" className='text-start leading-5'>
                             <p className='text-[13px] font-bold'>{t('header.package')}</p>
                             <p className='text-[10px]'>{t('header.generalEx')}</p>
@@ -76,6 +96,15 @@ const Header = () => {
                             <a className="" href='/lich-hen'>
                                 <AiOutlineHistory className="text-[#45C3D2] text-4xl" />
                             </a>
+                            {localStorage.getItem('role') !== 'USER' ? (
+                                <Link to={`/login`} className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium'>
+                                    Đăng nhập
+                                </Link>
+                            ) : (
+                                <Link to={`/ho-so-kham-benh`}>
+                                    <Avatar style={{ backgroundColor: '#45C3D2' }} size={34} icon={<UserOutlined />} />
+                                </Link>
+                            )}
                             <div className="relative">
                                 <button className="flex gap-1 items-center p-2 " onClick={toggleDropdown}>
                                     <img

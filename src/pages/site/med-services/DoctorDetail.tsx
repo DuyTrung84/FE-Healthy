@@ -63,7 +63,7 @@ const DoctorDetail = () => {
                     <Spin spinning={bookingLoading}>
                         <div className='px-4'>
                             <Select style={{ width: 150 }} value={selectedDate} onChange={handleDateChange}>
-                                {bookingData?.data.map((item: IBooking, index: number) => (
+                                {doctorData?.data?.schedules.map((item: IBooking, index: number) => (
                                     <Select.Option key={index} value={index}>{item.date}</Select.Option>
                                 ))}
                             </Select>
@@ -74,8 +74,8 @@ const DoctorDetail = () => {
                                         Lịch khám
                                     </h3>
                                     <div className='grid grid-cols-4 gap-3'>
-                                        {bookingData?.data[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
-                                            <a key={index} className='bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium'>
+                                        {doctorData?.data?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
+                                            <a key={index} className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 1 ? 'pointer-events-none opacity-50' : ''}`}>
                                                 {`${schedule.startTime}-${schedule.endTime}`}
                                             </a>
                                         ))}
@@ -94,7 +94,10 @@ const DoctorDetail = () => {
                             <p> {doctorData?.data?.address} {doctorData?.data?.wardName} - {doctorData?.data?.districtName} - {doctorData?.data?.provinceName}</p>
                         </div>
                         <p className='border-b border-gray-200 py-2'>
-                            <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>300.000đ
+                            <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>{doctorData?.data?.note}
+                            <div className="p-2 bg-gray-100 border border-gray-300 text-sm my-1">
+                                <p className="text-gray-600">{doctorData?.data?.paymentMethod}</p>
+                            </div>
                         </p>
                         <div>
                             <p className='mr-1'>

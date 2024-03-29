@@ -23,6 +23,15 @@ const bookingApi = createApi({
             }),
             providesTags: ['BOOKING']
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        searchBooking: builder.mutation<any, string>({
+            query: (id: string) => ({
+                url: `public/schedules/get`,
+                method: 'GET',
+                params: { id },
+            }),
+            invalidatesTags: ['BOOKING']
+        }),
 
     }),
 });
@@ -30,6 +39,7 @@ const bookingApi = createApi({
 
 export const {
     useGetBookingQuery,
+    useSearchBookingMutation
 } = bookingApi;
 
 export const bookingApiReducer = bookingApi.reducer;

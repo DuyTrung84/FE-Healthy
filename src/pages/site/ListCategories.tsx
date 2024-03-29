@@ -35,7 +35,7 @@ const ListCategories = () => {
         } else if (data.slug === "specialty") {
             searchSpecialty({ name: '', status: '1', page: currentPage - 1, resultLimit: 10 });
         } else if (data.slug === "doctor") {
-            searchDoctor({ name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
+            searchDoctor({ type: 1, name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
         }
     }, [data.slug, currentPage, searchSpecialty, searchClinics, searchDoctor]);
 
@@ -74,7 +74,7 @@ const ListCategories = () => {
         } else if (data.slug === "specialty") {
             searchSpecialty({ name: values.search, status: '1', page: currentPage - 1, resultLimit: 10 });
         } else if (data.slug === "doctor") {
-            searchDoctor({ name: values.search, clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
+            searchDoctor({ type: 1, name: values.search, clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
         }
     };
 
@@ -84,7 +84,7 @@ const ListCategories = () => {
         } else if (data.slug === "specialty") {
             searchSpecialty({ name: '', status: '1', page: currentPage - 1, resultLimit: 10 });
         } else if (data.slug === "doctor") {
-            searchDoctor({ name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
+            searchDoctor({ type: 1, name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
         }
         form.resetFields();
     }

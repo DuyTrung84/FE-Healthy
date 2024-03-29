@@ -13,7 +13,7 @@ const LayoutSite = React.lazy(() => import('./layout/site/LayoutSite'));
 const Home = React.lazy(() => import('./pages/site/Home'));
 const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
 const AppointmentHist = React.lazy(() => import('./pages/site/AppointmentHist'));
-const MedExamination = React.lazy(() => import('./pages/site/med-services/MedExamination'));
+const MedExamination = React.lazy(() => import('./pages/site/med-services/SpecialtyDetail'));
 const ClinicsDetail = React.lazy(() => import('./pages/site/med-services/ClinicsDetail'))
 const ClinicsChildren = React.lazy(() => import('./pages/site/med-services/ClinicsChildren'))
 const LayoutAdmin = React.lazy(() => import('./layout/admin/LayoutAdmin'));
@@ -28,6 +28,10 @@ const AddAccount = React.lazy(() => import('./pages/admin/AccountManage/AddAccou
 const UpdateDoctor = React.lazy(() => import('./pages/admin/AccountManage/UpdateDoctor'));
 const MakeAppt = React.lazy(() => import('./pages/site/MakeAppt'));
 const DoctorDetail = React.lazy(() => import('./pages/site/med-services/DoctorDetail'));
+const Profile = React.lazy(() => import('./pages/site/profile/Profile'))
+const LstProfile = React.lazy(() => import('./pages/site/profile/LstProfile'))
+const AddProfile = React.lazy(() => import('./pages/site/profile/AddProfile'))
+const UpdateProfile = React.lazy(() => import('./pages/site/profile/UpdateProfile'))
 
 function App() {
   return (
@@ -44,6 +48,11 @@ function App() {
               <Route path='co-so-y-te/:slug/:id' element={<ClinicsChildren />} />
               <Route path='dat-lich/:id' element={<MakeAppt />} />
               <Route path='bac-si/:slug' element={<DoctorDetail />} />
+              <Route path="ho-so-kham-benh" element={<Profile />}>
+                <Route index element={<LstProfile />} />
+                <Route path="them" element={<AddProfile />} />
+                <Route path="sua/:id" element={<UpdateProfile />} />
+              </Route>
             </Route>
             <Route element={<IsCheckAdmin />}>
               <Route path="/admin" element={<LayoutAdmin />}>

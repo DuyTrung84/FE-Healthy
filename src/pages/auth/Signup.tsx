@@ -16,18 +16,14 @@ const Signup = () => {
         }
         signup(values)
             .unwrap()
-            .then((response) => {
-                if (response.status === 'fails') {
-                    if (response.errors.email) {
-                        Notifn("error", "Lưu ý", "Email đã tồn tại vui lòng sử dụng email khác");
-                    } else if (response.errors.phone) {
-                        Notifn("error", "Lưu ý", "Số điện thoại đã tồn tại vui lòng sử dụng số khác");
-                    }
-                } else {
-                    Notifn("success", "Thành công", "Đăng kí thành công vui lòng kiểm tra mail để xác nhận tài khoản");
-                    navigate("/login")
-                }
+            .then(() => {
+                Notifn("success", "Thành công", "Đăng kí thành công vui lòng kiểm tra mail để xác nhận tài khoản");
+                navigate("/login")
+
             })
+            .catch((error) => {
+                Notifn("warning", "Cảnh báo", error.data.message);
+            });
     };
     return (
         <section className="bg-white">
@@ -45,13 +41,12 @@ const Signup = () => {
                 <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-7">
                     <div className="max-w-2xl">
                         <Link className="block text-blue-600" to="/">
-                            <span className="sr-only">Home</span>
-                            <img src="https://res.cloudinary.com/dxzlnojyv/image/upload/v1700016144/xhfmztmgbyqu1ezm71dh.png" className="w-36 mb-10" alt="" />
+                            <img src="https://cdn.youmed.vn/wp-content/themes/youmed/images/favicon.svg" className="w-20" alt="" />
                         </Link>
-                        <h1 className="mt-6 text-xl font-bold text-blue-500 sm:text-3xl md:text-4xl">Chào mừng bạn đến với BEWORK!!</h1>
-                        <p className="mt-4 leading-relaxed text-gray-800">
+                        <h1 className="mt-6 text-xl font-bold text-blue-500 sm:text-3xl md:text-4xl">Chào mừng bạn đến với Healthy-Care!!</h1>
+                        {/* <p className="mt-4 leading-relaxed text-gray-800">
                             Đăng ký tài khoản nhà tuyển dụng để tìm được những ững viên phù hợp nhất với công ty của bạn
-                        </p>
+                        </p> */}
                         <Form
                             form={form}
                             name="normal_login"
