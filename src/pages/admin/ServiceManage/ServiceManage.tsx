@@ -1,26 +1,27 @@
 import { Link } from "react-router-dom"
-import { Button, Table, Space, Dropdown, Modal, Tag, Select, Input, Form } from 'antd';
+import { Button, Table, Space, Dropdown, Modal, Input, Form, Select } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
-import { EditOutlined, ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { IAccount } from "../../../interface/Account";
-import { useDeleteAccountMutation, useGetAllAccountMutation, useGetRoleQuery } from "../../../api/admin/Account";
-import { Option } from "antd/es/mentions";
 import { useEffect } from "react";
+import { useSearchDoctorsMutation } from "../../../api/admin/Doctor";
+import { useGetAllClinicsQuery } from "../../../api/site/Clinics";
+import { useGetAllSpecialtyQuery } from "../../../api/admin/Specialty";
 
 const { confirm } = Modal;
-const AccountManage = () => {
+const ServiceManage = () => {
     const [form] = Form.useForm();
-    const [searchAccount, { data, isLoading }] = useGetAllAccountMutation();
-    const [deleteAccount] = useDeleteAccountMutation();
-    const { data: selectRole, isLoading: loadingRole } = useGetRoleQuery();
+    const [searchService, { data, isLoading }] = useSearchDoctorsMutation();
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 10 });//Phòng khám
+    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 10 });//Chuyên khoa
 
 
     useEffect(() => {
-        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
-    }, [searchAccount]);
+        searchService({ type: 2, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
+    }, [searchService]);
 
     const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
@@ -36,7 +37,7 @@ const AccountManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await deleteAccount({ id, status });
+
                         Notifn("success", "Thành công", "Đã chuyển trạng thái tài khoản thành công!");
                         form.submit();
                     } catch (error) {
@@ -48,26 +49,30 @@ const AccountManage = () => {
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSearch = (values: any) => {
-        searchAccount({
-            keyword: values.keyword,
-            role: values.role,
+        searchService({
+            type: 2,
+            name: values.name,
+            clinic: values.clinicsId,
+            speciality: values.specialitiesId,
             page: 0,
             resultLimit: 10
-        });
+        })
     };
 
     const handleReset = () => {
         form.resetFields();
-        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
+        searchService({ type: 2, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
     };
 
     const handlePaginationChange = (currentPage: number, pageSize?: number) => {
-        searchAccount({
-            keyword: form.getFieldValue('keyword'),
-            role: form.getFieldValue('role'),
-            page: currentPage - 1, // Trừ 1 vì API thường sử dụng index bắt đầu từ 0
-            resultLimit: pageSize || 10, // Số lượng mục trên mỗi trang
-        });
+        searchService({
+            type: 2,
+            name: form.getFieldValue('name'),
+            clinic: form.getFieldValue('clinicsId'),
+            speciality: form.getFieldValue('keywspecialitiesIdord'),
+            page: currentPage - 1,
+            resultLimit: pageSize || 10
+        })
     };
     const columns: ColumnsType<IAccount> = [
         {
@@ -77,53 +82,36 @@ const AccountManage = () => {
             render: (_text, _record, index) => index + 1,
         },
         {
-            title: 'Tên người dùng',
-            dataIndex: 'name',
-            key: 'name',
+            title: 'Tên dịch vụ',
+            dataIndex: 'doctorName',
+            key: 'doctorName',
 
         },
         {
-            title: 'Email tài khoản',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Chuyên khoa',
+            dataIndex: 'specialityName',
+            key: 'specialityName',
 
         },
         {
-            title: 'Vai trò',
-            dataIndex: 'role',
-            key: 'role',
-            render: (role: string) => {
-                let tagColor: string;
-                if (role === 'ADMIN') {
-                    tagColor = 'gold';
-                } else if (role === 'USER') {
-                    tagColor = 'blue';
-                } else if (role === 'DOCTOR') {
-                    tagColor = 'cyan';
-                } else {
-                    tagColor = 'default_color';
-                }
-                return <Tag color={tagColor}>{role}</Tag>;
-            },
-            width: 100
+            title: 'Chuyên khoa',
+            dataIndex: 'clinicName',
+            key: 'clinicName',
+            width: 400
+
         },
         {
-            title: 'Trạng thái',
-            dataIndex: 'status',
-            key: 'status',
-            render: (status: string) => (
-                <Tag color={status === "0" ? 'red' : 'green'}>
-                    {status === "0" ? 'INACTIVE' : 'ACTIVE'}
-                </Tag>
-            ),
-            width: 100
+            title: 'Giá',
+            dataIndex: 'note',
+            key: 'note',
+
         },
         {
             title: 'Ảnh',
-            dataIndex: 'avatar',
-            key: 'avatar',
-            render: (avatar: string) => (
-                <img src={`${avatar}`} alt="Ảnh" style={{ maxWidth: '80px', maxHeight: '80px' }} />
+            dataIndex: 'imageUrl',
+            key: 'imageUrl',
+            render: (imageUrl: string) => (
+                <img src={`${imageUrl}`} alt="Ảnh" style={{ maxWidth: '120px', maxHeight: '120px' }} />
             ),
         },
         {
@@ -145,16 +133,6 @@ const AccountManage = () => {
                         ),
                     },
                 ];
-                if (record.role === "DOCTOR") {
-                    items.push({
-                        key: 'edit',
-                        label: (
-                            <a href={`cap-nhat-bac-si/${record.id}`}>
-                                <p className=""><EditOutlined className="inline-block mr-2 text-xl" />Sửa</p>
-                            </a>
-                        ),
-                    });
-                }
                 return (
                     <div className="flex gap-2">
                         <Space size="middle">
@@ -174,27 +152,38 @@ const AccountManage = () => {
         <div className="">
             <div className="flex justify-between mb-6">
                 <h2 className="text-2xl font-semibold">Quản lý tài khoản</h2>
-                <Button type="primary" className="bg-blue-600">
-                    <Link to="/admin/them-tai-khoan">Tạo tài khoản</Link>
-                </Button>
             </div>
             <Form onFinish={handleSearch} form={form}>
                 <div>
                     <div className="mb-8 grid grid-cols-3 gap-10 mx-8">
                         <div>
-                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên người dùng:</p>
-                            <Form.Item name="keyword">
-                                <Input placeholder="Nhập tên người dùng" />
+                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên dịch vụ:</p>
+                            <Form.Item name="name">
+                                <Input placeholder="Nhập tên dịch vụ" />
                             </Form.Item>
                         </div>
                         <div>
-                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Vai trò:</p>
-                            <Form.Item name="role">
-                                <Select placeholder="---Select---" className="w-full" loading={loadingRole}>
-                                    <Select.Option value="">All</Select.Option>
+                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên phòng khám:</p>
+                            <Form.Item
+                                name="clinicsId"
+                            >
+                                <Select placeholder="---Chọn phòng khám---" loading={loadingClinics}                                    >
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {selectRole?.data?.map((role: any) => (
-                                        <Option key={role.value} value={role.value}>{role.name}</Option>
+                                    {clinics?.data?.data?.map((role: any) => (
+                                        <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên chuyên khoa:</p>
+                            <Form.Item
+                                name="specialitiesId"
+                            >
+                                <Select placeholder="---Chọn chuyên khoa---" loading={loadingSpecialty}                                    >
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {specialty?.data?.data?.map((role: any) => (
+                                        <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -224,4 +213,4 @@ const AccountManage = () => {
     )
 }
 
-export default AccountManage
+export default ServiceManage

@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { convertToSlug } from '../../utils/convertToSlug';
 import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { useGetAllProfileQuery } from '../../api/site/Profile';
+// import { UserOutlined } from '@ant-design/icons';
 import { useRefreshTokenMutation } from '../../api/share/area';
+import { useGetAccountQuery } from '../../api/share/upload';
 
 
 const Header = () => {
@@ -15,8 +15,8 @@ const Header = () => {
     const [, setSelectedLanguage] = useState('');
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { error } = useGetAllProfileQuery();
     const [refreshToken] = useRefreshTokenMutation();
+    const { data, error } = useGetAccountQuery();
 
     useEffect(() => {
         if (error) {
@@ -93,16 +93,17 @@ const Header = () => {
                             <a className="" href="#">
                                 <AiFillCustomerService className="text-[#45C3D2] text-4xl" />
                             </a>
-                            <a className="" href='/lich-hen'>
+                            <Link className="" to={'/lich-hen'}>
                                 <AiOutlineHistory className="text-[#45C3D2] text-4xl" />
-                            </a>
+                            </Link>
                             {localStorage.getItem('role') !== 'USER' ? (
                                 <Link to={`/login`} className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium'>
                                     Đăng nhập
                                 </Link>
                             ) : (
                                 <Link to={`/ho-so-kham-benh`}>
-                                    <Avatar style={{ backgroundColor: '#45C3D2' }} size={34} icon={<UserOutlined />} />
+                                    {/* <Avatar style={{ backgroundColor: '#45C3D2' }} size={34} icon={<UserOutlined />} /> */}
+                                    <Avatar size={34} src={`http://${data?.data?.avatar}`} />
                                 </Link>
                             )}
                             <div className="relative">
