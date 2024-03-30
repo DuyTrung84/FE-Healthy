@@ -4,8 +4,8 @@ import { useAddProfileMutation } from '../../../api/site/Profile';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { useState } from 'react';
-import { useUploadMutation } from '../../../api/share/upload';
+import { useEffect, useState } from 'react';
+import { useGetAccountQuery, useUploadMutation } from '../../../api/share/upload';
 import { Notifn } from '../../../components/Notification';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,6 +19,13 @@ const AddProfile = () => {
 
     const [addProfile, { isLoading: addLoading }] = useAddProfileMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
+    const { data } = useGetAccountQuery();
+
+    useEffect(() => {
+        form.setFieldsValue({
+            email: data?.data?.email,
+        });
+    }, [form, data]);
 
     const handleUpload = async (file: File) => {
         setFile(file)

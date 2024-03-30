@@ -38,6 +38,16 @@ const doctorApi = createApi({
             }),
             invalidatesTags: ['DOCTOR']
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        updateService: builder.mutation<any, any>({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            query: (doctor: any) => ({
+                url: `admin/user/update`,
+                method: "PUT",
+                body: doctor
+            }),
+            invalidatesTags: ['DOCTOR']
+        }),
     }),
 });
 

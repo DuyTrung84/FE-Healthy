@@ -20,6 +20,7 @@ import accountApi, { accountApiReducer } from '../api/admin/Account';
 import doctorApi, { doctorApiReducer } from '../api/admin/Doctor';
 import bookingApi, { bookingApiReducer } from '../api/admin/Booking';
 import profileApi, { profileApiReducer } from '../api/site/Profile';
+import serviceApi, { serviceApiReducer } from '../api/admin/Service';
 
 // Định nghĩa kiểu cho RootState
 interface RootState {
@@ -32,6 +33,7 @@ interface RootState {
     [doctorApi.reducerPath]: ReturnType<typeof doctorApiReducer>;
     [bookingApi.reducerPath]: ReturnType<typeof bookingApiReducer>;
     [profileApi.reducerPath]: ReturnType<typeof profileApiReducer>;
+    [serviceApi.reducerPath]: ReturnType<typeof serviceApiReducer>;
 }
 
 const persistConfig = {
@@ -50,6 +52,7 @@ const rootReducer = combineReducers<RootState>({
     [doctorApi.reducerPath]: doctorApiReducer,
     [bookingApi.reducerPath]: bookingApiReducer,
     [profileApi.reducerPath]: profileApiReducer,
+    [serviceApi.reducerPath]: serviceApiReducer,
 })
 
 const middleware = [
@@ -62,6 +65,7 @@ const middleware = [
     doctorApi.middleware,
     bookingApi.middleware,
     profileApi.middleware,
+    serviceApi.middleware,
 ]
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

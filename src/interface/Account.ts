@@ -4,7 +4,7 @@ export interface IAccount {
     email?: string;
     id?: string;
     role?: string;
-    status?: string;
+    status?: string | number;
     data?: IAccount;
     currentPage?: number;
     totalItems?: number

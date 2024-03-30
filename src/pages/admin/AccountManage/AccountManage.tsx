@@ -9,6 +9,7 @@ import { IAccount } from "../../../interface/Account";
 import { useDeleteAccountMutation, useGetAllAccountMutation, useGetRoleQuery } from "../../../api/admin/Account";
 import { Option } from "antd/es/mentions";
 import { useEffect } from "react";
+import { RiServiceLine } from "react-icons/ri";
 
 const { confirm } = Modal;
 const AccountManage = () => {
@@ -146,14 +147,24 @@ const AccountManage = () => {
                     },
                 ];
                 if (record.role === "DOCTOR") {
-                    items.push({
-                        key: 'edit',
-                        label: (
-                            <a href={`cap-nhat-bac-si/${record.id}`}>
-                                <p className=""><EditOutlined className="inline-block mr-2 text-xl" />Sửa</p>
-                            </a>
-                        ),
-                    });
+                    items.push(
+                        {
+                            key: 'edit',
+                            label: (
+                                <a href={`cap-nhat-bac-si/${record.id}`}>
+                                    <p className=""><EditOutlined className="inline-block mr-2 text-xl" />Sửa</p>
+                                </a>
+                            ),
+                        },
+                        {
+                            key: 'manage',
+                            label: (
+                                <a href={`quan-ly-dich-vu/${record.id}`}>
+                                    <p className=""><RiServiceLine className="inline-block mr-2 text-xl" />Quản lý dịch vụ</p>
+                                </a>
+                            ),
+                        },
+                    );
                 }
                 return (
                     <div className="flex gap-2">

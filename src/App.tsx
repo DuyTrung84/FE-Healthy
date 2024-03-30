@@ -33,6 +33,8 @@ const LstProfile = React.lazy(() => import('./pages/site/profile/LstProfile'))
 const AddProfile = React.lazy(() => import('./pages/site/profile/AddProfile'))
 const UpdateProfile = React.lazy(() => import('./pages/site/profile/UpdateProfile'))
 const ServiceManage = React.lazy(() => import('./pages/admin/ServiceManage/ServiceManage'));
+const ServiceUpdate = React.lazy(() => import('./pages/admin/ServiceManage/ServiceUpdate'));
+const ServiceAdd = React.lazy(() => import('./pages/admin/ServiceManage/ServiceAdd'));
 
 function App() {
   return (
@@ -66,7 +68,10 @@ function App() {
                 <Route path='quan-ly-tai-khoan' element={<AccountManage />} />
                 <Route path='them-tai-khoan' element={<AddAccount />} />
                 <Route path='cap-nhat-bac-si/:id' element={<UpdateDoctor />} />
-                <Route path='quan-ly-dich-vu' element={<ServiceManage />} />
+                <Route path='quan-ly-dich-vu/:idDoctor' element={<ServiceManage />} />
+                <Route path='cap-nhat-dich-vu/:id' element={<ServiceUpdate />} />
+                <Route path='them-nhat-dich-vu/:idDoctor' element={<ServiceAdd />} />
+
               </Route>
             </Route>
             <Route path='/login' element={<Signin />} />

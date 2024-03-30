@@ -1,33 +1,33 @@
-import { Link } from "react-router-dom"
-import { Button, Table, Space, Dropdown, Modal, Input, Form, Select } from 'antd';
+import { Button, Table, Space, Dropdown, Modal, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
-import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { EditOutlined, ExclamationCircleFilled, MoreOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../components/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { IAccount } from "../../../interface/Account";
-import { useEffect } from "react";
-import { useSearchDoctorsMutation } from "../../../api/admin/Doctor";
-import { useGetAllClinicsQuery } from "../../../api/site/Clinics";
-import { useGetAllSpecialtyQuery } from "../../../api/admin/Specialty";
+import { useEffect, useState } from "react";
+import { Key } from 'antd/es/table/interface';
+import { useDeleterServiceDoctorMutation, useGetAllServiceMutation } from '../../../api/admin/Service';
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const { confirm } = Modal;
 const ServiceManage = () => {
-    const [form] = Form.useForm();
-    const [searchService, { data, isLoading }] = useSearchDoctorsMutation();
-    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 10 });//Phòng khám
-    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 10 });//Chuyên khoa
+    const { idDoctor } = useParams();
+    const [idService, setIdService] = useState<Key[]>([]);
 
+    const [doSearch, { data, isLoading }] = useGetAllServiceMutation()
+    const [deleteService] = useDeleterServiceDoctorMutation()
 
     useEffect(() => {
-        searchService({ type: 2, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
-    }, [searchService]);
+        doSearch(idDoctor || "")
+    }, [doSearch, idDoctor])
 
-    const showDeleteConfirm = (id: string | undefined, status: string) => {
+    const showDeleteConfirm = (id: string[] | Key[], status: number | undefined) => {
         if (id !== undefined) {
-            const contentMessage = status === "1"
-                ? 'Bạn có muốn chuyển trạng thái tài khoản này sang Active không??'
-                : 'Bạn có muốn chuyển trạng thái tài khoản này sang Inactive không??';
+            const contentMessage = status === 1
+                ? 'Bạn có muốn chuyển trạng thái dịch vụ này sang Active không??'
+                : 'Bạn có muốn chuyển trạng thái dịch vụ này sang Inactive không??';
             confirm({
                 title: 'Xác nhận xoá',
                 icon: <ExclamationCircleFilled />,
@@ -37,9 +37,9 @@ const ServiceManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-
-                        Notifn("success", "Thành công", "Đã chuyển trạng thái tài khoản thành công!");
-                        form.submit();
+                        deleteService({ idServicesToDelete: id, status })
+                        Notifn("success", "Thành công", "Đã chuyển trạng thái dịch vụ thành công!");
+                        doSearch(idDoctor || "")
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi khoá");
                     }
@@ -47,33 +47,8 @@ const ServiceManage = () => {
             });
         }
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleSearch = (values: any) => {
-        searchService({
-            type: 2,
-            name: values.name,
-            clinic: values.clinicsId,
-            speciality: values.specialitiesId,
-            page: 0,
-            resultLimit: 10
-        })
-    };
 
-    const handleReset = () => {
-        form.resetFields();
-        searchService({ type: 2, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
-    };
 
-    const handlePaginationChange = (currentPage: number, pageSize?: number) => {
-        searchService({
-            type: 2,
-            name: form.getFieldValue('name'),
-            clinic: form.getFieldValue('clinicsId'),
-            speciality: form.getFieldValue('keywspecialitiesIdord'),
-            page: currentPage - 1,
-            resultLimit: pageSize || 10
-        })
-    };
     const columns: ColumnsType<IAccount> = [
         {
             title: 'STT',
@@ -94,7 +69,7 @@ const ServiceManage = () => {
 
         },
         {
-            title: 'Chuyên khoa',
+            title: 'Phòng khám',
             dataIndex: 'clinicName',
             key: 'clinicName',
             width: 400
@@ -107,12 +82,15 @@ const ServiceManage = () => {
 
         },
         {
-            title: 'Ảnh',
-            dataIndex: 'imageUrl',
-            key: 'imageUrl',
-            render: (imageUrl: string) => (
-                <img src={`${imageUrl}`} alt="Ảnh" style={{ maxWidth: '120px', maxHeight: '120px' }} />
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: number) => (
+                <Tag color={status === 0 ? 'red' : 'green'}>
+                    {status === 0 ? 'INACTIVE' : 'ACTIVE'}
+                </Tag>
             ),
+            width: 100
         },
         {
             title: 'Action',
@@ -124,14 +102,22 @@ const ServiceManage = () => {
                     {
                         key: record.status === "1" ? 'active' : 'inactive',
                         label: (
-                            <button onClick={() => { showDeleteConfirm(record.id, record.status === "1" ? "0" : "1") }}>
+                            <button onClick={() => { showDeleteConfirm([record.id], record.status === 1 ? 0 : 1) }}>
                                 <p className="">
-                                    {record.status === "1" ? <AiOutlineLock className="inline-block mr-2 text-xl" /> : <AiOutlineUnlock className="inline-block mr-2 text-xl" />}
-                                    {record.status === "1" ? 'Inactive' : 'Active'}
+                                    {record.status === 1 ? <AiOutlineLock className="inline-block mr-2 text-xl" /> : <AiOutlineUnlock className="inline-block mr-2 text-xl" />}
+                                    {record.status === 1 ? 'Inactive' : 'Active'}
                                 </p>
                             </button>
                         ),
                     },
+                    {
+                        key: 'edit',
+                        label: (
+                            <Link to={`/admin/cap-nhat-dich-vu/${record.id}`}>
+                                <p className=""><EditOutlined className="inline-block mr-2 text-xl" />Sửa</p>
+                            </Link>
+                        ),
+                    }
                 ];
                 return (
                     <div className="flex gap-2">
@@ -148,65 +134,33 @@ const ServiceManage = () => {
         },
     ];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const dataSourceWithKeys = Array.isArray(data?.data) ? data?.data.map((item: any) => ({ ...item, key: item.id })) : [];
     return (
         <div className="">
-            <div className="flex justify-between mb-6">
-                <h2 className="text-2xl font-semibold">Quản lý tài khoản</h2>
+            <div className="flex justify-between">
+                <h2 className="text-2xl font-semibold">Quản lý dịch vụ (Bác sĩ: {data?.message})</h2>
+                <Button type="primary" className="bg-blue-600">
+                    <Link to={`/admin/them-nhat-dich-vu/${idDoctor}`}>Tạo tài khoản</Link>
+                </Button>
             </div>
-            <Form onFinish={handleSearch} form={form}>
-                <div>
-                    <div className="mb-8 grid grid-cols-3 gap-10 mx-8">
-                        <div>
-                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên dịch vụ:</p>
-                            <Form.Item name="name">
-                                <Input placeholder="Nhập tên dịch vụ" />
-                            </Form.Item>
-                        </div>
-                        <div>
-                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên phòng khám:</p>
-                            <Form.Item
-                                name="clinicsId"
-                            >
-                                <Select placeholder="---Chọn phòng khám---" loading={loadingClinics}                                    >
-                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {clinics?.data?.data?.map((role: any) => (
-                                        <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                        </div>
-                        <div>
-                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Tên chuyên khoa:</p>
-                            <Form.Item
-                                name="specialitiesId"
-                            >
-                                <Select placeholder="---Chọn chuyên khoa---" loading={loadingSpecialty}                                    >
-                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                    {specialty?.data?.data?.map((role: any) => (
-                                        <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                        </div>
-                    </div>
-                    <div className="mb-8 float-right mr-8 flex items-center gap-3">
-                        <Button icon={<ReloadOutlined />} onClick={handleReset}>Đặt lại</Button>
-                        <Button type="primary" icon={<SearchOutlined />} className="bg-blue-600" htmlType="submit">
-                            Tìm kiếm
-                        </Button>
-                    </div>
-                </div>
-            </Form>
+            <Button className='my-6' type='primary' danger onClick={() => showDeleteConfirm(idService, 0)} disabled={idService.length === 0}>InActive</Button>
             <Table
                 columns={columns}
-                dataSource={Array.isArray(data?.data?.data) ? data?.data?.data : []}
+                dataSource={dataSourceWithKeys}
                 loading={isLoading}
-                scroll={{ y: 240 }}
-                pagination={{
-                    current: data?.data?.currentPage ? data.data.currentPage + 1 : 1,
-                    total: data?.data?.totalItems,
-                    pageSize: 10,
-                    onChange: handlePaginationChange,
+                scroll={{ y: 540 }}
+                rowSelection={{
+                    type: 'checkbox', // Thay đổi từ 'checkbox' thành 'radio'
+                    // ...rowSelection,
+                    onChange: (selectedRowKeys) => {
+                        setIdService(selectedRowKeys)
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    getCheckboxProps: (record: any) => ({
+                        disabled: record.status === 0, // Column configuration not to be checked
+                        name: record.status,
+                    }),
                 }}
             />
         </div>

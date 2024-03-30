@@ -6,7 +6,6 @@ import { FaRegHospital } from 'react-icons/fa6';
 import { useGetAccountQuery } from '../../api/share/upload';
 import { useEffect } from 'react';
 import { useRefreshTokenMutation } from '../../api/share/area';
-import { RiServiceLine } from 'react-icons/ri';
 
 const { Header, Sider, Content } = Layout;
 
@@ -49,12 +48,6 @@ const LayoutAdmin = () => {
             icon: <UserOutlined />,
             label: 'Quản lý tài khoản',
             path: 'quan-ly-tai-khoan',
-        },
-        {
-            key: 'service-management',
-            icon: <RiServiceLine />,
-            label: 'Quản lý dịch vụ bác sĩ',
-            path: 'quan-ly-dich-vu',
         },
 
     ];
