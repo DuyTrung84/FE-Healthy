@@ -158,7 +158,8 @@ const ClinicsDetail = () => {
                                         <p>{item.wardName} - {item.districtName} - {item.provinceName}</p>
                                     </div>
                                     <p className='border-b border-gray-200 py-2'>
-                                        <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>{item.note}
+                                        <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>
+                                        <span dangerouslySetInnerHTML={{ __html: item.note || '' }}></span>
                                         <div className="p-2 bg-gray-100 border border-gray-300 text-sm my-1">
                                             <p className="text-gray-600">{item.paymentMethod}</p>
                                         </div>

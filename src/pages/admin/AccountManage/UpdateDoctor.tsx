@@ -269,7 +269,17 @@ const UpdateDoctor = () => {
                                     { required: true, message: 'Trường này không được bỏ trống !' },
                                 ]}
                             >
-                                <Input placeholder="Ghi chú" className="p-3" />
+
+                                <CKEditor
+                                    data={doctorData?.data?.note}
+                                    editor={ClassicEditor}
+                                    onChange={(_event, editor) => {
+                                        const data = editor.getData();
+                                        form.setFieldsValue({
+                                            note: data
+                                        });
+                                    }}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={24}>

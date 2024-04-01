@@ -94,7 +94,8 @@ const DoctorDetail = () => {
                             <p> {doctorData?.data?.address} {doctorData?.data?.wardName} - {doctorData?.data?.districtName} - {doctorData?.data?.provinceName}</p>
                         </div>
                         <p className='border-b border-gray-200 py-2'>
-                            <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>{doctorData?.data?.note}
+                            <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>
+                            <span dangerouslySetInnerHTML={{ __html: doctorData?.data?.note || '' }}></span>
                             <div className="p-2 bg-gray-100 border border-gray-300 text-sm my-1">
                                 <p className="text-gray-600">{doctorData?.data?.paymentMethod}</p>
                             </div>
@@ -109,14 +110,12 @@ const DoctorDetail = () => {
                             {showMore && (
                                 <div>
                                     <div className="bg-gray-100 border border-gray-300 text-sm my-2">
-                                        <div className="border-b border-gray-300 p-2">
-                                            <h1 className="text-base">Bảo hiểm Y tế nhà nước</h1>
-                                            <p className="text-gray-600">{doctorData?.data?.note}</p>
-                                        </div>
-                                        <div className="p-2">
-                                            <h1 className="text-base">Bảo hiểm bảo lãnh</h1>
-                                            <p className="text-gray-600">Phòng khám hiện chưa có đơn vị bảo hiểm bảo lãnh và không có xuất hóa đơn tài chính (hóa đơn đỏ)</p>
-                                        </div>
+                                        {doctorData.data.warrantyPolicy.map((warranty: { name: string, value: string }) => (
+                                            <div className="border border-gray-300 p-2">
+                                                <h1 className="text-base">{warranty.name}</h1>
+                                                <p className="text-gray-600">{warranty.value}</p>
+                                            </div>
+                                        ))}
                                     </div>
                                     <p onClick={toggleShowMore} className='text-blue-400 ml-1 cursor-pointer'>{showMore ? 'Ẩn' : ''}</p>
                                 </div>

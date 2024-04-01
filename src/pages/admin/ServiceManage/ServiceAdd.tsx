@@ -134,7 +134,15 @@ const ServiceAdd = () => {
                                 { required: true, message: 'Trường này không được bỏ trống !' },
                             ]}
                         >
-                            <Input placeholder="Giá" />
+                            <CKEditor
+                                editor={ClassicEditor}
+                                onChange={(_event, editor) => {
+                                    const data = editor.getData();
+                                    form.setFieldsValue({
+                                        note: data
+                                    });
+                                }}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={24}>

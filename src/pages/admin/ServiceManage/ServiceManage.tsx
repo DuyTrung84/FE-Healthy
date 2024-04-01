@@ -151,8 +151,7 @@ const ServiceManage = () => {
                 loading={isLoading}
                 scroll={{ y: 540 }}
                 rowSelection={{
-                    type: 'checkbox', // Thay đổi từ 'checkbox' thành 'radio'
-                    // ...rowSelection,
+                    type: 'checkbox',
                     onChange: (selectedRowKeys) => {
                         setIdService(selectedRowKeys)
                     },

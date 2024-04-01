@@ -20,6 +20,7 @@ const MedExamination = () => {
     const [selectedDate, setSelectedDate] = useState(0);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
+    console.log(lstDoctor)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [ltsService, setLstService] = useState<any>([]); //lưu data danh sách dịch vụ
 
@@ -144,7 +145,8 @@ const MedExamination = () => {
                                         <p>{item.wardName} - {item.districtName} - {item.provinceName}</p>
                                     </div>
                                     <p className='border-b border-gray-200 py-2'>
-                                        <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>{item.note}
+                                        <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>
+                                        <span dangerouslySetInnerHTML={{ __html: item?.note || '' }}></span>
                                         <div className="p-2 bg-gray-100 border border-gray-300 text-sm my-1">
                                             <p className="text-gray-600">{item.paymentMethod}</p>
                                         </div>
@@ -240,7 +242,8 @@ const MedExamination = () => {
                                         <p>{item.wardName} - {item.districtName} - {item.provinceName}</p>
                                     </div>
                                     <p className='border-b border-gray-200 py-2'>
-                                        <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>{item.note}
+                                        <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>
+                                        <span dangerouslySetInnerHTML={{ __html: item.note || '' }}></span>
                                         <div className="p-2 bg-gray-100 border border-gray-300 text-sm my-1">
                                             <p className="text-gray-600">{item.paymentMethod}</p>
                                         </div>

@@ -187,7 +187,6 @@ const UpdateProfile = () => {
                             ]}
                         >
                             <DatePicker
-                                // defaultValue={profileData?.data?.birthdate ? dayjs(profileData?.data?.birthdate) : undefined}
                                 showTime={false}
                                 className='w-full'
                             />

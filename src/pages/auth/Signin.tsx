@@ -6,7 +6,7 @@ import { Notifn } from '../../components/Notification';
 
 
 const Signin = () => {
-    const [signin] = useSigninMutation();
+    const [signin, { isLoading }] = useSigninMutation();
     const navigate = useNavigate()
     const onFinish = async (values: AuthSignin) => {
         try {
@@ -28,7 +28,10 @@ const Signin = () => {
                 Notifn("success", "Thành công", "Đăng nhập thành công");
                 if (role === "ADMIN") {
                     navigate("/admin");
-                } else {
+                } if (role === "DOCTOR") {
+                    navigate("/doctor");
+                }
+                else {
                     navigate("/");
                 }
             } else {
@@ -99,7 +102,7 @@ const Signin = () => {
                             </Form.Item>
 
                             <Form.Item className='text-center'>
-                                <Button type="primary" htmlType="submit" className="bg-blue-500 w-full" style={{ height: '45px' }}>
+                                <Button type="primary" htmlType="submit" className="bg-blue-500 w-full" style={{ height: '45px' }} loading={isLoading}>
                                     Đăng nhập
                                 </Button>
                                 <p className='my-2'>Hoặc</p>

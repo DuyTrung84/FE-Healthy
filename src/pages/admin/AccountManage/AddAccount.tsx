@@ -324,13 +324,21 @@ const AddAccount = () => {
                             </Col>
                             <Col span={24}>
                                 <Form.Item
-                                    label="Ghi chú"
+                                    label="Ghi chú giá khám"
                                     name="note"
                                     rules={[
                                         { required: selectedRole === "DOCTOR", message: 'Trường này không được bỏ trống !' },
                                     ]}
                                 >
-                                    <Input placeholder="Ghi chú" className="p-3" />
+                                    <CKEditor
+                                        editor={ClassicEditor}
+                                        onChange={(_event, editor) => {
+                                            const data = editor.getData();
+                                            form.setFieldsValue({
+                                                note: data
+                                            });
+                                        }}
+                                    />
                                 </Form.Item>
                             </Col>
                             <Col span={24}>

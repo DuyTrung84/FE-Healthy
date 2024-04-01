@@ -9,6 +9,7 @@ const Signin = React.lazy(() => import('./pages/auth/Signin'));
 const Signup = React.lazy(() => import('./pages/auth/Signup'));
 const EmailVerify = React.lazy(() => import('./pages/auth/EmailVerify'));
 const IsCheckAdmin = React.lazy(() => import('./pages/auth/IsCheckAdmin'));
+const IsCheckDoctor = React.lazy(() => import('./pages/auth/IsCheckDoctor'));
 const LayoutSite = React.lazy(() => import('./layout/site/LayoutSite'));
 const Home = React.lazy(() => import('./pages/site/Home'));
 const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
@@ -35,6 +36,10 @@ const UpdateProfile = React.lazy(() => import('./pages/site/profile/UpdateProfil
 const ServiceManage = React.lazy(() => import('./pages/admin/ServiceManage/ServiceManage'));
 const ServiceUpdate = React.lazy(() => import('./pages/admin/ServiceManage/ServiceUpdate'));
 const ServiceAdd = React.lazy(() => import('./pages/admin/ServiceManage/ServiceAdd'));
+const LayoutDoctor = React.lazy(() => import('./layout/doctor/LayoutDoctor'));
+const BookingManage = React.lazy(() => import('./pages/doctor/BookingManage/BookingManage'));
+const BookingAdd = React.lazy(() => import('./pages/doctor/BookingManage/BookingAdd'));
+const BookingUpdate = React.lazy(() => import('./pages/doctor/BookingManage/BookingUpdate'));
 
 function App() {
   return (
@@ -55,6 +60,13 @@ function App() {
                 <Route index element={<LstProfile />} />
                 <Route path="them" element={<AddProfile />} />
                 <Route path="sua/:id" element={<UpdateProfile />} />
+              </Route>
+            </Route>
+            <Route element={<IsCheckDoctor />}>
+              <Route path="/doctor" element={<LayoutDoctor />}>
+                <Route path='quan-ly-lich-kham' element={<BookingManage />} />
+                <Route path='them-lich-kham' element={<BookingAdd />} />
+                <Route path='sua-lich-kham/:id' element={<BookingUpdate />} />
               </Route>
             </Route>
             <Route element={<IsCheckAdmin />}>

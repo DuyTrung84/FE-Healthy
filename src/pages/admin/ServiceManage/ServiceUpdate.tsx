@@ -143,13 +143,22 @@ const ServiceUpdate = () => {
                         </Col>
                         <Col span={24}>
                             <Form.Item
-                                label="Giá"
+                                label="Ghi chú giá"
                                 name="note"
                                 rules={[
                                     { required: true, message: 'Trường này không được bỏ trống !' },
                                 ]}
                             >
-                                <Input placeholder="Giá" />
+                                <CKEditor
+                                    data={data?.data?.note}
+                                    editor={ClassicEditor}
+                                    onChange={(_event, editor) => {
+                                        const data = editor.getData();
+                                        form.setFieldsValue({
+                                            note: data
+                                        });
+                                    }}
+                                />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
