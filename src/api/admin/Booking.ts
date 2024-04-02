@@ -73,7 +73,12 @@ const bookingApi = createApi({
         getWhoPay: builder.query<any, void>({
             query: () => "public/whoPay",
             providesTags: ["BOOKING"],
-        })
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getBookingById: builder.query<any, number | string>({
+            query: (id) => "/public/schedules/detail/" + id,
+            providesTags: ['BOOKING']
+        }),
     }),
 });
 
@@ -85,7 +90,8 @@ export const {
     useUpdateBookingMutation,
     useDeleteBookingMutation,
     useGetStatusBookingQuery,
-    useGetWhoPayQuery
+    useGetWhoPayQuery,
+    useGetBookingByIdQuery
 } = bookingApi;
 
 export const bookingApiReducer = bookingApi.reducer;

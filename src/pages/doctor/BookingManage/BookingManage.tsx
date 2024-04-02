@@ -137,6 +137,7 @@ const BookingManage = () => {
                     );
                 },
             },
+            { title: 'Lượng người tối đa', dataIndex: 'maxNumber', key: 'maxNumber' },
             { title: 'Thời gian hết hạn đặt', dataIndex: 'bookingExpiredTime', key: 'bookingExpiredTime' },
             { title: 'Quyền sửa xoá', dataIndex: 'isEditable', key: 'isEditable', render: (value: number) => (value === 1 ? 'Có' : 'Không') },
             {
@@ -146,7 +147,7 @@ const BookingManage = () => {
                 render: (_text: any, _record: any) => (
                     <Space size="middle" className="text-xl">
                         {_record.isEditable === 1 ? (
-                            <Link to={`/edit-schedule/${_record.id}`}>
+                            <Link to={`/doctor/sua-lich-kham/${_record.id}`}>
                                 <AiOutlineEdit className="text-yellow-400 hover:text-yellow-300" />
                             </Link>
                         ) : (
@@ -199,6 +200,9 @@ const BookingManage = () => {
         <div className="">
             <div className="flex justify-between mb-6">
                 <h2 className="text-2xl font-semibold">Quản lý lịch khám</h2>
+                <Button type="primary" className="bg-blue-600">
+                    <Link to="/doctor/them-lich-kham">Tạo lịch khám</Link>
+                </Button>
             </div>
             <Form onFinish={handleSearch} form={form}>
                 <div>

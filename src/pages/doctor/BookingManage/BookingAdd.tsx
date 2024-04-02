@@ -15,7 +15,7 @@ const BookingAdd = () => {
     const location = useLocation();
     console.log(location)
 
-    const [addService, { isLoading }] = useAddBookingMutation(); //hàm thêm tài khoản
+    const [addService, { isLoading }] = useAddBookingMutation();
     const { data: whoPay } = useGetWhoPayQuery()
 
 
@@ -59,7 +59,7 @@ const BookingAdd = () => {
         })
             .unwrap()
             .then(() => {
-                Notifn("success", "Thành công", "Tạo dịch vụ thành công");
+                Notifn("success", "Thành công", "Tạo lịch khám thành công");
                 navigate(-1)
             })
             .catch((error) => {
