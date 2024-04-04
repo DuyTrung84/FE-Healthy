@@ -137,17 +137,31 @@ const MakeAppt = () => {
                             rules={[{ required: true, message: 'Vui lòng chọn một hồ sơ!' }]}
                         >
                             <Radio.Group>
-                                {profiles?.data.map((item: any) => (
-                                    <Radio key={item.id} value={item.id} style={{ margin: '0 8px 8px 0' }} >
-                                        <Card style={{ width: 320 }} loading={loadingProfile}>
-                                            <Meta
-                                                avatar={<Avatar src={item.imgUrl} size={46} />}
-                                                title={item.fullName}
-                                                description={item.genderValue || ''}
-                                            />
-                                        </Card>
-                                    </Radio>
-                                ))}
+                                {profiles?.data ? (
+                                    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                                    profiles.data.map((item: any) => (
+                                        <Radio key={item.id} value={item.id} style={{ margin: '0 8px 8px 0' }}>
+                                            <Card style={{ width: 320 }} loading={loadingProfile}>
+                                                <Meta
+                                                    avatar={<Avatar src={item.imgUrl} size={46} />}
+                                                    title={item.fullName}
+                                                    description={item.genderValue || ''}
+                                                />
+                                            </Card>
+                                        </Radio>
+                                    ))
+                                ) : (
+                                    <div className="flex justify-center items-center mx-auto w-[300%]">
+                                        <Empty
+                                            image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                                            imageStyle={{ height: 60 }}
+                                            description="Bạn chưa có hồ sơ bệnh nhân nào !!"
+                                            className="flex flex-col items-center"
+                                        >
+                                            <Link to={'/ho-so-kham-benh/them'} className="bg-blue-500 text-white p-2 rounded-md hover:text-white hover:bg-blue-400">Thêm hồ sơ bệnh nhân</Link>
+                                        </Empty>
+                                    </div>
+                                )}
                             </Radio.Group>
                         </Form.Item>
 
