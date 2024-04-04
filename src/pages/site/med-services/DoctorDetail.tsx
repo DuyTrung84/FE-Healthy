@@ -5,8 +5,8 @@ import { AiFillHome, AiOutlineCaretDown, AiOutlineCaretUp } from "react-icons/ai
 import { MdDateRange, MdLocationPin } from "react-icons/md";
 import { TbHandFinger } from "react-icons/tb";
 import { useState } from "react";
-import { useGetBookingQuery } from "../../../api/admin/Booking";
 import { IBooking, IBookingChildren } from "../../../interface/Booking";
+import { Link } from "react-router-dom";
 // import { useTranslation } from "react-i18next";
 
 
@@ -18,8 +18,6 @@ const DoctorDetail = () => {
     // const { t } = useTranslation();
 
     const { data: doctorData, isLoading: doctorLoading } = useGetByIdDoctorQuery(location.state.id)
-    const { data: bookingData, isLoading: bookingLoading } = useGetBookingQuery(location.state.id || "")
-    console.log(doctorData)
 
     const toggleShowMore = () => {
         setShowMore(!showMore);
@@ -60,7 +58,7 @@ const DoctorDetail = () => {
                     </div>
                 </div>
                 <div className='py-3 my-3 grid grid-cols-2 gap-16 bg-white items-start'>
-                    <Spin spinning={bookingLoading}>
+                    <Spin spinning={doctorLoading}>
                         <div className='px-4'>
                             <Select style={{ width: 150 }} value={selectedDate} onChange={handleDateChange}>
                                 {doctorData?.data?.schedules.map((item: IBooking, index: number) => (
@@ -75,9 +73,11 @@ const DoctorDetail = () => {
                                     </h3>
                                     <div className='grid grid-cols-4 gap-3'>
                                         {doctorData?.data?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
-                                            <a key={index} className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 1 ? 'pointer-events-none opacity-50' : ''}`}>
+                                            <Link
+                                                to={`/dat-lich/${schedule.id}`}
+                                                key={index} className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 1 ? 'pointer-events-none opacity-50' : ''}`}>
                                                 {`${schedule.startTime}-${schedule.endTime}`}
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </>

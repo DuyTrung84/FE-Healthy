@@ -37,6 +37,9 @@ const ListCategories = () => {
         } else if (data.slug === "doctor") {
             searchDoctor({ type: 1, name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
         }
+        else if (data.slug === "service") {
+            searchDoctor({ type: 2, name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
+        }
     }, [data.slug, currentPage, searchSpecialty, searchClinics, searchDoctor]);
 
     useEffect(() => {
@@ -47,6 +50,7 @@ const ListCategories = () => {
         } else if (doctor) {
             setSelectData(doctor);
         }
+
     }, [clinics, specialty, doctor]);
 
     useEffect(() => {
@@ -58,6 +62,8 @@ const ListCategories = () => {
             navigate(`/co-so-y-te/${convertToSlug(t(title || ""))}`, { state: { slug, id } });
         } else if (slug === "doctor") {
             navigate(`/bac-si/${convertToSlug(t(title2 || ''))}`, { state: { id } });
+        } else if (slug === "service") {
+            navigate(`/dich-vu/${convertToSlug(t(title2 || ''))}`, { state: { id } });
         } else {
             navigate(`/dich-vu-y-te/${convertToSlug(t(slug))}/${convertToSlug(t(title || ""))}`, { state: { slug, id } });
         }
@@ -75,6 +81,8 @@ const ListCategories = () => {
             searchSpecialty({ name: values.search, status: '1', page: currentPage - 1, resultLimit: 10 });
         } else if (data.slug === "doctor") {
             searchDoctor({ type: 1, name: values.search, clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
+        } else if (data.slug === "service") {
+            searchDoctor({ type: 2, name: values.search, clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
         }
     };
 
@@ -85,6 +93,9 @@ const ListCategories = () => {
             searchSpecialty({ name: '', status: '1', page: currentPage - 1, resultLimit: 10 });
         } else if (data.slug === "doctor") {
             searchDoctor({ type: 1, name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
+        }
+        else if (data.slug === "service") {
+            searchDoctor({ type: 2, name: "", clinic: "", speciality: "", page: currentPage - 1, resultLimit: 10 })
         }
         form.resetFields();
     }

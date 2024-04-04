@@ -138,12 +138,13 @@ const ClinicsDetail = () => {
                                             </h3>
                                             <div className='grid grid-cols-4 gap-3'>
                                                 {item?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
-                                                    <a
+                                                    <Link
+                                                        to={`/dat-lich/${schedule.id}`}
                                                         key={index}
                                                         className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 2 ? 'pointer-events-none opacity-50' : ''}`}
                                                     >
                                                         {`${schedule.startTime}-${schedule.endTime}`}
-                                                    </a>
+                                                    </Link>
                                                 ))}
 
                                             </div>
@@ -235,12 +236,13 @@ const ClinicsDetail = () => {
                                             </h3>
                                             <div className='grid grid-cols-4 gap-3'>
                                                 {item?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
-                                                    <a
+                                                    <Link
+                                                        to={`/dat-lich/${schedule.id}`}
                                                         key={index}
                                                         className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 2 ? 'pointer-events-none opacity-50' : ''}`}
                                                     >
                                                         {`${schedule.startTime}-${schedule.endTime}`}
-                                                    </a>
+                                                    </Link>
                                                 ))}
 
                                             </div>

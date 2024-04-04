@@ -24,7 +24,11 @@ const SlickCarousel = ({ slides }: { slides: LstCategories[] }) => {
 
     const handleLinkClick = (descriptionHtml: string | undefined, cateCode: string | undefined, title: string | undefined, id: string | undefined) => {
         if (descriptionHtml) {
-            navigate(`/bac-si/${convertToSlug(t(title || ''))}`, { state: { id } });
+            if (cateCode === "doctor") {
+                navigate(`/bac-si/${convertToSlug(t(title || ''))}`, { state: { id } });
+            } else if (cateCode === "service") {
+                navigate(`/dich-vu/${convertToSlug(t(title || ''))}`, { state: { id } });
+            }
         } else {
             // Nếu descriptionHtml không có dữ liệu, gọi hàm handleClick2 để chuyển trang
             handleClick2(cateCode || '', title || '', id || '');
@@ -60,9 +64,9 @@ const SlickCarousel = ({ slides }: { slides: LstCategories[] }) => {
     return (
         <Slider {...settings}>
             {slides.map((slide, index) => (
-                <button onClick={() => handleLinkClick(slide.descriptionHtml, slide.cateCode, slide.name, slide.id)} key={index} className='border-2 border-gray-200 p-5 rounded-2xl w-96 min-h-80 max-h-96'>
+                <button onClick={() => handleLinkClick(slide.descriptionHtml, slide.cateCode, slide.name, slide.id)} key={index} className='border-2 border-gray-200 p-5 rounded-2xl w-96 h-96'>
                     <img src={slide.imageUrl} alt={`Image ${index}`} className='rounded-lg object-cover object-top w-80 h-52 blur-0' />
-                    <h3 className="font-semibold text-lg text-gray-800 text-center mt-3">{slide.name}</h3>
+                    <h3 className="font-semibold text-lg text-gray-800 mt-3 line-clamp-2">{slide.name}</h3>
                     <p className='text-center my-2'>{slide.descriptionHtml}</p>
                 </button>
             ))}

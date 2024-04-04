@@ -37,9 +37,9 @@ const ServiceManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-                        deleteService({ idServicesToDelete: id, status })
+                        await deleteService({ idServicesToDelete: id, status })
                         Notifn("success", "Thành công", "Đã chuyển trạng thái dịch vụ thành công!");
-                        doSearch(idDoctor || "")
+                        await doSearch(idDoctor || "")
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi khoá");
                     }
@@ -141,7 +141,7 @@ const ServiceManage = () => {
             <div className="flex justify-between">
                 <h2 className="text-2xl font-semibold">Quản lý dịch vụ (Bác sĩ: {data?.message})</h2>
                 <Button type="primary" className="bg-blue-600">
-                    <Link to={`/admin/them-nhat-dich-vu/${idDoctor}`}>Tạo tài khoản</Link>
+                    <Link to={`/admin/them-nhat-dich-vu/${idDoctor}`}>Tạo dịch vụ</Link>
                 </Button>
             </div>
             <Button className='my-6' type='primary' danger onClick={() => showDeleteConfirm(idService, 0)} disabled={idService.length === 0}>InActive</Button>

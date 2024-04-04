@@ -40,6 +40,7 @@ const LayoutDoctor = React.lazy(() => import('./layout/doctor/LayoutDoctor'));
 const BookingManage = React.lazy(() => import('./pages/doctor/BookingManage/BookingManage'));
 const BookingAdd = React.lazy(() => import('./pages/doctor/BookingManage/BookingAdd'));
 const BookingUpdate = React.lazy(() => import('./pages/doctor/BookingManage/BookingUpdate'));
+const BookingResults = React.lazy(() => import('./components/BookingResults'));
 
 function App() {
   return (
@@ -56,11 +57,13 @@ function App() {
               <Route path='co-so-y-te/:slug/:id' element={<ClinicsChildren />} />
               <Route path='dat-lich/:id' element={<MakeAppt />} />
               <Route path='bac-si/:slug' element={<DoctorDetail />} />
+              <Route path='dich-vu/:slug' element={<DoctorDetail />} />
               <Route path="ho-so-kham-benh" element={<Profile />}>
                 <Route index element={<LstProfile />} />
                 <Route path="them" element={<AddProfile />} />
                 <Route path="sua/:id" element={<UpdateProfile />} />
               </Route>
+              <Route path='vnpay_return' element={<BookingResults />} />
             </Route>
             <Route element={<IsCheckDoctor />}>
               <Route path="/doctor" element={<LayoutDoctor />}>

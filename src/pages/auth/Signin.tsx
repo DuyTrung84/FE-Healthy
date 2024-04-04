@@ -28,10 +28,10 @@ const Signin = () => {
                 Notifn("success", "Thành công", "Đăng nhập thành công");
                 if (role === "ADMIN") {
                     navigate("/admin");
-                } if (role === "DOCTOR") {
+                } else if (role === "DOCTOR") {
                     navigate("/doctor");
                 }
-                else {
+                else if (role === "USER") {
                     navigate("/");
                 }
             } else {

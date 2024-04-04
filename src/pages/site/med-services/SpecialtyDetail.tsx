@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { useGetByIdSpecialtyQuery } from '../../../api/admin/Specialty';
 import { useSearchDoctorsMutation } from '../../../api/admin/Doctor';
 import { IBooking, IBookingChildren } from '../../../interface/Booking';
+import { Link } from 'react-router-dom';
 
 const MedExamination = () => {
     const [showMore, setShowMore] = useState(false);
@@ -20,7 +21,6 @@ const MedExamination = () => {
     const [selectedDate, setSelectedDate] = useState(0);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
-    console.log(lstDoctor)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [ltsService, setLstService] = useState<any>([]); //lưu data danh sách dịch vụ
 
@@ -125,12 +125,13 @@ const MedExamination = () => {
                                             </h3>
                                             <div className='grid grid-cols-4 gap-3'>
                                                 {item?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
-                                                    <a
+                                                    <Link
+                                                        to={`/dat-lich/${schedule.id}`}
                                                         key={index}
                                                         className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 2 ? 'pointer-events-none opacity-50' : ''}`}
                                                     >
                                                         {`${schedule.startTime}-${schedule.endTime}`}
-                                                    </a>
+                                                    </Link>
                                                 ))}
 
                                             </div>
@@ -218,16 +219,16 @@ const MedExamination = () => {
                                         <>
                                             <h3 className='flex gap-1 items-center uppercase my-2'>
                                                 <MdDateRange />
-                                                Lịch khám
                                             </h3>
                                             <div className='grid grid-cols-4 gap-3'>
                                                 {item?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
-                                                    <a
+                                                    <Link
+                                                        to={`/dat-lich/${schedule.id}`}
                                                         key={index}
                                                         className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 2 ? 'pointer-events-none opacity-50' : ''}`}
                                                     >
                                                         {`${schedule.startTime}-${schedule.endTime}`}
-                                                    </a>
+                                                    </Link>
                                                 ))}
 
                                             </div>

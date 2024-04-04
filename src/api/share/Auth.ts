@@ -16,6 +16,7 @@ export interface AuthSignin {
     rememberMe?: boolean;
     token?: string;
     refreshToken?: string;
+    role?: string
 }
 
 const authApi = createApi({
@@ -40,7 +41,7 @@ const authApi = createApi({
                 body: account,
             }),
         }),
-        signin: builder.mutation<{ errorMessage: string; token: string, errorCode: string, refreshToken: string, data: AuthSignin }, AuthSignin>({
+        signin: builder.mutation<{ errorMessage: string; token: string, errorCode: string, refreshToken: string, data: AuthSignin, role: string }, AuthSignin>({
             query: (account) => ({
                 url: "login",
                 method: "POST",

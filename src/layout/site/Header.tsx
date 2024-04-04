@@ -71,19 +71,19 @@ const Header = () => {
                                 </svg>
                             </button>
                         </div> */}
-                        <button className='text-start leading-5' onClick={() => handleClick('specialty')}>
+                        <a href='' className='text-start leading-5' onClick={() => handleClick('specialty')}>
                             <p className='text-[13px] font-bold'>{t('header.specialty')}</p>
                             <p className='text-[10px]'>{t('header.searchDoctor')}</p>
-                        </button>
-                        <button className='text-start leading-5' onClick={() => handleClick('clinics')}>
+                        </a>
+                        <a href='' className='text-start leading-5' onClick={() => handleClick('clinics')}>
                             <p className='text-[13px] font-bold'>{t('header.medFacilities')}</p>
                             <p className='text-[10px]'>{t('header.hospital')}</p>
-                        </button>
-                        <button className='text-start leading-5' onClick={() => handleClick('doctor')}>
+                        </a>
+                        <a href='' className='text-start leading-5' onClick={() => handleClick('doctor')}>
                             <p className='text-[13px] font-bold'>{t('header.doctor')}</p>
                             <p className='text-[10px]'>{t('header.choosingDoctor')}</p>
-                        </button>
-                        <a href="" className='text-start leading-5'>
+                        </a>
+                        <a href="" className='text-start leading-5' onClick={() => handleClick('service')}>
                             <p className='text-[13px] font-bold'>{t('header.package')}</p>
                             <p className='text-[10px]'>{t('header.generalEx')}</p>
                         </a>

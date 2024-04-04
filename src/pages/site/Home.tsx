@@ -6,31 +6,57 @@ import { convertToSlug } from '../../utils/convertToSlug';
 import { useGetAllSpecialtyQuery } from '../../api/admin/Specialty';
 import { useGetAllClinicsQuery } from '../../api/site/Clinics';
 import { useSearchDoctorsMutation } from '../../api/admin/Doctor';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Spin } from 'antd';
 
 const Home = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [ltsService, setLstService] = useState<any>([]); //lưu data danh sách dịch vụ
+    const [dataLoaded, setDataLoaded] = useState(false);
+
     const handleClick2 = (slug: string, data: LstCategories) => {
         navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { data, slug } });
     };
     const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: '', status: "1", page: 0, resultLimit: 10 });
     const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: '', province: '', status: '1', page: 0, resultLimit: 10 });
-    const [search, { data: doctor, isLoading: loadingDoctor }] = useSearchDoctorsMutation();
+    const [search, { isLoading: loadingDoctor }] = useSearchDoctorsMutation();
 
     useEffect(() => {
-        search({ type: 1, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
-    }, [search])
+        if (!dataLoaded) {
+            fieldLstDotors();
+            fieldLstService();
+            setDataLoaded(true);
+        }
+    }, [dataLoaded])
+
+
+    const fieldLstDotors = async () => {
+        const response = await search({ type: 1, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
+        if ('data' in response) { // Kiểm tra xem response có thuộc tính 'data' không
+            setLstDoctor(response.data); // Nếu có, gán dữ liệu vào state lstDoctor
+        }
+    }
+
+    const fieldLstService = async () => {
+        const response = await search({ type: 2, name: "", clinic: "", speciality: "", page: 0, resultLimit: 10 })
+
+        if ('data' in response) {
+            setLstService(response.data)
+        }
+    }
 
     const newSpecialty = specialty?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) || [];
-
 
     const newClinics = clinics ? clinics?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-    const newDoctor = doctor ? doctor?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "doctor", name: item.doctorName, descriptionHtml: item.specialityName })) : [];
+    const newDoctor = lstDoctor?.data?.data ? lstDoctor.data.data.map((item: LstCategories) => ({ ...item, cateCode: "doctor", name: item.doctorName, descriptionHtml: item.specialityName })) : [];
 
+    const newService = ltsService?.data?.data ? ltsService.data.data.map((item: LstCategories) => ({ ...item, cateCode: "service", name: item.doctorName, descriptionHtml: item.specialityName })) : [];
 
     return (
         <div>
@@ -67,11 +93,23 @@ const Home = () => {
                 <div className="flex justify-between items-center font-semibold text-2xl my-8">
                     <h2>{t('doctor')}</h2>
                     <div className="bg-[#DAF3F6] text-[#34929E] p-2 rounded-xl">
-                        <button onClick={() => handleClick2('doctor', doctor)} >{t('more')} </button>
+                        <button onClick={() => handleClick2('doctor', lstDoctor)} >{t('more')} </button>
                     </div>
                 </div>
                 <Spin spinning={loadingDoctor}>
                     <SlickCarousel slides={newDoctor} />
+                </Spin>
+            </div>
+
+            <div className="max-w-screen-xl mx-44 mt-20">
+                <div className="flex justify-between items-center font-semibold text-2xl my-8">
+                    <h2>{t('service')}</h2>
+                    <div className="bg-[#DAF3F6] text-[#34929E] p-2 rounded-xl">
+                        <button onClick={() => handleClick2('service', ltsService)} >{t('more')} </button>
+                    </div>
+                </div>
+                <Spin spinning={loadingDoctor}>
+                    <SlickCarousel slides={newService} />
                 </Spin>
             </div>
         </div>
