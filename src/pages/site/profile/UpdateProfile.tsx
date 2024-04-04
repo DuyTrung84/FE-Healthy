@@ -6,7 +6,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useUploadMutation } from '../../../api/share/upload';
-import { Notifn } from '../../../components/Notification';
+import { Notifn } from '../../../utils/Notification';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateProfile = () => {

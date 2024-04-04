@@ -3,7 +3,7 @@ import { useDeleteProfileMutation, useGetAllProfileQuery, useGetProfileById2Muta
 import { MdDeleteOutline, MdOutlineEdit, MdOutlineRemoveRedEye } from 'react-icons/md';
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Notifn } from '../../../components/Notification';
+import { Notifn } from '../../../utils/Notification';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import Meta from 'antd/es/card/Meta';
 const { confirm } = Modal;

@@ -6,7 +6,7 @@ import { Option } from "antd/es/mentions";
 import { useAddAccountMutation, useGetRoleQuery } from "../../../api/admin/Account";
 import { useState } from "react";
 import { useUploadMutation } from "../../../api/share/upload";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../../api/share/area";

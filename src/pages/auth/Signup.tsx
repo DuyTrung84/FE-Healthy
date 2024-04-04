@@ -1,5 +1,5 @@
 
-import { Notifn } from '../../components/Notification';
+import { Notifn } from '../../utils/Notification';
 import { LockOutlined, UserOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Form, Input, Row } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';

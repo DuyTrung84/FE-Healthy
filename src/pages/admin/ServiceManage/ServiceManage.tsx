@@ -2,7 +2,7 @@ import { Button, Table, Space, Dropdown, Modal, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { EditOutlined, ExclamationCircleFilled, MoreOutlined } from "@ant-design/icons";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { IAccount } from "../../../interface/Account";
 import { useEffect, useState } from "react";

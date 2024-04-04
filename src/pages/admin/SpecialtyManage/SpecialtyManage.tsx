@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineEdit, AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { useDeleteSpecialtyMutation, useSearchAllSpecialtyMutation } from "../../../api/admin/Specialty";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { ISpecialty } from "../../../interface/Specialty";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { useGetStatusQuery } from "../../../api/share/upload";

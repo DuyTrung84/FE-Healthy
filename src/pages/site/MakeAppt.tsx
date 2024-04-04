@@ -5,7 +5,7 @@ import { useGetBookingByIdQuery } from "../../api/admin/Booking";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthSignin, useSigninMutation } from "../../api/share/Auth";
-import { Notifn } from "../../components/Notification";
+import { Notifn } from "../../utils/Notification";
 import Meta from "antd/es/card/Meta";
 import { useGetAllProfileQuery } from "../../api/site/Profile";
 import { TbBrandReason } from "react-icons/tb";
@@ -137,30 +137,17 @@ const MakeAppt = () => {
                             rules={[{ required: true, message: 'Vui lòng chọn một hồ sơ!' }]}
                         >
                             <Radio.Group>
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                {profiles?.data?.length === 0 ? (
-                                    <Empty
-                                        image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-                                        imageStyle={{ height: 60 }}
-                                        description="Bạn chưa có hồ sơ bệnh nhân nào !!"
-                                    >
-                                        <Button type="primary">Thêm hồ sơ bệnh nhân</Button>
-                                    </Empty>
-                                ) : (
-                                    <Radio.Group>
-                                        {profiles?.data.map((item: any) => (
-                                            <Radio key={item.id} value={item.id} style={{ margin: '0 8px 8px 0' }} >
-                                                <Card style={{ width: 320 }} loading={loadingProfile}>
-                                                    <Meta
-                                                        avatar={<Avatar src={item.imgUrl} size={46} />}
-                                                        title={item.fullName}
-                                                        description={item.genderValue || ''}
-                                                    />
-                                                </Card>
-                                            </Radio>
-                                        ))}
-                                    </Radio.Group>
-                                )}
+                                {profiles?.data.map((item: any) => (
+                                    <Radio key={item.id} value={item.id} style={{ margin: '0 8px 8px 0' }} >
+                                        <Card style={{ width: 320 }} loading={loadingProfile}>
+                                            <Meta
+                                                avatar={<Avatar src={item.imgUrl} size={46} />}
+                                                title={item.fullName}
+                                                description={item.genderValue || ''}
+                                            />
+                                        </Card>
+                                    </Radio>
+                                ))}
                             </Radio.Group>
                         </Form.Item>
 

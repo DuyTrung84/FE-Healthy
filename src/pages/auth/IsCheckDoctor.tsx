@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Notifn } from '../../components/Notification';
+import { Notifn } from '../../utils/Notification';
 
 const IsCheckDoctor = () => {
     const navigate = useNavigate();

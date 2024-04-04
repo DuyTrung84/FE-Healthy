@@ -3,7 +3,7 @@ import { Button, Table, Space, Dropdown, Modal, Tag, Form, Input, Select } from 
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineEdit, AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { DownOutlined, ExclamationCircleFilled, MoreOutlined, ReloadOutlined, SearchOutlined, UpOutlined } from "@ant-design/icons";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { useDeleteClinicsMutation, useSearchClinicsMutation } from "../../../api/site/Clinics";
 import { IClinics } from "../../../interface/Clinics";

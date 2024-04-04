@@ -8,7 +8,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useGetByIdSpecialtyQuery, useUpdateSpecialtyMutation } from "../../../api/admin/Specialty";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 
 const UpdateSpecialty = () => {
     const { id } = useParams();

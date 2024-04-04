@@ -3,7 +3,7 @@ import { Button, Table, Space, Modal, Form, DatePicker, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineEdit } from "react-icons/ai";
 import { ExclamationCircleFilled, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { Key, useEffect, useState } from "react";
 import { useDeleteBookingMutation, useSearchBookingMutation } from "../../../api/admin/Booking";
 import dayjs from 'dayjs';

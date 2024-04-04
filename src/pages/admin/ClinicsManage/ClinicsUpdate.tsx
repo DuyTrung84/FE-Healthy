@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { IClinics } from "../../../interface/Clinics";
 import { useGetAllClinicsQuery, useGetByIdClinicsQuery, useUpdateClinicsMutation } from "../../../api/site/Clinics";
 import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../../api/share/area";

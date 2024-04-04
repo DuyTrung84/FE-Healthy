@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { EnterOutlined } from "@ant-design/icons";
 import { Button, Col, DatePicker, Form, InputNumber, Row, Select, Spin } from 'antd';
 
-import { Notifn } from "../../../components/Notification";
+import { Notifn } from "../../../utils/Notification";
 import { useUpdateBookingMutation, useGetBookingByIdQuery, useGetWhoPayQuery } from "../../../api/admin/Booking";
 import dayjs from 'dayjs';
 import { useEffect } from "react";

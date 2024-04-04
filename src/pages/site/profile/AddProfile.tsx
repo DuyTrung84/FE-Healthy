@@ -6,7 +6,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useGetAccountQuery, useUploadMutation } from '../../../api/share/upload';
-import { Notifn } from '../../../components/Notification';
+import { Notifn } from '../../../utils/Notification';
 import { useNavigate } from 'react-router-dom';
 
 const AddProfile = () => {
@@ -190,6 +190,21 @@ const AddProfile = () => {
                         rules={[
                             { required: true, message: 'Trường này không được bỏ trống !' },
                         ]}
+                    >
+                        <Input />
+                    </Form.Item>
+
+
+                    <Form.Item
+                        label="Mã CCCD/CMND"
+                        name="cardId"
+                    >
+                        <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Mã thẻ bảo hiểm"
+                        name="warrantyId"
                     >
                         <Input />
                     </Form.Item>

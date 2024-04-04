@@ -2,7 +2,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthSignin, useSigninMutation } from '../../api/share/Auth';
-import { Notifn } from '../../components/Notification';
+import { Notifn } from '../../utils/Notification';
 
 
 const Signin = () => {
