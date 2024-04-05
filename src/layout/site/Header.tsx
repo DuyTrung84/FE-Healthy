@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AiFillCustomerService, AiOutlineCaretDown, AiOutlineHistory } from 'react-icons/ai';
+import { AiFillCustomerService, AiOutlineCaretDown } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { convertToSlug } from '../../utils/convertToSlug';
 import { Link } from 'react-router-dom';
-import { Avatar } from 'antd';
-// import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, MenuProps } from 'antd';
 import { useRefreshTokenMutation } from '../../api/share/area';
 import { useGetAccountQuery } from '../../api/share/upload';
+import { HistoryOutlined, LoginOutlined } from '@ant-design/icons';
+import { ImProfile } from 'react-icons/im';
+import { Notifn } from '../../utils/Notification';
 
 
 const Header = () => {
@@ -52,6 +54,21 @@ const Header = () => {
         navigate(`danh-sach/${convertToSlug(t(slug))}`, { state: { slug } });
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('rfToken');
+        localStorage.removeItem('role');
+        Notifn("success", "Đăng xuất", "");
+
+        navigate("/login");
+    };
+
+    const items: MenuProps['items'] = [
+        { label: <Link to={`/ho-so-kham-benh`} className='mx-2 flex items-center gap-2'><ImProfile />{t('header.medExamRec')}</Link>, key: '1', },
+        { label: <Link to={`/lich-hen`} className='mx-2 flex items-center gap-2'><HistoryOutlined />{t('header.history')}</Link>, key: '3', },
+        { label: <button className='mx-2' onClick={handleLogout}><LoginOutlined className='mr-2' />{t('header.logout')}</button>, key: '2', },
+    ];
+
     return (
         <header className="bg-[#EDFFFA]">
             <div className="mx-auto max-w-screen-xl px-8 py-2">
@@ -90,21 +107,20 @@ const Header = () => {
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="flex gap-4 items-center">
-                            <a className="" href="#">
+                            <a href="https://www.facebook.com/profile.php?id=100008553451184">
                                 <AiFillCustomerService className="text-[#45C3D2] text-4xl" />
                             </a>
-                            <Link className="" to={'/lich-hen'}>
-                                <AiOutlineHistory className="text-[#45C3D2] text-4xl" />
-                            </Link>
                             {localStorage.getItem('role') !== 'USER' ? (
                                 <Link to={`/login`} className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium'>
-                                    Đăng nhập
+                                    {t('header.signin')}
                                 </Link>
                             ) : (
-                                <Link to={`/ho-so-kham-benh`}>
-                                    {/* <Avatar style={{ backgroundColor: '#45C3D2' }} size={34} icon={<UserOutlined />} /> */}
-                                    <Avatar size={34} src={`http://${data?.data?.avatar}`} />
-                                </Link>
+                                <Dropdown menu={{ items }} trigger={['click']} className='cursor-pointer'>
+                                    <a onClick={(e) => e.preventDefault()}>
+                                        <Avatar size={34} src={`http://${data?.data?.avatar}`} />
+                                    </a>
+                                </Dropdown>
+
                             )}
                             <div className="relative">
                                 <button className="flex gap-1 items-center p-2 " onClick={toggleDropdown}>
@@ -116,7 +132,7 @@ const Header = () => {
                                     <AiOutlineCaretDown className="text-[#45C3D2]" />
                                 </button>
                                 {isOpen && (
-                                    <div className="absolute top-full left-0 mt-2 bg-white rounded shadow border border-gray-200">
+                                    <div className="absolute top-full left-0 mt-2 bg-white rounded shadow border border-gray-200 z-50">
                                         <button className="flex gap-1 items-center p-2 hover:bg-gray-100" onClick={() => selectLanguage('en')}>
                                             <img src="https://kenh14cdn.com/2017/5-1503128133747.png" alt="" className="w-6 h-4 object-cover" />
                                         </button>

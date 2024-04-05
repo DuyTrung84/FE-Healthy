@@ -1,12 +1,13 @@
 
-import { FundProjectionScreenOutlined } from '@ant-design/icons';
-import { Avatar, Layout, Menu, Space, theme } from 'antd';
+import { DownOutlined, FundProjectionScreenOutlined, LoginOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'antd';
 
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useRefreshTokenMutation } from '../../api/share/area';
 import { useGetAccountQuery } from '../../api/share/upload';
 import { useEffect } from 'react';
 import { MdOutlineDateRange } from 'react-icons/md';
+import { Notifn } from '../../utils/Notification';
 
 const { Header, Content, Sider } = Layout;
 type MenuItem = {
@@ -18,10 +19,10 @@ type MenuItem = {
 };
 
 const LayoutDoctor = () => {
-
+    const navigate = useNavigate();
     const [refreshToken] = useRefreshTokenMutation();
     const { data, error } = useGetAccountQuery();
-    console.log(data)
+
     useEffect(() => {
         if (error) {
             if ('status' in error && error.status === 401) {
@@ -50,6 +51,19 @@ const LayoutDoctor = () => {
             path: 'quan-ly-lich-kham',
         },
 
+    ];
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('rfToken');
+        localStorage.removeItem('role');
+        Notifn("success", "Đăng xuất", "");
+        navigate("/login");
+    };
+
+
+    const items: MenuProps['items'] = [
+        { label: <button className='mx-2' onClick={handleLogout}><LoginOutlined className='mr-2' />Đăng xuất</button>, key: '2', }
     ];
 
     return (
@@ -85,11 +99,18 @@ const LayoutDoctor = () => {
             <Layout className='max-h-screen' style={{ marginLeft: 220 }}>
                 <Header style={{ padding: 0, background: colorBgContainer }} className='flex justify-end fixed top-0 right-0 z-10 w-full drop-shadow'>
                     <div className='mr-16 flex gap-2'>
-                        <p>Xin chào! {data?.data?.name}</p>
+                        <p><span className='font-medium text-gray-700'>Xin chào bác sĩ !!  </span> <span className='text-blue-500'>{data?.data?.name}</span></p>
                         <div className='border-l px-4'>
                             <Space wrap size={16} className='mr-2'>
-                                <Avatar size={34} src={`http://${data?.data?.avatar}`} />
+                                <Avatar size={34} src={`${data?.data?.avatar}`} />
                             </Space>
+                            <Dropdown menu={{ items }} trigger={['click']}>
+                                <a onClick={(e) => e.preventDefault()}>
+                                    <Space>
+                                        <DownOutlined />
+                                    </Space>
+                                </a>
+                            </Dropdown>
                         </div>
                     </div>
                 </Header>

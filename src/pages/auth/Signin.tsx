@@ -18,13 +18,12 @@ const Signin = () => {
             const accessToken = response?.data?.token;
             const refreshToken = response?.data?.refreshToken;
             const role = response?.data?.role;
-            console.log(response?.data);
 
             // Lưu token vào localStorage
             if (accessToken && refreshToken) {
                 localStorage.setItem('token', accessToken);
                 localStorage.setItem('rfToken', refreshToken);
-                localStorage.setItem('role', role);
+                localStorage.setItem('role', role!);
                 Notifn("success", "Thành công", "Đăng nhập thành công");
                 if (role === "ADMIN") {
                     navigate("/admin");
@@ -89,9 +88,8 @@ const Signin = () => {
                                 name="password"
                                 rules={[{ required: true, message: 'Mật khẩu không được bỏ trống!' }]}
                             >
-                                <Input
+                                <Input.Password
                                     prefix={<LockOutlined className="site-form-item-icon p-3" />}
-                                    type="password"
                                     placeholder="Mật khẩu"
                                 />
                             </Form.Item>

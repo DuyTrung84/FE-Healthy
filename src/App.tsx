@@ -10,6 +10,7 @@ const Signup = React.lazy(() => import('./pages/auth/Signup'));
 const EmailVerify = React.lazy(() => import('./pages/auth/EmailVerify'));
 const IsCheckAdmin = React.lazy(() => import('./pages/auth/IsCheckAdmin'));
 const IsCheckDoctor = React.lazy(() => import('./pages/auth/IsCheckDoctor'));
+const IsCheckUser = React.lazy(() => import('./pages/auth/IsCheckUser'));
 const LayoutSite = React.lazy(() => import('./layout/site/LayoutSite'));
 const Home = React.lazy(() => import('./pages/site/Home'));
 const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
@@ -51,19 +52,21 @@ function App() {
             <Route path="/" element={<LayoutSite />}>
               <Route index element={<Home />} />
               <Route path='danh-sach/:slug' element={<ListCategories />} />
-              <Route path='lich-hen' element={<AppointmentHist />} />
               <Route path='dich-vu-y-te/:slug/:slug' element={<MedExamination />} />
               <Route path='co-so-y-te/:slug' element={<ClinicsDetail />} />
               <Route path='co-so-y-te/:slug/:id' element={<ClinicsChildren />} />
               <Route path='dat-lich/:id' element={<MakeAppt />} />
               <Route path='bac-si/:slug' element={<DoctorDetail />} />
               <Route path='dich-vu/:slug' element={<DoctorDetail />} />
-              <Route path="ho-so-kham-benh" element={<Profile />}>
-                <Route index element={<LstProfile />} />
-                <Route path="them" element={<AddProfile />} />
-                <Route path="sua/:id" element={<UpdateProfile />} />
+              <Route element={<IsCheckUser />}>
+                <Route path='lich-hen' element={<AppointmentHist />} />
+                <Route path="ho-so-kham-benh" element={<Profile />}>
+                  <Route index element={<LstProfile />} />
+                  <Route path="them" element={<AddProfile />} />
+                  <Route path="sua/:id" element={<UpdateProfile />} />
+                </Route>
+                <Route path='vnpay_return' element={<BookingResults />} />
               </Route>
-              <Route path='vnpay_return' element={<BookingResults />} />
             </Route>
             <Route element={<IsCheckDoctor />}>
               <Route path="/doctor" element={<LayoutDoctor />}>

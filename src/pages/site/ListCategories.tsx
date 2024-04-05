@@ -112,7 +112,7 @@ const ListCategories = () => {
                     <Form.Item name="province" initialValue="" className="mr-2">
                         {data.slug === "clinics" && (
                             <Select showSearch style={{ width: 150 }} placeholder="Chọn tỉnh/thành phố">
-                                <Option value="">Toàn Quốc</Option>
+                                <Option value="">{t('listCategories.nationally')}</Option>
                                 {provinces &&
                                     provinces?.data?.map((province: IProvinces) => (
                                         <Option key={province.code} value={province.name}>
@@ -123,14 +123,14 @@ const ListCategories = () => {
                         )}
                     </Form.Item>
                     <Form.Item name="search">
-                        <Input placeholder="Tìm kiếm" prefix={<AiOutlineSearch />} />
+                        <Input placeholder={t('listCategories.search')} prefix={<AiOutlineSearch />} />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" className="bg-blue-500" htmlType="submit">Tìm kiếm</Button>
+                        <Button type="primary" className="bg-blue-500" htmlType="submit">{t('listCategories.search')}</Button>
                     </Form.Item>
                     <Form.Item>
                         {/* Nút reset */}
-                        <Button onClick={handleReset}>Reset</Button>
+                        <Button onClick={handleReset}>{t('listCategories.reset')}</Button>
                     </Form.Item>
                 </Form>
             </div>

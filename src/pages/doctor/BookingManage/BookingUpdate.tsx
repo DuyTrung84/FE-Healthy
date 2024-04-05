@@ -16,7 +16,6 @@ const BookingUpdate = () => {
 
     const [updateService, { isLoading }] = useUpdateBookingMutation();
     const { data: bookingData, isLoading: bookingById } = useGetBookingByIdQuery(id || "")
-    console.log(bookingData?.data?.date)
     const { data: whoPay } = useGetWhoPayQuery()
 
 

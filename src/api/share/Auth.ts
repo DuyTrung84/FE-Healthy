@@ -41,7 +41,7 @@ const authApi = createApi({
                 body: account,
             }),
         }),
-        signin: builder.mutation<{ errorMessage: string; token: string, errorCode: string, refreshToken: string, data: AuthSignin, role: string }, AuthSignin>({
+        signin: builder.mutation<{ errorMessage: string; token: string, errorCode: string, refreshToken: string, role: string, data: AuthSignin }, AuthSignin>({
             query: (account) => ({
                 url: "login",
                 method: "POST",

@@ -10,9 +10,11 @@ import Meta from "antd/es/card/Meta";
 import { useGetAllProfileQuery } from "../../api/site/Profile";
 import { TbBrandReason } from "react-icons/tb";
 import { useCreateFreeOrderMutation, useCreatePaymentMutation } from "../../api/site/Payment";
+import { useTranslation } from "react-i18next";
 
 const MakeAppt = () => {
     const { id } = useParams();
+    const { t } = useTranslation()
     const navigate = useNavigate();
     const role = localStorage.getItem("role");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -99,7 +101,7 @@ const MakeAppt = () => {
                 <div className="flex gap-4 items-start max-w-screen-md mx-auto px-12">
                     <img src={bookingData?.data?.doctorImg} alt="" className="w-28 h-28 rounded-full" />
                     <div className="text-gray-700 brightness-125">
-                        <p className="uppercase">Đặt lịch khám</p>
+                        <p className="uppercase">{t('makeAppt.booking')}</p>
                         <p className="text-blue-600 font-medium text-lg">{bookingData?.data?.doctorName}</p>
                         <p>{bookingData?.data?.startTime} - {bookingData?.data?.endTime} - {bookingData?.data?.date}</p>
                         <p dangerouslySetInnerHTML={{ __html: bookingData?.data?.price || '' }} />
@@ -114,15 +116,15 @@ const MakeAppt = () => {
                         onFinish={onSubmit}
                     >
                         <Form.Item
-                            label="Lý do khám"
+                            label={t('makeAppt.lableReason')}
                             name="reasonBooking"
                             rules={[
-                                { required: true, message: 'Vui lòng nhập lý do khám!' },
+                                { required: true, message: t('makeAppt.placeholderReason') },
                             ]}
                         >
                             <div style={{ position: 'relative' }}>
                                 <Input.TextArea
-                                    placeholder="Nhập lý do khám"
+                                    placeholder={t('makeAppt.placeholderReason')}
                                     style={{ paddingLeft: '40px' }}
                                     className="py-1"
                                 />
@@ -131,10 +133,10 @@ const MakeAppt = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Chọn hồ sơ khám bệnh"
+                            label={t('makeAppt.lableProfile')}
                             name="idProfile"
                             initialValue={null}
-                            rules={[{ required: true, message: 'Vui lòng chọn một hồ sơ!' }]}
+                            rules={[{ required: true, message: t('makeAppt.errorProfile') }]}
                         >
                             <Radio.Group>
                                 {profiles?.data ? (
@@ -155,10 +157,10 @@ const MakeAppt = () => {
                                         <Empty
                                             image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
                                             imageStyle={{ height: 60 }}
-                                            description="Bạn chưa có hồ sơ bệnh nhân nào !!"
+                                            description={t('makeAppt.noProfile')}
                                             className="flex flex-col items-center"
                                         >
-                                            <Link to={'/ho-so-kham-benh/them'} className="bg-blue-500 text-white p-2 rounded-md hover:text-white hover:bg-blue-400">Thêm hồ sơ bệnh nhân</Link>
+                                            <Link to={'/ho-so-kham-benh/them'} className="bg-blue-500 text-white p-2 rounded-md hover:text-white hover:bg-blue-400">{t('makeAppt.createProfile')}</Link>
                                         </Empty>
                                     </div>
                                 )}
@@ -167,14 +169,14 @@ const MakeAppt = () => {
 
                         <div className="bg-gray-50 p-4">
                             <div className="flex justify-between items-center mb-2">
-                                <p>Giá khám</p>
-                                <p>Khám và thanh toán ở cơ sở y tế</p>
+                                <p>{t('makeAppt.priceExam')}</p>
+                                <p>{t('makeAppt.descPrice')}</p>
                             </div>
                             <div className="flex justify-between items-center">
-                                <p>Phí đặt lịch</p>
+                                <p>{t('makeAppt.priceBooking')}</p>
                                 <p>
                                     {bookingData?.data?.whoPay === "1" ? (
-                                        "Miễn phí"
+                                        <span>{t('makeAppt.free')}</span>
                                     ) : (
                                         <span className="text-red-500">
                                             {Number(bookingData?.data?.bookingFee).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
@@ -183,19 +185,19 @@ const MakeAppt = () => {
                                 </p>
                             </div>
                         </div>
-                        <p className="my-4 text-gray-500 text-center">Quý khách nếu có phải chịu phí đặt lịch thì khi đặt sẽ chỉ thanh toán phí đặt lịch trước</p>
+                        <p className="my-4 text-gray-500 text-center">{t('makeAppt.notePrice')}</p>
                         <div className="bg-[#D4EFFC] py-4 px-8 leading-8 mb-8">
-                            <p className="font-medium text-lg uppercase">Lưu ý</p>
-                            <p>Thông tin anh/chị vui lòng cung cấp sẽ được sử dụng làm hồ sơ khám bệnh, khi điền thông tin anh/chị vui lòng:</p>
+                            <p className="font-medium text-lg uppercase">{t('makeAppt.note')}</p>
+                            <p>{t('makeAppt.noteTitle')}</p>
                             <ul className="list-disc pl-4 ml-4">
-                                <li><span>Ghi rõ họ và tên, viết hoa những chữ cái đầu tiên, ví dụ: Trần Văn Phú </span></li>
-                                <li><span>Điền đầy đủ, đúng và vui lòng kiểm tra lại thông tin trước khi ấn "Xác nhận" </span></li>
+                                <li><span>{t('makeAppt.noteDesc1')}</span></li>
+                                <li><span>{t('makeAppt.noteDess2')}</span></li>
                             </ul>
                         </div>
 
                         <Form.Item labelAlign="left">
                             <Button type="primary" htmlType="submit" className="bg-blue-500 w-full" size="large" loading={paymentFreeLoading || paymentLoading}>
-                                Xác nhận đặt khám
+                                {t('makeAppt.btnBooking')}
                             </Button>
                         </Form.Item>
                     </Form>
@@ -203,14 +205,14 @@ const MakeAppt = () => {
             ) : (
                 <div className="max-w-screen-md mx-auto my-8">
                     <Button onClick={showModal} type="primary" className="bg-blue-500 w-full text-white items-center flex justify-center" size="large">
-                        <UserOutlined /> Đăng nhập để đặt lịch
+                        <UserOutlined /> {t('makeAppt.isBookingLogin')}
                     </Button>
                 </div>
             )}
 
             <Modal width={500} open={isModalOpen} footer={null} onCancel={hiddenModal}>
                 <section className="bg-white">
-                    <h1 className="font-bold text-blue-500 text-3xl p-4">Đăng nhập </h1>
+                    <h1 className="font-bold text-blue-500 text-3xl p-4">{t('makeAppt.login')}</h1>
                     <main className="flex items-center justify-center mt-2">
                         <Form
                             name="normal_login"
@@ -221,32 +223,30 @@ const MakeAppt = () => {
                             onFinish={onFinish}
                         >
                             <Form.Item
-                                label="Email"
+                                label={t('makeAppt.labelEmail')}
                                 name="email"
-                                rules={[{ required: true, message: 'Email không được bỏ trống!' }]}
+                                rules={[{ required: true, message: t('makeAppt.errorEmail') }]}
                             >
-                                <Input prefix={<UserOutlined className="site-form-item-icon p-3" />} placeholder="Email" />
+                                <Input prefix={<UserOutlined className="site-form-item-icon p-3" />} placeholder={t('makeAppt.placeholderEmail')} />
                             </Form.Item>
                             <Form.Item
 
-                                label="Mật khẩu"
+                                label={t('makeAppt.labelPassword')}
                                 name="password"
-                                rules={[{ required: true, message: 'Mật khẩu không được bỏ trống!' }]}
+                                rules={[{ required: true, message: t('makeAppt.errorPassword') }]}
                             >
-                                <Input
+                                <Input.Password
                                     prefix={<LockOutlined className="site-form-item-icon p-3" />}
-                                    type="password"
-                                    placeholder="Mật khẩu"
+                                    placeholder={t('makeAppt.placeholderEmail')}
                                 />
                             </Form.Item>
 
-
                             <Form.Item className='text-center'>
                                 <Button type="primary" htmlType="submit" className="bg-blue-500 w-full" style={{ height: '45px' }} loading={isLoading}>
-                                    Đăng nhập
+                                    {t('makeAppt.btnLogin')}
                                 </Button>
-                                <p className='my-2'>Hoặc</p>
-                                <p>Chưa có tài khoản? <Link to="/register" className='text-blue-500 hover:text-blue-800 hover:underline'>Đăng ký ngay</Link></p>
+                                <p className='my-2'>{t('makeAppt.or')}</p>
+                                <p>{t('makeAppt.noAccount')}<Link to="/register" className='text-blue-500 hover:text-blue-800 hover:underline'>{t('makeAppt.signup')}</Link></p>
 
                             </Form.Item>
                         </Form>

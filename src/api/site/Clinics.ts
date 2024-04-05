@@ -70,6 +70,16 @@ const clinicsApi = createApi({
             }),
             invalidatesTags: ['CLINICS']
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getHistoryBooking: builder.mutation<any, { fromDate: string | null; toDate: string | null; status: string | null; page: number; resultLimit: number }>({
+            query: ({ fromDate, toDate, status, page, resultLimit }) => ({
+                url: 'user/booking/userGetBookingHistory',
+                method: 'POST',
+                body: { fromDate, toDate, status, page, resultLimit },
+            }),
+
+            invalidatesTags: ['CLINICS']
+        }),
     }),
 });
 
@@ -81,7 +91,8 @@ export const {
     useAddClinicsMutation,
     useUpdateClinicsMutation,
     useDeleteClinicsMutation,
-    useSearchClinicsMutation
+    useSearchClinicsMutation,
+    useGetHistoryBookingMutation,
 
 } = clinicsApi;
 

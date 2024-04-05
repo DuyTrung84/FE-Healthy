@@ -1,15 +1,17 @@
 import { UserOutlined, FundProjectionScreenOutlined, DownOutlined, LoginOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Layout, Menu, Space, Avatar, Dropdown, MenuProps, theme } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { MdManageAccounts, MdOutlineCategory } from 'react-icons/md';
 import { FaRegHospital } from 'react-icons/fa6';
 import { useGetAccountQuery } from '../../api/share/upload';
 import { useEffect } from 'react';
 import { useRefreshTokenMutation } from '../../api/share/area';
+import { Notifn } from '../../utils/Notification';
 
 const { Header, Sider, Content } = Layout;
 
 const LayoutAdmin = () => {
+    const navigate = useNavigate()
     const [refreshToken] = useRefreshTokenMutation();
     const { data, error } = useGetAccountQuery();
 
@@ -52,8 +54,16 @@ const LayoutAdmin = () => {
 
     ];
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('rfToken');
+        localStorage.removeItem('role');
+        Notifn("success", "Đăng xuất", "");
+        navigate("/login");
+    };
+
     const items: MenuProps['items'] = [
-        { label: <button className='mx-4'><LoginOutlined className='mr-2' />Logout</button>, key: '3', },
+        { label: <button className='mx-2' onClick={handleLogout}><LoginOutlined className='mr-2' />Đăng xuất</button>, key: '2', }
     ];
 
     return (

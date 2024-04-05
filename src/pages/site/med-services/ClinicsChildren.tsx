@@ -31,7 +31,7 @@ const ClinicsChildren = () => {
             <div className='flex justify-between items-center border-b-2 border-gray-300 py-6'>
                 <p className='text-[27px] font-semibold text-gray-800'>{t('chilldrenClinics.title')}</p>
                 <div className='flex gap-4'>
-                    <Input placeholder={t('chilldrenClinics.search ')} variant="filled" style={{ width: '300px', paddingBottom: '8px', paddingTop: '8px', paddingLeft: '16px', paddingRight: '8px', borderRadius: '30px' }} onChange={handleSearch} />
+                    <Input placeholder={t('chilldrenClinics.search')} variant="filled" style={{ width: '300px', paddingBottom: '8px', paddingTop: '8px', paddingLeft: '16px', paddingRight: '8px', borderRadius: '30px' }} onChange={handleSearch} />
                     <button onClick={handleBack}>
                         <CloseOutlined />
                     </button>

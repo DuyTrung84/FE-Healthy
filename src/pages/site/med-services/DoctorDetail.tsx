@@ -7,15 +7,15 @@ import { TbHandFinger } from "react-icons/tb";
 import { useState } from "react";
 import { IBooking, IBookingChildren } from "../../../interface/Booking";
 import { Link } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
-
+import { useTranslation } from "react-i18next";
 
 const DoctorDetail = () => {
+    const { t } = useTranslation();
     const [showMore, setShowMore] = useState(false);
     const [showMore2, setShowMore2] = useState(false);
     const [selectedDate, setSelectedDate] = useState(0);
     const location = useLocation();
-    // const { t } = useTranslation();
+
 
     const { data: doctorData, isLoading: doctorLoading } = useGetByIdDoctorQuery(location.state.id)
 
@@ -36,7 +36,7 @@ const DoctorDetail = () => {
             <div className="max-w-screen-xl mx-auto px-12 py-4">
                 <div className="flex items-center gap-1 my-4 text-[#45C3D2] ">
                     <a href="/" className="flex gap-1"><AiFillHome className="text-xl" />/</a>
-                    <p>Bác sĩ /{doctorData?.data?.specialityName}</p>
+                    <p> {t('doctorDetail.doctor')} /{doctorData?.data?.specialityName}</p>
                 </div>
                 <div className="flex gap-8 w-4/6 text-[#555555] leading-6">
                     <img src={doctorData?.data?.imageUrl} alt="" className="w-32 h-32 rounded-full" />
@@ -50,8 +50,8 @@ const DoctorDetail = () => {
                             onClick={toggleShowMore2}
                         >
                             {showMore2
-                                ? <span>Ẩn đi< AiOutlineCaretUp className="inline-block" /></span>
-                                : <span>Xem thêm< AiOutlineCaretDown className="inline-block" /></span>}
+                                ? <span>{t('clinicsDetail.hidden')}< AiOutlineCaretUp className="inline-block" /></span>
+                                : <span>{t('clinicsDetail.more')}< AiOutlineCaretDown className="inline-block" /></span>}
                         </button>
                         <p className="flex gap-1 items-center text-lg">
                             <MdLocationPin /> {doctorData?.data?.provinceName}</p>
@@ -69,7 +69,7 @@ const DoctorDetail = () => {
                                 <>
                                     <h3 className='flex gap-1 items-center uppercase my-2'>
                                         <MdDateRange />
-                                        Lịch khám
+                                        {t('doctorDetail.bookingTitle')}
                                     </h3>
                                     <div className='grid grid-cols-4 gap-3'>
                                         {doctorData?.data?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
@@ -83,18 +83,18 @@ const DoctorDetail = () => {
                                 </>
                             )}
                             <p className='text-gray-700 text-sm pt-1.5 my-1 pb-2.5 flex items-center'>
-                                Chọn và đặt <TbHandFinger className='mx-0.5 text-black' /> (Phí đặt lịch 0đ)
+                                {t('doctorDetail.selectAndSet')} <TbHandFinger className='mx-0.5 text-black' />
                             </p>
                         </div>
                     </Spin>
                     <div className="border-l border-gray-200 pl-8 py-4">
                         <div className='leading-6 border-b border-gray-200 pb-2'>
-                            <p className='uppercase text-gray-500 font-medium'>Địa chỉ khám</p>
+                            <p className='uppercase text-gray-500 font-medium'>{t('doctorDetail.addressExamination')}</p>
                             <p className='font-semibold'>{doctorData?.data?.clinicName}</p>
                             <p> {doctorData?.data?.address} {doctorData?.data?.wardName} - {doctorData?.data?.districtName} - {doctorData?.data?.provinceName}</p>
                         </div>
                         <p className='border-b border-gray-200 py-2'>
-                            <span className='uppercase text-gray-500 font-medium mr-1'>Giá khám:</span>
+                            <span className='uppercase text-gray-500 font-medium mr-1'>{t('doctorDetail.priceExamitination')}:</span>
                             <span dangerouslySetInnerHTML={{ __html: doctorData?.data?.note || '' }}></span>
                             <div className="p-2 bg-gray-100 border border-gray-300 text-sm my-1">
                                 <p className="text-gray-600">{doctorData?.data?.paymentMethod}</p>
@@ -102,9 +102,9 @@ const DoctorDetail = () => {
                         </p>
                         <div>
                             <p className='mr-1'>
-                                <span className='uppercase text-gray-500 font-medium'>Loại bảo hiểm áp dụng</span>
+                                <span className='uppercase text-gray-500 font-medium'>{t('doctorDetail.insurance')}</span>
                                 <span className='text-blue-400 ml-1 cursor-pointer' onClick={toggleShowMore}>
-                                    {showMore ? '' : 'Xem chi tiết'}
+                                    {showMore ? '' : <span>{t('doctorDetail.moreDetail')}</span>}
                                 </span>
                             </p>
                             {showMore && (
@@ -117,7 +117,7 @@ const DoctorDetail = () => {
                                             </div>
                                         ))}
                                     </div>
-                                    <p onClick={toggleShowMore} className='text-blue-400 ml-1 cursor-pointer'>{showMore ? 'Ẩn' : ''}</p>
+                                    <p onClick={toggleShowMore} className='text-blue-400 ml-1 cursor-pointer'>{showMore ? <span>{t('doctorDetail.hidden')}</span> : ''}</p>
                                 </div>
 
                             )}
