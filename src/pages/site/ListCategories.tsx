@@ -5,12 +5,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { LstCategories } from "../../interface/ListCategories";
 import { convertToSlug } from "../../utils/convertToSlug";
 import { useGetProvincesQuery } from "../../api/share/area";
-import { Input, Select, Pagination, Spin, Form, Button } from "antd";
+import { Input, Select, Pagination, Spin, Form, Button, Empty } from "antd";
 import { Option } from "antd/es/mentions";
 import { IProvinces } from "../../interface/Area";
 import { useSearchClinicsMutation } from "../../api/site/Clinics";
 import { useSearchAllSpecialtyMutation } from "../../api/admin/Specialty";
 import { useSearchDoctorsMutation } from "../../api/admin/Doctor";
+import { FrownTwoTone } from "@ant-design/icons";
 
 const ListCategories = () => {
     const [form] = Form.useForm();
@@ -136,15 +137,33 @@ const ListCategories = () => {
             </div>
             <Spin spinning={isLoading}>
                 <div className="grid grid-cols-1 gap-4 ">
-                    {selectData?.data?.data?.map((item: LstCategories, index: number) => (
-                        <button onClick={() => handleClick2(data.slug, item.name, item.doctorName, item.id)} key={index} className="flex items-center gap-6 border-b-2 border-gray-200 pb-2">
-                            <img src={item.imageUrl} alt={item.name} className="w-40 h-24 object-cover" />
-                            <div className="text-start">
-                                <p className="text-xl mb-1.5">{item.name || item.doctorName}</p>
-                                <p className="">{item?.specialityName}</p>
+                    {selectData?.data?.data && selectData?.data?.data.length > 0 ? (
+                        <div className="grid grid-cols-1 gap-4">
+                            {selectData?.data?.data?.map((item: LstCategories, index: number) => (
+                                <button onClick={() => handleClick2(data.slug, item.name, item.doctorName, item.id)} key={index} className="flex items-center gap-6 border-b-2 border-gray-200 pb-2">
+                                    <img src={item.imageUrl} alt={item.name} className="w-40 h-24 object-cover" />
+                                    <div className="text-start">
+                                        <p className="text-xl mb-1.5">{item.name || item.doctorName}</p>
+                                        <p className="">{item?.specialityName}</p>
+                                    </div>
+                                </button>
+                            ))}
+                            <div className="flex justify-center">
+                                <Pagination
+                                    current={currentPage}
+                                    total={selectData?.data?.totalItems}
+                                    pageSize={10}
+                                    onChange={handlePageChange}
+                                />
                             </div>
-                        </button>
-                    ))}
+                        </div>
+                    ) : (
+                        <Empty
+                            image={<FrownTwoTone />}
+                            imageStyle={{ fontSize: 60 }}
+                            description={<span>Không tìm thấy {t(data.slug)} phù hợp</span>}
+                        />
+                    )}
 
                     <div className="flex justify-center">
                         <Pagination

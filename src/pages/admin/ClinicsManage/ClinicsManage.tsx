@@ -39,8 +39,8 @@ const ClinicsManage = () => {
                 async onOk() {
                     try {
                         await deleteClinics({ id, status });
-                        searchClinics({ search: "", province: "", status: "", page: 0, resultLimit: 10 });
                         Notifn("success", "Thành công", "Đã đổi trạng thái phòng khám thành công");
+                        form.submit();
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }

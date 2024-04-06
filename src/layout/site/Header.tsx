@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { Avatar, Dropdown, MenuProps } from 'antd';
 import { useRefreshTokenMutation } from '../../api/share/area';
 import { useGetAccountQuery } from '../../api/share/upload';
-import { HistoryOutlined, LoginOutlined } from '@ant-design/icons';
+import { HistoryOutlined, LoginOutlined, RollbackOutlined } from '@ant-design/icons';
 import { ImProfile } from 'react-icons/im';
 import { Notifn } from '../../utils/Notification';
 
@@ -110,16 +110,18 @@ const Header = () => {
                             <a href="https://www.facebook.com/profile.php?id=100008553451184">
                                 <AiFillCustomerService className="text-[#45C3D2] text-4xl" />
                             </a>
-                            {localStorage.getItem('role') !== 'USER' ? (
-                                <Link to={`/login`} className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium'>
-                                    {t('header.signin')}
-                                </Link>
-                            ) : (
+                            {localStorage.getItem('role') === 'USER' ? (
                                 <Dropdown menu={{ items }} trigger={['click']} className='cursor-pointer'>
                                     <a onClick={(e) => e.preventDefault()}>
                                         <Avatar size={34} src={`http://${data?.data?.avatar}`} />
                                     </a>
                                 </Dropdown>
+                            ) : localStorage.getItem('role') === 'ADMIN' ? (
+                                <Link className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium' to="/admin">Quay lại admin <RollbackOutlined /></Link>
+                            ) : (
+                                <Link to={`/login`} className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium'>
+                                    {t('header.signin')}
+                                </Link>
 
                             )}
                             <div className="relative">
@@ -146,7 +148,7 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
 
     );
 };

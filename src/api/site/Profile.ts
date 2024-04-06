@@ -16,7 +16,7 @@ const profileApi = createApi({
     }),
     endpoints: (builder) => ({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getAllProfile: builder.query<void, void>({
+        getAllProfile: builder.query<any, void>({
             query: () => "getAll",
             providesTags: ['PROFILES']
         }),

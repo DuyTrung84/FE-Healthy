@@ -14,7 +14,8 @@ const MedExamination = () => {
     const id = location.state.id
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPage2, setCurrentPage2] = useState(1);
-    const [selectedDate, setSelectedDate] = useState(0);
+    // const [selectedDate, setSelectedDate] = useState(0);
+    const [selectedDates, setSelectedDates] = useState<number[]>(Array(10).fill(0));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,18 +27,17 @@ const MedExamination = () => {
     useEffect(() => {
         fieldLstDotors()
         fieldLstService()
-    }, [searchDoctor, id, currentPage])
+    }, [searchDoctor, id, currentPage, currentPage2])
 
     const fieldLstDotors = async () => {
-        const response = await searchDoctor({ type: 1, name: "", clinic: "", speciality: id, page: currentPage - 1, resultLimit: 10 })
+        const response = await searchDoctor({ type: 1, name: "", clinic: "", speciality: id, page: currentPage - 1, resultLimit: 5 })
         if ('data' in response) { // Kiểm tra xem response có thuộc tính 'data' không
             setLstDoctor(response.data); // Nếu có, gán dữ liệu vào state lstDoctor
         }
     }
 
     const fieldLstService = async () => {
-        const response = await searchDoctor({ type: 2, name: "", clinic: "", speciality: id, page: currentPage2 - 1, resultLimit: 10 })
-
+        const response = await searchDoctor({ type: 2, name: "", clinic: "", speciality: id, page: currentPage2 - 1, resultLimit: 5 })
         if ('data' in response) {
             setLstService(response.data)
         }
@@ -54,6 +54,7 @@ const MedExamination = () => {
     };
 
     const handlePageChange = (page: number) => {
+        console.log(page)
         setCurrentPage(page);
     };
 
@@ -61,8 +62,10 @@ const MedExamination = () => {
         setCurrentPage2(page);
     };
 
-    const handleDateChange = (value: number) => {
-        setSelectedDate(value);
+    const handleDateChange = (value: number, index: number) => {
+        const updatedSelectedDates = [...selectedDates];
+        updatedSelectedDates[index] = value;
+        setSelectedDates(updatedSelectedDates);
     };
 
     return (
@@ -90,10 +93,10 @@ const MedExamination = () => {
                 <h2 className='font-semibold text-gray-800 text-2xl max-w-screen-xl mx-44 mb-4'>{t('clinicsDetail.doctor')}</h2>
                 <ListBooking
                     lstService={lstDoctor}
-                    currentPage={currentPage2}
+                    currentPage={currentPage}
                     handlePageChange={handlePageChange}
                     handleDateChange={handleDateChange}
-                    selectedDate={selectedDate}
+                    selectedDates={selectedDates}
                     toggleShowMoreDetails={toggleShowMoreDetails}
                     showMoreDetails={showMoreDetails}
                     doctorLoading={doctorLoading}
@@ -102,10 +105,10 @@ const MedExamination = () => {
                 <h2 className='font-semibold text-gray-800 text-2xl max-w-screen-xl mx-44 mb-4'>{t('clinicsDetail.service')}</h2>
                 <ListBooking
                     lstService={ltsService}
-                    currentPage={currentPage}
+                    currentPage={currentPage2}
                     handlePageChange={handlePageChange2}
                     handleDateChange={handleDateChange}
-                    selectedDate={selectedDate}
+                    selectedDates={selectedDates}
                     toggleShowMoreDetails={toggleShowMoreDetails}
                     showMoreDetails={showMoreDetails}
                     doctorLoading={doctorLoading}

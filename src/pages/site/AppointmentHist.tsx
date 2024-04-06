@@ -2,9 +2,12 @@ import { useTranslation } from "react-i18next";
 import { AiFillCalendar, AiFillClockCircle, AiFillHome } from "react-icons/ai";
 import { useGetHistoryBookingMutation } from "../../api/site/Clinics";
 import { useEffect, useState } from "react";
-import { Button, DatePicker, Form, Pagination, Spin } from "antd";
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Empty, Form, Input, Modal, Pagination, Select, Spin } from "antd";
+import { FrownTwoTone, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
+import { useGetStatusBookingQuery } from "../../api/admin/Booking";
+import { useCancelAppointmentMutation } from "../../api/site/Payment";
+import { Notifn } from "../../utils/Notification";
 
 const { RangePicker } = DatePicker;
 
@@ -12,8 +15,13 @@ const AppointmentHist = () => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
     const [currentPage, setCurrentPage] = useState(1);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isFullContent, setIsFullContent] = useState(false);
+    const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>(""); // State để lưu trữ id của lịch khám được chọn
 
     const [search, { data, isLoading }] = useGetHistoryBookingMutation();
+    const { data: bookingStatus } = useGetStatusBookingQuery();
+    const [cancel, { isLoading: cancelLoading }] = useCancelAppointmentMutation()
 
     useEffect(() => {
         search({ fromDate: "", toDate: "", status: "", page: currentPage - 1, resultLimit: 10 })
@@ -21,12 +29,12 @@ const AppointmentHist = () => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSearch = (values: any) => {
-        const fromDate = dayjs(values.name[0]).format('YYYY-MM-DD');
-        const toDate = dayjs(values.name[1]).format('YYYY-MM-DD');
+        const fromDate = values.name && values.name[0] ? dayjs(values.name[0]).format('YYYY-MM-DD') : '';
+        const toDate = values.name && values.name[1] ? dayjs(values.name[1]).format('YYYY-MM-DD') : '';
         search({
             fromDate: fromDate,
             toDate: toDate,
-            status: "",
+            status: values.status,
             page: 0,
             resultLimit: 10
         });
@@ -37,6 +45,34 @@ const AppointmentHist = () => {
         search({ fromDate: "", toDate: "", status: "", page: 0, resultLimit: 10 });
     };
 
+    const toggleFullContent = () => {
+        setIsFullContent(!isFullContent); // Đảo ngược trạng thái hiển thị đầy đủ nội dung
+    };
+
+    const showModal = (idBooking: string) => {
+        setSelectedAppointmentId(idBooking)
+        setIsModalOpen(true);
+    };
+
+    const hiddenModal = () => {
+        setIsModalOpen(false);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onFinish = async (values: any) => {
+        await cancel({ ...values, idBooking: selectedAppointmentId })
+            .unwrap()
+            .then(() => {
+                Notifn("success", "Thành công", "Huỷ đặt lịch thành công");
+                search({ fromDate: "", toDate: "", status: "", page: currentPage - 1, resultLimit: 10 })
+                setIsModalOpen(false);
+                handleReset()
+            })
+            .catch((error) => {
+                Notifn("error", "Lỗi", error.data.message || error.data);
+            })
+    };
+
     return (
         <div className="max-w-screen-xl mx-44">
             <div className="flex items-center gap-1 my-4 text-[#45C3D2]">
@@ -45,10 +81,17 @@ const AppointmentHist = () => {
             </div>
             <h2 className="font-bold text-xl mt-2 mb-5">{t('history')}</h2>
             <Form onFinish={handleSearch} form={form} className="ml-8 my-4">
-                <p className="font-medium text-[17px] my-1.5 text-gray-700 mb-2">Khoảng thời gian:</p>
                 <div className="flex gap-4">
                     <Form.Item name="name">
-                        <RangePicker />
+                        <RangePicker placeholder={['Từ ngày', 'Đến ngày']} />
+                    </Form.Item>
+                    <Form.Item name="status" className="w-44">
+                        <Select placeholder="Trạng thái đặt lịch" className="w-96">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {bookingStatus?.data?.map((role: any) => (
+                                <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>
+                            ))}
+                        </Select>
                     </Form.Item>
                     <Button icon={<ReloadOutlined />} onClick={handleReset}>Đặt lại</Button>
                     <Button type="primary" icon={<SearchOutlined />} className="bg-blue-600" htmlType="submit">
@@ -59,34 +102,69 @@ const AppointmentHist = () => {
             </Form>
             <Spin spinning={isLoading}>
                 <div className="grid grid-cols-1 gap-8 mx-24">
-                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                    {data?.data?.data.map((item: any) => (
-                        <div className="grid grid-cols-4 items-center py-6 px-20 gap-4 border-2 rounded-xl shadow-lg">
-                            <div className="col-span-1 flex flex-col gap-2 justify-center items-center ">
-                                <div className="border-2 border-gray-200 p-2 rounded-full w-24 h-24 flex justify-center items-center">
-                                    <img src={item.patientProfile.imgUrl} alt="" className="w-20 h-20 object-cover rounded-full" />
+                    {data?.data?.data && data?.data?.data.length > 0 ? (
+                        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                        data?.data?.data.map((item: any) => (
+                            <div className="grid grid-cols-4 items-center py-6 px-20 gap-4 border-2 rounded-xl shadow-lg">
+                                <div className="col-span-1 flex flex-col gap-2 justify-center items-center ">
+                                    <div className="border-2 border-gray-200 p-2 rounded-full w-24 h-24 flex justify-center items-center">
+                                        <img src={item.patientProfile.imgUrl} alt="" className="w-20 h-20 object-cover rounded-full" />
+                                    </div>
+                                    <p className="font-semibold text-[#49BCE2] uppercase text-lg">Khám</p>
+                                    <p className="flex gap-2 items-center text-[#FFC10E]">
+                                        <AiFillClockCircle className="text-3xl" />
+                                        <span className="text-lg font-medium">{item.timeStart}-{item.timeEnd}</span>
+                                    </p>
+                                    <p className="flex gap-2 items-center text-[#FFC10E]">
+                                        <AiFillCalendar className="text-3xl" />
+                                        <span className="text-lg font-medium">{item.date}</span>
+                                    </p>
                                 </div>
-                                <p className="font-semibold text-[#49BCE2] uppercase text-lg">Khám</p>
-                                <p className="flex gap-2 items-center text-[#FFC10E]">
-                                    <AiFillClockCircle className="text-3xl" />
-                                    <span className="text-lg font-medium">{item.timeStart}-{item.timeEnd}</span>
-                                </p>
-                                <p className="flex gap-2 items-center text-[#FFC10E]">
-                                    <AiFillCalendar className="text-3xl" />
-                                    <span className="text-lg font-medium">{item.date}</span>
-                                </p>
+                                <div className="col-span-3 text-start grid grid-cols-1 gap-2 text-lg">
+                                    <p className="font-semibold">Bệnh nhân: {item.patientProfile.fullName}</p>
+                                    <p>Bác sĩ : <span className="text-[#45C3D2]">{item.doctorName}</span></p>
+                                    <p>Nơi khám: {item.clinicName}</p>
+                                    <p className={isFullContent ? "" : "line-clamp-3"}>
+                                        Lý do khám: {item.reasonBooking}
+                                    </p>
+
+                                    <span>
+                                        {!isFullContent && (
+                                            <Button type="link" onClick={toggleFullContent}>
+                                                Xem thêm
+                                            </Button>
+                                        )}
+                                        {isFullContent && (
+                                            <Button type="link" onClick={toggleFullContent}>
+                                                Ẩn đi
+                                            </Button>
+                                        )}
+                                    </span>
+
+                                    <button
+                                        className={`text-center text-white px-6 py-3 mt-2 w-2/5 rounded-lg font-semibold
+                                         ${item.isCancel === 1 ? "bg-[#FFC20E] hover:bg-yellow-400 cursor-pointer" : "bg-gray-400 cursor-not-allowed"}`}
+                                        disabled={item.isCancel !== 1}
+                                        onClick={() => showModal(item.id)}
+                                    >
+                                        {item.isCancel === 1 ? (
+                                            <span>Huỷ lịch khám</span>
+                                        ) : item.isCancel === 0 ? (
+                                            "Lịch đã huỷ"
+                                        ) : (
+                                            "Đã khám xong"
+                                        )}
+                                    </button>
+                                </div>
                             </div>
-                            <div className="col-span-3 text-start grid grid-cols-1 gap-2 text-lg">
-                                <p className="font-semibold">Bệnh nhân: {item.patientProfile.fullName}</p>
-                                <p>Bác sĩ : <span className="text-[#45C3D2]">{item.doctorName}</span></p>
-                                <p>Nơi khám: {item.clinicName}</p>
-                                <p className="line-clamp-4">Lý do khám: {item.reasonBooking} </p>
-                                <button className="text-center text-white bg-[#FFC20E] px-6 py-3 mt-2 w-2/5 rounded-lg font-semibold">
-                                    <p>Đã đặt lịch khám</p>
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <Empty
+                            image={<FrownTwoTone />}
+                            imageStyle={{ fontSize: 60 }}
+                            description={<span>Không tìm thấy lịch khám phù hợp</span>}
+                        />
+                    )}
                 </div>
             </Spin>
             <Pagination
@@ -96,6 +174,31 @@ const AppointmentHist = () => {
                 onChange={(page) => setCurrentPage(page)}
                 className="text-center mt-8"
             />
+
+            <Modal width={500} open={isModalOpen} footer={null} onCancel={hiddenModal}>
+                <Form
+                    name="normal_login"
+                    className="login-form"
+                    labelCol={{ span: 24 }}
+                    wrapperCol={{ span: 24 }}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                >
+                    <Form.Item
+                        label="Lý do huỷ"
+                        name="reasonCancel"
+                        rules={[{ required: true, message: "Vui lòng nhập lý do huỷ!!" }]}
+                    >
+                        <Input placeholder="Nhập lý do huỷ" />
+                    </Form.Item>
+
+                    <Form.Item className='text-center'>
+                        <Button type="primary" htmlType="submit" className="bg-blue-500 w-full" style={{ height: '45px' }} loading={cancelLoading}>
+                            Huỷ đặt lịch
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
     )
 }

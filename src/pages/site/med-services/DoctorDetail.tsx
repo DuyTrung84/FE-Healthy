@@ -15,7 +15,7 @@ const DoctorDetail = () => {
     const [showMore2, setShowMore2] = useState(false);
     const [selectedDate, setSelectedDate] = useState(0);
     const location = useLocation();
-
+    const isCheck = location.pathname.split('/')[1];
 
     const { data: doctorData, isLoading: doctorLoading } = useGetByIdDoctorQuery(location.state.id)
 
@@ -36,7 +36,11 @@ const DoctorDetail = () => {
             <div className="max-w-screen-xl mx-auto px-12 py-4">
                 <div className="flex items-center gap-1 my-4 text-[#45C3D2] ">
                     <a href="/" className="flex gap-1"><AiFillHome className="text-xl" />/</a>
-                    <p> {t('doctorDetail.doctor')} /{doctorData?.data?.specialityName}</p>
+                    {isCheck === "bac-si" ? (
+                        <p> {t('doctorDetail.doctor')} /{doctorData?.data?.specialityName}</p>
+                    ) : isCheck === "dich-vu" ? (
+                        <p>{t('doctorDetail.service')}/{doctorData?.data?.specialityName}</p>
+                    ) : null}
                 </div>
                 <div className="flex gap-8 w-4/6 text-[#555555] leading-6">
                     <img src={doctorData?.data?.imageUrl} alt="" className="w-32 h-32 rounded-full" />

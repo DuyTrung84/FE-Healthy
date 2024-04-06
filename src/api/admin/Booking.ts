@@ -62,9 +62,9 @@ const bookingApi = createApi({
             invalidatesTags: ['BOOKING']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getStatusBooking: builder.query<any, string>({
+        getStatusBooking: builder.query<any, void>({
             query: () => ({
-                url: `public/scheduleStatus`,
+                url: `public/bookingStatus`,
                 method: 'GET',
             }),
             providesTags: ['BOOKING']

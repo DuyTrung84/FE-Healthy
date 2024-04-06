@@ -79,6 +79,7 @@ const enTranslation = {
         "hidden": "Hide"
     },
     "doctorDetail": {
+        "service": "Service",
         "doctor": "Doctor",
         "bookingTitle": "Appointment Schedule",
         "selectAndSet": "Select and Book",

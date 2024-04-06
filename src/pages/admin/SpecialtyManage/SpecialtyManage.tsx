@@ -14,13 +14,14 @@ import { useEffect } from "react";
 const { confirm } = Modal;
 const SpecialtyManage = () => {
     const [form] = Form.useForm();
+
     const [searchSpecialty, { data, isLoading }] = useSearchAllSpecialtyMutation();
     const [deleteSpecialty] = useDeleteSpecialtyMutation();
     const { data: statusData } = useGetStatusQuery()
 
     useEffect(() => {
         searchSpecialty({ name: "", status: "", page: 0, resultLimit: 10 });
-    }, []);
+    }, [searchSpecialty]);
 
     const showDeleteConfirm = (id: string | undefined, status: string) => {
         if (id !== undefined) {
@@ -37,7 +38,7 @@ const SpecialtyManage = () => {
                 async onOk() {
                     try {
                         await deleteSpecialty({ id, status });
-                        searchSpecialty({ name: "", status: "", page: 0, resultLimit: 10 });
+                        form.submit();
                         Notifn("success", "Thành công", "Đổi trạng thái thành công!!");
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi đổi trạng thái");

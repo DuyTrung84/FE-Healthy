@@ -44,6 +44,16 @@ const paymentApi = createApi({
             }),
             providesTags: ['PAYMENT']
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        cancelAppointment: builder.mutation<any, any>({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            query: (payment: any) => ({
+                url: "cancelAppointment",
+                method: "POST",
+                body: payment
+            }),
+            invalidatesTags: ['PAYMENT']
+        }),
     }),
 });
 
@@ -51,7 +61,8 @@ const paymentApi = createApi({
 export const {
     useCreateFreeOrderMutation,
     useCreatePaymentMutation,
-    useResultPaymentQuery
+    useResultPaymentQuery,
+    useCancelAppointmentMutation
 } = paymentApi;
 
 export const paymentApiReducer = paymentApi.reducer;

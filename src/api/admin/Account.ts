@@ -41,7 +41,8 @@ const accountApi = createApi({
             }),
             invalidatesTags: ['ACCOUNT']
         }),
-        getRole: builder.query<void, void>({
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+        getRole: builder.query<any, void>({
             query: () => "/role",
             providesTags: ['ACCOUNT']
         }),

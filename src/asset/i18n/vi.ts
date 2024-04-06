@@ -79,7 +79,8 @@ const viTranslation = {
         hidden: "Ẩn",
     },
     doctorDetail: {
-        doctor: "Doctor",
+        service: "Dịch vụ",
+        doctor: "Bác sĩ",
         bookingTitle: "Lịch khám",
         selectAndSet: "Chọn và đặt",
         addressExamination: "Địa chỉ khám",

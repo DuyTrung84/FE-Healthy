@@ -139,8 +139,8 @@ const MakeAppt = () => {
                             rules={[{ required: true, message: t('makeAppt.errorProfile') }]}
                         >
                             <Radio.Group>
-                                {profiles?.data ? (
-                                    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+                                {profiles?.data && profiles.data.length > 0 ? (
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                     profiles.data.map((item: any) => (
                                         <Radio key={item.id} value={item.id} style={{ margin: '0 8px 8px 0' }}>
                                             <Card style={{ width: 320 }} loading={loadingProfile}>
@@ -164,6 +164,7 @@ const MakeAppt = () => {
                                         </Empty>
                                     </div>
                                 )}
+
                             </Radio.Group>
                         </Form.Item>
 

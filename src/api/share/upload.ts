@@ -39,7 +39,6 @@ const uploadApi = createApi({
             query: () => "/public/payment",
             providesTags: ["UPLOAD"],
         })
-
     }),
 });
 

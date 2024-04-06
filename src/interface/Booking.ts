@@ -12,6 +12,7 @@ export interface IBookingChildren {
 }
 
 export interface IBooking {
+    id: string;
     date: string;
     schedules: IBookingChildren;
 }
