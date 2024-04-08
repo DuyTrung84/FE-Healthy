@@ -1,5 +1,5 @@
 
-import { DownOutlined, FundProjectionScreenOutlined, LoginOutlined } from '@ant-design/icons';
+import { DownOutlined, FundProjectionScreenOutlined, LoginOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'antd';
 
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -112,6 +112,7 @@ const LayoutDoctor = () => {
                                 </a>
                             </Dropdown>
                         </div>
+                        <Link className='border-l px-3' to="/">Quay lại web <RollbackOutlined /></Link>
                     </div>
                 </Header>
                 <Content style={{ margin: '88px 24px 0' }}>

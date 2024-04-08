@@ -11,6 +11,7 @@ const EmailVerify = React.lazy(() => import('./pages/auth/EmailVerify'));
 const IsCheckAdmin = React.lazy(() => import('./pages/auth/IsCheckAdmin'));
 const IsCheckDoctor = React.lazy(() => import('./pages/auth/IsCheckDoctor'));
 const IsCheckUser = React.lazy(() => import('./pages/auth/IsCheckUser'));
+const IsCheckLogin = React.lazy(() => import('./pages/auth/IsCheckLogin'));
 const LayoutSite = React.lazy(() => import('./layout/site/LayoutSite'));
 const Home = React.lazy(() => import('./pages/site/Home'));
 const ListCategories = React.lazy(() => import('./pages/site/ListCategories'));
@@ -92,7 +93,9 @@ function App() {
 
               </Route>
             </Route>
-            <Route path='/login' element={<Signin />} />
+            <Route element={<IsCheckLogin />}>
+              <Route path='/login' element={<Signin />} />
+            </Route>
             <Route path='/register' element={<Signup />} />
             <Route path='/auth/email-verification/:token' element={<EmailVerify />} />
           </Routes>

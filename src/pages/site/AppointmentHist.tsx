@@ -16,7 +16,7 @@ const AppointmentHist = () => {
     const [form] = Form.useForm();
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isFullContent, setIsFullContent] = useState(false);
+    const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>(""); // State để lưu trữ id của lịch khám được chọn
 
     const [search, { data, isLoading }] = useGetHistoryBookingMutation();
@@ -25,6 +25,7 @@ const AppointmentHist = () => {
 
     useEffect(() => {
         search({ fromDate: "", toDate: "", status: "", page: currentPage - 1, resultLimit: 10 })
+        form.submit();
     }, [search, currentPage])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,10 +46,13 @@ const AppointmentHist = () => {
         search({ fromDate: "", toDate: "", status: "", page: 0, resultLimit: 10 });
     };
 
-    const toggleFullContent = () => {
-        setIsFullContent(!isFullContent); // Đảo ngược trạng thái hiển thị đầy đủ nội dung
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const toggleItemContent = (itemId: any) => {
+        setExpandedItems(prevState => ({
+            ...prevState,
+            [itemId]: !prevState[itemId]
+        }));
     };
-
     const showModal = (idBooking: string) => {
         setSelectedAppointmentId(idBooking)
         setIsModalOpen(true);
@@ -66,7 +70,7 @@ const AppointmentHist = () => {
                 Notifn("success", "Thành công", "Huỷ đặt lịch thành công");
                 search({ fromDate: "", toDate: "", status: "", page: currentPage - 1, resultLimit: 10 })
                 setIsModalOpen(false);
-                handleReset()
+                form.submit();
             })
             .catch((error) => {
                 Notifn("error", "Lỗi", error.data.message || error.data);
@@ -124,32 +128,43 @@ const AppointmentHist = () => {
                                     <p className="font-semibold">Bệnh nhân: {item.patientProfile.fullName}</p>
                                     <p>Bác sĩ : <span className="text-[#45C3D2]">{item.doctorName}</span></p>
                                     <p>Nơi khám: {item.clinicName}</p>
-                                    <p className={isFullContent ? "" : "line-clamp-3"}>
+                                    <p>Trạng thái:
+                                        {item.status === 1 ? (
+                                            <span className="text-green-500"> Đặt thành công</span>
+                                        ) : item.status === 0 ? (
+                                            <span className="text-red-500"> Lịch đã huỷ</span>
+                                        ) : (
+                                            <span className="text-blue-500"> Đã khám xong</span>
+                                        )}
+                                    </p>
+                                    <p className={expandedItems[item.id] ? "" : "line-clamp-3"}>
                                         Lý do khám: {item.reasonBooking}
                                     </p>
 
                                     <span>
-                                        {!isFullContent && (
-                                            <Button type="link" onClick={toggleFullContent}>
+                                        {!expandedItems[item.id] && (
+                                            <Button type="link" onClick={() => toggleItemContent(item.id)}>
                                                 Xem thêm
                                             </Button>
                                         )}
-                                        {isFullContent && (
-                                            <Button type="link" onClick={toggleFullContent}>
+                                        {expandedItems[item.id] && (
+                                            <Button type="link" onClick={() => toggleItemContent(item.id)}>
                                                 Ẩn đi
                                             </Button>
                                         )}
                                     </span>
-
+                                    {item.status === 0 && (
+                                        <p>Lý do huỷ: {item.reasonCancel}</p>
+                                    )}
                                     <button
                                         className={`text-center text-white px-6 py-3 mt-2 w-2/5 rounded-lg font-semibold
                                          ${item.isCancel === 1 ? "bg-[#FFC20E] hover:bg-yellow-400 cursor-pointer" : "bg-gray-400 cursor-not-allowed"}`}
                                         disabled={item.isCancel !== 1}
                                         onClick={() => showModal(item.id)}
                                     >
-                                        {item.isCancel === 1 ? (
+                                        {item.status === 1 ? (
                                             <span>Huỷ lịch khám</span>
-                                        ) : item.isCancel === 0 ? (
+                                        ) : item.status === 0 ? (
                                             "Lịch đã huỷ"
                                         ) : (
                                             "Đã khám xong"

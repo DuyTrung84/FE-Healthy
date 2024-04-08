@@ -21,8 +21,9 @@ const BookingManage = () => {
     const [deleteBooking] = useDeleteBookingMutation();
 
     useEffect(() => {
-        searchBooking({ fromDate: "", toDate: "", page: 0, resultLimit: 10 });
-    }, [searchBooking]);
+        searchBooking({ fromDate: "", toDate: "" });
+        form.submit();
+    }, [searchBooking, form]);
 
     const showDeleteConfirm = (id: string[] | Key[]) => {
         if (id !== undefined) {
@@ -37,7 +38,7 @@ const BookingManage = () => {
                     try {
                         deleteBooking({ idsToDelete: id })
                         Notifn("success", "Thành công", "Xoá lịch khám thành công thành công!");
-                        searchBooking({ fromDate: "", toDate: "", page: 0, resultLimit: 10 });
+                        form.submit()
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi xoá");
                     }
@@ -53,23 +54,12 @@ const BookingManage = () => {
         searchBooking({
             fromDate: fromDate,
             toDate: toDate,
-            page: 0,
-            resultLimit: 10
         });
     };
 
     const handleReset = () => {
         form.resetFields();
-        searchBooking({ fromDate: "", toDate: "", page: 0, resultLimit: 10 });
-    };
-
-    const handlePaginationChange = (currentPage: number, pageSize?: number) => {
-        searchBooking({
-            fromDate: form.getFieldValue('name'),
-            toDate: form.getFieldValue('status'),
-            page: currentPage - 1, // Trừ 1 vì API thường sử dụng index bắt đầu từ 0
-            resultLimit: pageSize || 10, // Số lượng mục trên mỗi trang
-        });
+        searchBooking({ fromDate: "", toDate: "" });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,7 +95,14 @@ const BookingManage = () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             render: (_text: any, _record: any) => (
                 <Space size="middle">
-                    <MdAddCard className="text-2xl text-blue-500 hover:text-blue-400 cursor-pointer" onClick={() => navigate(`/doctor/them-lich-kham`, { state: _record.date })} />
+                    <MdAddCard
+                        className={`text-2xl ${_record.isCreate === 0 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-blue-400 cursor-pointer'}`}
+                        onClick={() => {
+                            if (_record.isCreate === 1) {
+                                navigate(`/doctor/them-lich-kham`, { state: _record.date });
+                            }
+                        }}
+                    />
                 </Space>
             ),
         },
@@ -228,12 +225,6 @@ const BookingManage = () => {
                 dataSource={newData}
                 loading={isLoading}
                 scroll={{ y: 400 }}
-                pagination={{
-                    current: data?.data?.currentPage ? data.data.currentPage + 1 : 1,
-                    total: data?.data?.totalItems,
-                    pageSize: 10,
-                    onChange: handlePaginationChange,
-                }}
                 expandable={{ expandedRowRender }}
             />
         </div>

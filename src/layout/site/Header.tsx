@@ -75,7 +75,7 @@ const Header = () => {
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center gap-12">
                         <Link className="block text-blue-600" to="/">
-                            <img src="https://cdn.youmed.vn/wp-content/themes/youmed/images/favicon.svg" className="w-14" alt="" />
+                            <img src="../../asset/img/logoDA.png" className="w-14" alt="" />
                         </Link>
                     </div>
                     <div className="flex items-center justify-center gap-6">
@@ -118,6 +118,8 @@ const Header = () => {
                                 </Dropdown>
                             ) : localStorage.getItem('role') === 'ADMIN' ? (
                                 <Link className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium' to="/admin">Quay lại admin <RollbackOutlined /></Link>
+                            ) : localStorage.getItem('role') === 'DOCTOR' ? (
+                                <Link className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium' to="/doctor">Quay lại doctor <RollbackOutlined /></Link>
                             ) : (
                                 <Link to={`/login`} className='text-[#45C3D2] hover:text-blue-500 hover:underline font-medium'>
                                     {t('header.signin')}

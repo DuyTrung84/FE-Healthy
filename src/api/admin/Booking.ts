@@ -24,11 +24,11 @@ const bookingApi = createApi({
             providesTags: ['BOOKING']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        searchBooking: builder.mutation<any, { fromDate: string, toDate: string, page: number, resultLimit: number }>({
-            query: ({ fromDate, toDate, page, resultLimit }) => ({
+        searchBooking: builder.mutation<any, { fromDate: string, toDate: string }>({
+            query: ({ fromDate, toDate }) => ({
                 url: `admin/doctors/getSchedules`,
                 method: 'GET',
-                params: { fromDate, toDate, page, resultLimit },
+                params: { fromDate, toDate },
             }),
             invalidatesTags: ['BOOKING']
         }),

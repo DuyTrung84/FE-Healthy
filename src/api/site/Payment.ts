@@ -36,13 +36,13 @@ const paymentApi = createApi({
             invalidatesTags: ['PAYMENT']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resultPayment: builder.query<any, any>({
+        resultPayment: builder.mutation<any, any>({
             query: (result) => ({
                 url: 'checkPaymentResult',
                 method: 'GET',
                 params: result,
             }),
-            providesTags: ['PAYMENT']
+            invalidatesTags: ['PAYMENT']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         cancelAppointment: builder.mutation<any, any>({
@@ -61,7 +61,7 @@ const paymentApi = createApi({
 export const {
     useCreateFreeOrderMutation,
     useCreatePaymentMutation,
-    useResultPaymentQuery,
+    useResultPaymentMutation,
     useCancelAppointmentMutation
 } = paymentApi;
 

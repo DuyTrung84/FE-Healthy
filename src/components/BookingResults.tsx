@@ -1,9 +1,11 @@
 import { Button, Result, Spin } from "antd"
-import { useResultPaymentQuery } from "../api/site/Payment";
+import { useResultPaymentMutation } from "../api/site/Payment";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const BookingResults = () => {
     const location = useLocation();
+    console.log(location.state)
     const navigate = useNavigate()
     const searchParams = new URLSearchParams(location.search);
 
@@ -20,11 +22,27 @@ const BookingResults = () => {
     const vnp_TxnRef = searchParams.get('vnp_TxnRef');
     const vnp_SecureHash = searchParams.get('vnp_SecureHash');
 
-    const { data, isLoading, isError } = useResultPaymentQuery({
-        vnp_Amount,
-        vnp_BankCode,
-        vnp_BankTranNo,
-        vnp_CardType,
+    const [reasult, { data, isLoading, isError }] = useResultPaymentMutation();
+    console.log(isError)
+
+    useEffect(() => {
+        if (!location.state || !location.state.isFree) {
+            reasult({
+                vnp_Amount,
+                vnp_BankCode,
+                vnp_BankTranNo,
+                vnp_CardType,
+                vnp_OrderInfo,
+                vnp_PayDate,
+                vnp_ResponseCode,
+                vnp_TmnCode,
+                vnp_TransactionNo,
+                vnp_TransactionStatus,
+                vnp_TxnRef,
+                vnp_SecureHash
+            });
+        }
+    }, [reasult, vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType,
         vnp_OrderInfo,
         vnp_PayDate,
         vnp_ResponseCode,
@@ -32,10 +50,7 @@ const BookingResults = () => {
         vnp_TransactionNo,
         vnp_TransactionStatus,
         vnp_TxnRef,
-        vnp_SecureHash
-    });
-    console.log(isError)
-
+        vnp_SecureHash, location])
 
 
     return (
@@ -43,7 +58,7 @@ const BookingResults = () => {
             {isError ? (
                 <Result
                     status="error"
-                    title={data?.message}
+                    title={data?.message || "Lỗi"}
                     subTitle="Đặt lịch khám không thành công!!"
                     extra={[
                         <Button type="default" key="console" onClick={() => navigate(-3)}>
@@ -54,7 +69,7 @@ const BookingResults = () => {
             ) : (
                 <Result
                     status="success"
-                    title={data?.message}
+                    title={data?.message || "Thành công"}
                     subTitle="Đặt lịch khám thành công!!"
                     extra={[
                         <Button type="primary" key="console" className="bg-blue-500" href="/lich-hen">

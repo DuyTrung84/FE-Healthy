@@ -164,15 +164,6 @@ const ListCategories = () => {
                             description={<span>Không tìm thấy {t(data.slug)} phù hợp</span>}
                         />
                     )}
-
-                    <div className="flex justify-center">
-                        <Pagination
-                            current={currentPage}
-                            total={selectData?.data?.totalItems}
-                            pageSize={10}
-                            onChange={handlePageChange}
-                        />
-                    </div>
                 </div>
             </Spin>
         </div>

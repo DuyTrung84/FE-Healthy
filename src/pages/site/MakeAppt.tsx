@@ -66,7 +66,7 @@ const MakeAppt = () => {
                 .unwrap()
                 .then(() => {
                     Notifn("success", "Thành công", "Đặt lịch thành công!");
-                    navigate("/vnpay_return");
+                    navigate("/vnpay_return", { state: { isFree: "Yes" } });
                 })
                 .catch((error) => {
                     console.error(error);

@@ -5,7 +5,7 @@ import { Button, Col, DatePicker, Form, InputNumber, Row, Select } from 'antd';
 import { Notifn } from "../../../utils/Notification";
 import { useAddBookingMutation, useGetWhoPayQuery } from "../../../api/admin/Booking";
 import dayjs from 'dayjs';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const { RangePicker } = DatePicker;
 
@@ -13,7 +13,8 @@ const BookingAdd = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const location = useLocation();
-    console.log(location)
+    const [expiryTime, setExpiryTime] = useState<dayjs.Dayjs | null>(null); // Thêm state mới để lưu giá trị thời gian hết hạn
+    console.log(expiryTime)
 
     const [addService, { isLoading }] = useAddBookingMutation();
     const { data: whoPay } = useGetWhoPayQuery()
@@ -26,6 +27,21 @@ const BookingAdd = () => {
         });
 
     }, [location, form])
+
+
+    const calculateExpiryTime = (startTime: dayjs.Dayjs | null) => {
+        if (startTime) {
+            const expiry = startTime.clone().subtract(1, 'hour'); // Tính thời gian hết hạn là thời gian bắt đầu trừ đi 1 tiếng
+            setExpiryTime(expiry);
+            form.setFieldsValue({ expiredTime: expiry }); // Cập nhật giá trị mới cho trường thời gian hết hạn trong form
+        }
+    };
+
+    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */ }
+    const handleTimeChange = (values: any) => {
+        const startTime = values?.[0];
+        calculateExpiryTime(startTime);
+    };
 
     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */ }
     const validateDate = (_rule: any, value: any, callback: any) => {
@@ -50,6 +66,7 @@ const BookingAdd = () => {
         delete values.time
         delete values.date
         delete values.expiredTime
+
         await addService({
             ...values,
             bookingExpiredTime: mergedBookingExpiredTime,
@@ -136,7 +153,12 @@ const BookingAdd = () => {
                                 { required: true, message: 'Trường này không được bỏ trống !' },
                             ]}
                         >
-                            <RangePicker picker="time" className="w-full" />
+                            <RangePicker
+                                picker="time"
+                                className="w-full"
+                                placeholder={["Thời gian bắt đầu", "Thời gian kết thúc"]}
+                                onChange={handleTimeChange}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
@@ -147,7 +169,7 @@ const BookingAdd = () => {
                                 { required: true, message: 'Trường này không được bỏ trống !' },
                             ]}
                         >
-                            <DatePicker picker="time" className="w-full" />
+                            <DatePicker picker="time" className="w-full" value={expiryTime} />
                         </Form.Item>
                     </Col>
                 </Row>

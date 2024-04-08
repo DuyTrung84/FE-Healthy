@@ -14,7 +14,7 @@ const ClinicsDetail = () => {
     const [showMoreDetails, setShowMoreDetails] = useState(Array(10).fill(false));
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPage2, setCurrentPage2] = useState(1);
-    const [selectedDate, setSelectedDate] = useState(0);
+    const [selectedDates, setSelectedDates] = useState<number[]>(Array(10).fill(0));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,8 +60,10 @@ const ClinicsDetail = () => {
     };
 
 
-    const handleDateChange = (value: number) => {
-        setSelectedDate(value);
+    const handleDateChange = (value: number, index: number) => {
+        const updatedSelectedDates = [...selectedDates];
+        updatedSelectedDates[index] = value;
+        setSelectedDates(updatedSelectedDates);
     };
 
     const handleBookAppointment = () => {
@@ -107,7 +109,7 @@ const ClinicsDetail = () => {
                     currentPage={currentPage}
                     handlePageChange={handlePageChange}
                     handleDateChange={handleDateChange}
-                    selectedDate={selectedDate}
+                    selectedDates={selectedDates}
                     toggleShowMoreDetails={toggleShowMoreDetails}
                     showMoreDetails={showMoreDetails}
                     doctorLoading={doctorLoading}
@@ -119,7 +121,7 @@ const ClinicsDetail = () => {
                     currentPage={currentPage2}
                     handlePageChange={handlePageChange2}
                     handleDateChange={handleDateChange}
-                    selectedDate={selectedDate}
+                    selectedDates={selectedDates}
                     toggleShowMoreDetails={toggleShowMoreDetails}
                     showMoreDetails={showMoreDetails}
                     doctorLoading={doctorLoading}
