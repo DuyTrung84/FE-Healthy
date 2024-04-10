@@ -29,14 +29,14 @@ const MedExamination = () => {
     }, [searchDoctor, id, currentPage, currentPage2])
 
     const fieldLstDotors = async () => {
-        const response = await searchDoctor({ type: 1, name: "", clinic: location.state.id, speciality: "", page: currentPage - 1, resultLimit: 5 })
+        const response = await searchDoctor({ type: 1, name: "", clinic: "", speciality: id, page: currentPage - 1, resultLimit: 5 })
         if ('data' in response) { // Kiểm tra xem response có thuộc tính 'data' không
             setLstDoctor(response.data); // Nếu có, gán dữ liệu vào state lstDoctor
         }
     }
 
     const fieldLstService = async () => {
-        const response = await searchDoctor({ type: 2, name: "", clinic: location.state.id, speciality: "", page: currentPage2 - 1, resultLimit: 5 })
+        const response = await searchDoctor({ type: 2, name: "", clinic: "", speciality: id, page: currentPage2 - 1, resultLimit: 5 })
         if ('data' in response) {
             setLstService(response.data)
         }

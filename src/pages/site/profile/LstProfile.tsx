@@ -15,7 +15,6 @@ const LstProfile = () => {
     const [allDataDisplayed, setAllDataDisplayed] = useState(false); // State để kiểm tra đã hiển thị hết dữ liệu hay chưa
     const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
 
-
     const { data: profiles, isLoading } = useGetAllProfileQuery();
     const [deleteProfile] = useDeleteProfileMutation();
     const [call, { data: profileById, isLoading: loadingProfileById }] = useGetProfileById2Mutation()

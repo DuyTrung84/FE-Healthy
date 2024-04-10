@@ -64,8 +64,8 @@ const Header = () => {
     };
 
     const items: MenuProps['items'] = [
-        { label: <Link to={`/ho-so-kham-benh`} className='mx-2 flex items-center gap-2'><ImProfile />{t('header.medExamRec')}</Link>, key: '1', },
-        { label: <Link to={`/lich-hen`} className='mx-2 flex items-center gap-2'><HistoryOutlined />{t('header.history')}</Link>, key: '3', },
+        { label: <a href={`/ho-so-kham-benh`} className='mx-2 flex items-center gap-2'><ImProfile />{t('header.medExamRec')}</a>, key: '1', },
+        { label: <a href={`/lich-hen`} className='mx-2 flex items-center gap-2'><HistoryOutlined />{t('header.history')}</a>, key: '3', },
         { label: <button className='mx-2' onClick={handleLogout}><LoginOutlined className='mr-2' />{t('header.logout')}</button>, key: '2', },
     ];
 
