@@ -39,6 +39,7 @@ const AccountManage = () => {
                     try {
                         await deleteAccount({ id, status });
                         Notifn("success", "Thành công", "Đã chuyển trạng thái tài khoản thành công!");
+                        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
                         form.submit();
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi khoá");

@@ -42,6 +42,7 @@ const LayoutDoctor = React.lazy(() => import('./layout/doctor/LayoutDoctor'));
 const BookingManage = React.lazy(() => import('./pages/doctor/BookingManage/BookingManage'));
 const BookingAdd = React.lazy(() => import('./pages/doctor/BookingManage/BookingAdd'));
 const BookingUpdate = React.lazy(() => import('./pages/doctor/BookingManage/BookingUpdate'));
+const ServiceDoctorManage = React.lazy(() => import('./pages/doctor/ServiceManage/ServiceDoctorManage'));
 const BookingResults = React.lazy(() => import('./components/BookingResults'));
 
 function App() {
@@ -74,6 +75,7 @@ function App() {
                 <Route path='quan-ly-lich-kham' element={<BookingManage />} />
                 <Route path='them-lich-kham' element={<BookingAdd />} />
                 <Route path='sua-lich-kham/:id' element={<BookingUpdate />} />
+                <Route path='dich-vu/:id' element={<ServiceDoctorManage />} />
               </Route>
             </Route>
             <Route element={<IsCheckAdmin />}>

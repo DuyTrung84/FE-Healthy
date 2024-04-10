@@ -21,15 +21,13 @@ const ClinicsDetail = () => {
     const [ltsService, setLstService] = useState<any>([]); //lưu data danh sách dịch vụ
     const doctorsListRef = useRef<HTMLDivElement>(null);
 
-
     const { data, isLoading } = useGetByIdClinicsQuery(location.state.id)
-
     const [searchDoctor, { isLoading: doctorLoading }] = useSearchDoctorsMutation();
 
     useEffect(() => {
         fieldLstDotors()
         fieldLstService()
-    }, [searchDoctor, currentPage])
+    }, [searchDoctor, location.state.id, currentPage, currentPage2])
 
     const fieldLstDotors = async () => {
         const response = await searchDoctor({ type: 1, name: "", clinic: location.state.id, speciality: "", page: currentPage - 1, resultLimit: 5 })
@@ -40,11 +38,11 @@ const ClinicsDetail = () => {
 
     const fieldLstService = async () => {
         const response = await searchDoctor({ type: 2, name: "", clinic: location.state.id, speciality: "", page: currentPage2 - 1, resultLimit: 5 })
-
         if ('data' in response) {
             setLstService(response.data)
         }
     }
+
     const toggleShowMoreDetails = (index: number) => {
         const updatedShowMoreDetails = [...showMoreDetails];
         updatedShowMoreDetails[index] = !updatedShowMoreDetails[index];
@@ -58,7 +56,6 @@ const ClinicsDetail = () => {
     const handlePageChange2 = (page: number) => {
         setCurrentPage2(page);
     };
-
 
     const handleDateChange = (value: number, index: number) => {
         const updatedSelectedDates = [...selectedDates];

@@ -38,6 +38,7 @@ const BookingManage = () => {
                     try {
                         deleteBooking({ idsToDelete: id })
                         Notifn("success", "Thành công", "Xoá lịch khám thành công thành công!");
+                        searchBooking({ fromDate: "", toDate: "" });
                         form.submit()
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi xoá");

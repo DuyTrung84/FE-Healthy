@@ -16,6 +16,7 @@ const AddProfile = () => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
     const [fileImg, setFile] = useState<File | null>(null);//Lưu file ảnh
     const [isImageUploading, setIsImageUploading] = useState(false);
+    console.log(fileImg)
 
     const [addProfile, { isLoading: addLoading }] = useAddProfileMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();

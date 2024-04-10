@@ -79,7 +79,7 @@ const DoctorDetail = () => {
                                         {doctorData?.data?.schedules[selectedDate]?.schedules.map((schedule: IBookingChildren, index: number) => (
                                             <Link
                                                 to={`/dat-lich/${schedule.id}`}
-                                                key={index} className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 1 ? 'pointer-events-none opacity-50' : ''}`}>
+                                                key={index} className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status !== 1 ? 'pointer-events-none opacity-50' : ''}`}>
                                                 {`${schedule.startTime}-${schedule.endTime}`}
                                             </Link>
                                         ))}

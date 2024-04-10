@@ -24,6 +24,15 @@ const uploadApi = createApi({
             }),
             invalidatesTags: ['UPLOAD']
         }),
+        uploadMultipart: builder.mutation({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            query: (image: any) => ({
+                url: "/upload/nfiles",
+                method: "POST",
+                body: image
+            }),
+            invalidatesTags: ['UPLOAD']
+        }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getAccount: builder.query<IAccount, void>({
             query: () => "/account/me",
@@ -47,7 +56,8 @@ export const {
     useUploadMutation,
     useGetAccountQuery,
     useGetStatusQuery,
-    useGetPaymentQuery
+    useGetPaymentQuery,
+    useUploadMultipartMutation
 
 } = uploadApi;
 

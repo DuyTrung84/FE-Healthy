@@ -38,8 +38,9 @@ const SpecialtyManage = () => {
                 async onOk() {
                     try {
                         await deleteSpecialty({ id, status });
-                        form.submit();
                         Notifn("success", "Thành công", "Đổi trạng thái thành công!!");
+                        searchSpecialty({ name: "", status: "", page: 0, resultLimit: 10 });
+                        form.submit();
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }

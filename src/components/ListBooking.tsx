@@ -73,7 +73,7 @@ const ListBooking: React.FC<ServiceListProps> = ({
                                             <Link
                                                 to={`/dat-lich/${schedule.id}`}
                                                 key={scheduleIndex}
-                                                className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status === 2 ? 'pointer-events-none opacity-50' : ''}`}
+                                                className={`bg-gray-100 py-3 text-center text-gray-800 text-sm font-medium ${schedule.status !== 1 ? 'pointer-events-none opacity-50' : ''}`}
                                             >
                                                 {`${schedule.startTime}-${schedule.endTime}`}
                                             </Link>

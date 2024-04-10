@@ -29,14 +29,14 @@ const MedExamination = () => {
     }, [searchDoctor, id, currentPage, currentPage2])
 
     const fieldLstDotors = async () => {
-        const response = await searchDoctor({ type: 1, name: "", clinic: "", speciality: id, page: currentPage - 1, resultLimit: 5 })
+        const response = await searchDoctor({ type: 1, name: "", clinic: location.state.id, speciality: "", page: currentPage - 1, resultLimit: 5 })
         if ('data' in response) { // Kiểm tra xem response có thuộc tính 'data' không
             setLstDoctor(response.data); // Nếu có, gán dữ liệu vào state lstDoctor
         }
     }
 
     const fieldLstService = async () => {
-        const response = await searchDoctor({ type: 2, name: "", clinic: "", speciality: id, page: currentPage2 - 1, resultLimit: 5 })
+        const response = await searchDoctor({ type: 2, name: "", clinic: location.state.id, speciality: "", page: currentPage2 - 1, resultLimit: 5 })
         if ('data' in response) {
             setLstService(response.data)
         }
@@ -53,7 +53,6 @@ const MedExamination = () => {
     };
 
     const handlePageChange = (page: number) => {
-        console.log(page)
         setCurrentPage(page);
     };
 
@@ -88,7 +87,6 @@ const MedExamination = () => {
                 </button>
             </div>
             <div className='bg-gray-100 mt-2 py-4'>
-
                 <h2 className='font-semibold text-gray-800 text-2xl max-w-screen-xl mx-44 mb-4'>{t('clinicsDetail.doctor')}</h2>
                 <ListBooking
                     lstService={lstDoctor}

@@ -6,22 +6,19 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useRefreshTokenMutation } from '../../api/share/area';
 import { useGetAccountQuery } from '../../api/share/upload';
 import { useEffect } from 'react';
-import { MdOutlineDateRange } from 'react-icons/md';
+import { MdOutlineDateRange, MdOutlineMedicalServices } from 'react-icons/md';
 import { Notifn } from '../../utils/Notification';
+import { useGetServiceDoctorQuery } from '../../api/admin/Doctor';
 
 const { Header, Content, Sider } = Layout;
-type MenuItem = {
-    key: string;
-    icon: JSX.Element;
-    label: string;
-    path: string;
-    items?: MenuItem[];
-};
 
 const LayoutDoctor = () => {
     const navigate = useNavigate();
     const [refreshToken] = useRefreshTokenMutation();
     const { data, error } = useGetAccountQuery();
+    const { data: ServiceDotoor } = useGetServiceDoctorQuery();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filteredServices = ServiceDotoor?.data?.filter((service: any) => service.type === 2);
 
     useEffect(() => {
         if (error) {
@@ -42,13 +39,24 @@ const LayoutDoctor = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const menuItems: MenuItem[] = [
+    const menuItems = [
         { key: '1', icon: <FundProjectionScreenOutlined />, label: 'Dashboard', path: '' },
         {
             key: 'account-management',
             icon: <MdOutlineDateRange />,
             label: 'Quản lý đặt lịch',
             path: 'quan-ly-lich-kham',
+        },
+        {
+            key: 'service-management',
+            icon: <MdOutlineMedicalServices />,
+            label: 'Quản lý dịch vụ',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            items: filteredServices?.map((service: any) => ({
+                key: service.id.toString(),
+                label: service.doctorName,
+                path: `dich-vu/${service.id}`,
+            })) || [],
         },
 
     ];
@@ -82,15 +90,16 @@ const LayoutDoctor = () => {
                     {menuItems.map((menuItem) => (
                         menuItem.items ? (
                             <Menu.SubMenu key={menuItem.key} icon={menuItem.icon} title={menuItem.label}>
-                                {menuItem.items.map((subItem) => (
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {menuItem.items.map((subItem: any) => (
                                     <Menu.Item key={subItem.key} icon={subItem.icon}>
-                                        <Link to={subItem.path}>{subItem.label}</Link>
+                                        <Link to={subItem.path} title={subItem.label}>{subItem.label}</Link>
                                     </Menu.Item>
                                 ))}
                             </Menu.SubMenu>
                         ) : (
                             <Menu.Item key={menuItem.key} icon={menuItem.icon}>
-                                <Link to={menuItem.path}>{menuItem.label}</Link>
+                                <Link to={menuItem.path || ""} title={menuItem.label}>{menuItem.label}</Link>
                             </Menu.Item>
                         )
                     ))}

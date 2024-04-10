@@ -48,6 +48,29 @@ const doctorApi = createApi({
             }),
             invalidatesTags: ['DOCTOR']
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getServiceDoctor: builder.query<any, void>({
+            query: () => "/admin/doctors/manageService",
+            providesTags: ['DOCTOR']
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        searchServiceDoctor: builder.mutation<any, { idService: string | null; status: string | null; fromDate: string | null; toDate: string | null; }>({
+            query: ({ idService, status, fromDate, toDate }) => ({
+                url: '/admin/doctors/manageService',
+                method: 'POST',
+                body: { idService, status, fromDate, toDate },
+            }),
+            invalidatesTags: ['DOCTOR']
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        closeBooking: builder.mutation<any, { idBooking: string | null; msg: string | null; }>({
+            query: ({ idBooking, msg }) => ({
+                url: '/admin/doctors/closeBooking',
+                method: 'POST',
+                body: { idBooking, msg },
+            }),
+            invalidatesTags: ['DOCTOR']
+        }),
     }),
 });
 
@@ -56,7 +79,9 @@ export const {
     useGetByIdDoctorQuery,
     useSearchDoctorsMutation,
     useUpdateDoctorMutation,
-
+    useGetServiceDoctorQuery,
+    useSearchServiceDoctorMutation,
+    useCloseBookingMutation
 } = doctorApi;
 
 export const doctorApiReducer = doctorApi.reducer;
