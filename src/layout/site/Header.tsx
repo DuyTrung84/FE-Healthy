@@ -75,7 +75,7 @@ const Header = () => {
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center gap-12">
                         <Link className="block text-blue-600" to="/">
-                            <img src="../../asset/img/logoDA.png" className="w-14" alt="" />
+                            <img src="/src/asset/img/logoDA.png" className="w-14" alt="" />
                         </Link>
                     </div>
                     <div className="flex items-center justify-center gap-6">

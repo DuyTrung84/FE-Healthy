@@ -44,6 +44,7 @@ const BookingAdd = React.lazy(() => import('./pages/doctor/BookingManage/Booking
 const BookingUpdate = React.lazy(() => import('./pages/doctor/BookingManage/BookingUpdate'));
 const ServiceDoctorManage = React.lazy(() => import('./pages/doctor/ServiceManage/ServiceDoctorManage'));
 const BookingResults = React.lazy(() => import('./components/BookingResults'));
+const Manage = React.lazy(() => import('./pages/admin/Manage'))
 
 function App() {
   return (
@@ -92,7 +93,7 @@ function App() {
                 <Route path='quan-ly-dich-vu/:idDoctor' element={<ServiceManage />} />
                 <Route path='cap-nhat-dich-vu/:id' element={<ServiceUpdate />} />
                 <Route path='them-nhat-dich-vu/:idDoctor' element={<ServiceAdd />} />
-
+                <Route path='lich-da-dat' element={<Manage />} />
               </Route>
             </Route>
             <Route element={<IsCheckLogin />}>

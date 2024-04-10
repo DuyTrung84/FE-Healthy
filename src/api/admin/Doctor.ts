@@ -81,7 +81,8 @@ export const {
     useUpdateDoctorMutation,
     useGetServiceDoctorQuery,
     useSearchServiceDoctorMutation,
-    useCloseBookingMutation
+    useCloseBookingMutation,
+
 } = doctorApi;
 
 export const doctorApiReducer = doctorApi.reducer;

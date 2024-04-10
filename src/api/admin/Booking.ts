@@ -1,5 +1,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+interface IManage {
+    fromDate?: string;
+    toDate?: string;
+    fromTime?: string;
+    toTime?: string;
+    doctorId?: string;
+    type?: string;
+    status?: string;
+    clinicId?: string;
+    specialityId?: string;
+    page?: number;
+    resultLimit?: number;
+}
+
 const bookingApi = createApi({
     reducerPath: "booking",
     tagTypes: ["BOOKING"],
@@ -79,6 +93,24 @@ const bookingApi = createApi({
             query: (id) => "/public/schedules/detail/" + id,
             providesTags: ['BOOKING']
         }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        searchManage: builder.mutation<any, IManage>({
+            query: (IManage) => ({
+                url: `/admin/booking/search`,
+                method: 'GET',
+                params: IManage,
+            }),
+            invalidatesTags: ['BOOKING']
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        exportManage: builder.mutation<any, IManage>({
+            query: (IManage) => ({
+                url: `/admin/booking/export`,
+                method: 'GET',
+                params: IManage,
+            }),
+            invalidatesTags: ['BOOKING']
+        }),
     }),
 });
 
@@ -91,7 +123,9 @@ export const {
     useDeleteBookingMutation,
     useGetStatusBookingQuery,
     useGetWhoPayQuery,
-    useGetBookingByIdQuery
+    useGetBookingByIdQuery,
+    useSearchManageMutation,
+    useExportManageMutation,
 } = bookingApi;
 
 export const bookingApiReducer = bookingApi.reducer;

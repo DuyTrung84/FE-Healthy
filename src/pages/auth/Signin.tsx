@@ -59,13 +59,10 @@ const Signin = () => {
                 <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-8">
                     <div className="max-w-xl">
                         <Link className="block text-blue-600" to="/">
-                            <img src="https://cdn.youmed.vn/wp-content/themes/youmed/images/favicon.svg" className="w-20" alt="" />
+                            <img src="/src/asset/img/logoDA.png" className="w-20" alt="" />
                         </Link>
                         <path d="M73.11 125.24A52.13 52.13 0 0 1 21 74.49V21.88a73.09 73.09 0 1 0 107.67 98.74L112.71 107a52 52 0 0 1-39.6 18.24M73.11 0A72.82 72.82 0 0 0 44.3 5.91l-.3.15a3.76 3.76 0 0 0-2.13 3.37v22A52.14 52.14 0 0 1 113.36 40l16.19-13.33A73 73 0 0 0 73.11 0" className="bookingcare-2020_svg__cls-1"></path>
-                        <h1 className="mt-6 text-2xl font-bold text-blue-500 sm:text-3xl md:text-4xl">Chào mừng bạn quay trở lại!!</h1>
-                        <p className="mt-4 leading-relaxed text-gray-800">
-                            Cùng tạo dựng lợi thế cho doanh nghiệp bằng trải nghiệm công nghệ tuyển dụng ứng dụng sâu AI & Hiring Funnel
-                        </p>
+                        <h1 className="my-6 text-2xl font-bold text-blue-500 sm:text-3xl md:text-4xl">Chào mừng bạn quay trở lại!!</h1>
 
                         <Form
                             name="normal_login"

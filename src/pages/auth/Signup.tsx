@@ -33,20 +33,17 @@ const Signup = () => {
                 >
                     <img
                         alt="Pattern"
-                        src="https://thuthuatnhanh.com/wp-content/uploads/2021/06/Hinh-anh-lam-viec-nhom-hieu-qua-nhat.jpg"
-                        className="absolute inset-0 w-full object-cover h-full"
+                        src="https://media.istockphoto.com/vectors/smiling-medic-man-with-clopboard-vector-id840388854?k=6&m=840388854&s=612x612&w=0&h=SMPjG4XlUXfazpNa0vvmyMilp2999fJ4RwH0CP8vX5g="
+                        className="absolute inset-0 w-full h-full"
                     />
                 </aside>
 
                 <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-7">
                     <div className="max-w-2xl">
                         <Link className="block text-blue-600" to="/">
-                            <img src="https://cdn.youmed.vn/wp-content/themes/youmed/images/favicon.svg" className="w-20" alt="" />
+                            <img src="/src/asset/img/logoDA.png" className="w-20" alt="" />
                         </Link>
-                        <h1 className="mt-6 text-xl font-bold text-blue-500 sm:text-3xl md:text-4xl">Chào mừng bạn đến với Healthy-Care!!</h1>
-                        {/* <p className="mt-4 leading-relaxed text-gray-800">
-                            Đăng ký tài khoản nhà tuyển dụng để tìm được những ững viên phù hợp nhất với công ty của bạn
-                        </p> */}
+                        <h1 className="my-6 text-xl font-bold text-blue-500 sm:text-3xl md:text-4xl">Chào mừng bạn đến với Healthy-Care!!</h1>
                         <Form
                             form={form}
                             name="normal_login"

@@ -81,7 +81,7 @@ const LayoutDoctor = () => {
                 trigger={null} collapsible width={220} style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0, zIndex: 20 }}
             >
                 <div className="flex justify-center items-center"> {/* Thêm các lớp để căn giữa */}
-                    <img src="https://cdn.youmed.vn/wp-content/themes/youmed/images/favicon.svg" className="w-14 my-4" alt="" />
+                    <img src="/src/asset/img/logoDA.png" className="w-14 my-4" alt="" />
                 </div>                <Menu
                     theme="light"
                     mode="inline"
