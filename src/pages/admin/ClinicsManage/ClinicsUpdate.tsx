@@ -10,7 +10,6 @@ import { Notifn } from "../../../utils/Notification";
 import { IClinics } from "../../../interface/Clinics";
 import { useGetAllClinicsQuery, useGetByIdClinicsQuery, useUpdateClinicsMutation } from "../../../api/site/Clinics";
 import { useGetDistrictsQuery, useGetProvincesQuery, useGetWardsQuery } from "../../../api/share/area";
-import { Option } from "antd/es/mentions";
 
 const ClinicsUpdate = () => {
     const { id } = useParams();
@@ -24,11 +23,10 @@ const ClinicsUpdate = () => {
     const [isClinicCurved, setIsClinicCurved] = useState(false);
 
     const { data: clinicsData, isLoading: dataLoading } = useGetByIdClinicsQuery(id || "")
-    console.log(clinicsData)
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 100 });//Phòng khám
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
-    const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince || "");//Quận huyện
-    const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts || "");//Phường Xã
-    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 10 });//Phòng khám
+    const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
+    const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
     const { data: status } = useGetStatusQuery() //status
     const [addClinic] = useUpdateClinicsMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
@@ -48,18 +46,21 @@ const ClinicsUpdate = () => {
         if (clinicsData?.data?.imageUrl) {
             setImageUrl(clinicsData?.data?.imageUrl);
         }
-        if (!selectedProvince && !selectedDistricts) {
-            setSelectedProvince(clinicsData?.data?.province || "");
-            setSelectedDistricts(clinicsData?.data?.district || "");
+        if (clinicsData?.data?.district && clinicsData?.data?.province) {
+            setSelectedDistricts(clinicsData?.data?.district)
+            setSelectedProvince(clinicsData?.data?.province)
         }
-    }, [clinicsData, selectedProvince, selectedDistricts, form]);
+    }, [clinicsData, form, setSelectedDistricts, setSelectedProvince]);
 
     const handleProvinceChange = (value: string) => {
         setSelectedProvince(value); // Cập nhật mã tỉnh/thành phố được chọn
+        form.setFieldValue("district", "");
+        form.setFieldValue("ward", "");
     };
 
     const handleDistrictsChange = (value: string) => {
         setSelectedDistricts(value); // Cập nhật mã tỉnh/thành phố được chọn
+        form.setFieldValue("ward", "");
     };
 
     const handleCurvedChange = (e: RadioChangeEvent) => {
@@ -80,21 +81,38 @@ const ClinicsUpdate = () => {
         try {
             delete values.imageObjectId;
             const request = {
-                ...values,
-                id: id
+                id: id,
+                ...values
             };
-            const response = await addClinic(request);
-            const responseData = response?.data?.data;
-            const formData = new FormData();
-            if (fileImg) {
-                formData.append('image', fileImg);
-            }
-            if (responseData) {
-                formData.append('id', responseData);
-            }
-            await uploadImage(formData)
-            Notifn("success", "Thành công", "Sửa thành công");
-            navigate("/admin/quan-ly-phong-kham");
+            await addClinic(request)
+                .unwrap()
+                .then((response) => {
+                    const responseData = response?.data?.data;
+                    const formData = new FormData();
+                    if (responseData) {
+                        formData.append('id', responseData);
+                    }
+                    if (fileImg) {
+                        formData.append('image', fileImg);
+                    } else if (!fileImg) {
+                        Notifn("success", "Thành công", "Sửa thành công");
+                        navigate("/admin/quan-ly-phong-kham");
+                        return;
+                    }
+
+                    uploadImage(formData)
+                        .unwrap()
+                        .then(() => {
+                            Notifn("success", "Thành công", "Sửa thành công");
+                            navigate("/admin/quan-ly-phong-kham");
+                        })
+                        .catch((error) => {
+                            Notifn("error", "Lỗi", error.data.message || error.message);
+                        });
+                })
+                .catch((error) => {
+                    Notifn("error", "Lỗi", error.data.message || error.message);
+                })
         } catch (error) {
             console.error('Error adding specialty:', error);
             Notifn("error", "Lỗi", "Sửa không thành công");
@@ -175,13 +193,12 @@ const ClinicsUpdate = () => {
                                     { required: true, message: 'Trường này không được bỏ trống !' },
                                 ]}
                             >
-                                <Select defaultValue="---Select---" className="w-full h-11"
+                                <Select className="w-full h-11"
                                     onChange={handleProvinceChange}
                                 >
-
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {provinces?.data?.map((role: any) => (
-                                        <Option key={role.code} value={role.code}>{role.name}</Option>
+                                        <Select.Option key={role.code} value={role.code}>{role.name}</Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -195,14 +212,13 @@ const ClinicsUpdate = () => {
                                 ]}
                             >
                                 <Select
-                                    defaultValue="---Select---"
                                     className="w-full h-11"
                                     loading={loadingDistricts}
                                     onChange={handleDistrictsChange}
                                 >
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {districts?.data?.map((district: any) => (
-                                        <Option key={district.code} value={district.code}>{district.name}</Option>
+                                        <Select.Option key={district.code} value={district.code}>{district.name}</Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -216,14 +232,13 @@ const ClinicsUpdate = () => {
                                 ]}
                             >
                                 <Select
-                                    defaultValue="---Select---"
                                     className="w-full h-11"
                                     loading={loadingWards}
                                 >
 
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {wards?.data?.map((wards: any) => (
-                                        <Option key={wards.code} value={wards.code}>{wards.name}</Option>
+                                        <Select.Option key={wards.code} value={wards.code}>{wards.name}</Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>
@@ -259,10 +274,10 @@ const ClinicsUpdate = () => {
                                         { required: isClinicCurved, message: 'Trường này không được bỏ trống !' },
                                     ]}
                                 >
-                                    <Select defaultValue="---Select---" className="w-full h-11" loading={loadingClinics}                                    >
+                                    <Select className="w-full h-11" loading={loadingClinics}                                    >
                                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {clinics?.data?.data?.map((role: any) => (
-                                            <Option key={role.id} value={role.id}>{role.name}</Option>
+                                            <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
                                         ))}
                                     </Select>
                                 </Form.Item>

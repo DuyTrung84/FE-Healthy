@@ -25,7 +25,6 @@ const AppointmentHist = () => {
 
     useEffect(() => {
         search({ fromDate: "", toDate: "", status: "", page: currentPage - 1, resultLimit: 10 })
-        form.submit();
     }, [search, currentPage])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,6 +52,7 @@ const AppointmentHist = () => {
             [itemId]: !prevState[itemId]
         }));
     };
+
     const showModal = (idBooking: string) => {
         setSelectedAppointmentId(idBooking)
         setIsModalOpen(true);
@@ -75,6 +75,31 @@ const AppointmentHist = () => {
             .catch((error) => {
                 Notifn("error", "Lỗi", error.data.message || error.data);
             })
+    };
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page); // Cập nhật currentPage với giá trị mới của trang
+        fetchData(page); // Gọi hàm fetchData với giá trị mới của trang
+    };
+
+    const fetchData = (page: number) => {
+        const date = form.getFieldValue('name')
+
+        const fromDate = date && date[0] ? dayjs(date[0]).format('YYYY-MM-DD') : '';
+        const toDate = date && date[1] ? dayjs(date[1]).format('YYYY-MM-DD') : '';
+        search({
+            fromDate: fromDate, toDate: toDate,
+            status: form.getFieldValue('status'),
+            page: page - 1, resultLimit: 10
+        });
+    };
+
+    useEffect(() => {
+        fetchData(currentPage);
+    }, [currentPage]);
+
+    const countLines = (text: string): number => {
+        return text.split('\n').length;
     };
 
     return (
@@ -141,18 +166,20 @@ const AppointmentHist = () => {
                                         Lý do khám: {item.reasonBooking}
                                     </p>
 
-                                    <span>
-                                        {!expandedItems[item.id] && (
-                                            <Button type="link" onClick={() => toggleItemContent(item.id)}>
-                                                Xem thêm
-                                            </Button>
-                                        )}
-                                        {expandedItems[item.id] && (
-                                            <Button type="link" onClick={() => toggleItemContent(item.id)}>
-                                                Ẩn đi
-                                            </Button>
-                                        )}
-                                    </span>
+                                    {countLines(item.reasonBooking) > 3 && (
+                                        <span>
+                                            {!expandedItems[item.id] && (
+                                                <Button type="link" onClick={() => toggleItemContent(item.id)}>
+                                                    Xem thêm
+                                                </Button>
+                                            )}
+                                            {expandedItems[item.id] && (
+                                                <Button type="link" onClick={() => toggleItemContent(item.id)}>
+                                                    Ẩn đi
+                                                </Button>
+                                            )}
+                                        </span>
+                                    )}
                                     {item.status === 0 && (
                                         <p>Lý do huỷ: {item.reasonCancel}</p>
                                     )}
@@ -186,7 +213,7 @@ const AppointmentHist = () => {
                 current={currentPage}
                 total={data?.data?.totalPages * 10}
                 pageSize={10}
-                onChange={(page) => setCurrentPage(page)}
+                onChange={handlePageChange}
                 className="text-center mt-8"
             />
 

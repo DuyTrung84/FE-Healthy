@@ -25,16 +25,19 @@ const ClinicsAdd = () => {
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
     const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
     const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
-    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery();//Phòng khám
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 100 });//Phòng khám
     const [addClinic] = useAddClinicsMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
 
     const handleProvinceChange = (value: string) => {
         setSelectedProvince(value); // Cập nhật mã tỉnh/thành phố được chọn
+        form.setFieldValue("ward", "");
+        form.setFieldValue("district", "");
     };
 
     const handleDistrictsChange = (value: string) => {
         setSelectedDistricts(value); // Cập nhật mã tỉnh/thành phố được chọn
+        form.setFieldValue("ward", "");
     };
 
     const handleCurvedChange = (e: RadioChangeEvent) => {

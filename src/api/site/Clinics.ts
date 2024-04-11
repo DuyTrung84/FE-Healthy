@@ -55,8 +55,8 @@ const clinicsApi = createApi({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         updateClinics: builder.mutation<any, any>({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            query: (packages: any) => ({
-                url: `admin/clinics/update/${packages.id}`,
+            query: ({ id, ...packages }: any) => ({
+                url: `admin/clinics/update/${id}`,
                 method: "PUT",
                 body: packages
             }),
@@ -71,7 +71,7 @@ const clinicsApi = createApi({
             invalidatesTags: ['CLINICS']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getHistoryBooking: builder.mutation<any, { fromDate: string | null; toDate: string | null; status: string | null; page: number; resultLimit: number }>({
+        getHistoryBooking: builder.mutation<any, { fromDate?: string | null; toDate?: string | null; status: string | null; page: number; resultLimit: number }>({
             query: ({ fromDate, toDate, status, page, resultLimit }) => ({
                 url: 'user/booking/userGetBookingHistory',
                 method: 'POST',

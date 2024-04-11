@@ -15,6 +15,7 @@ const MedExamination = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPage2, setCurrentPage2] = useState(1);
     const [selectedDates, setSelectedDates] = useState<number[]>(Array(10).fill(0));
+    const [selectedDates2, setSelectedDates2] = useState<number[]>(Array(10).fill(0));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,6 +67,12 @@ const MedExamination = () => {
         setSelectedDates(updatedSelectedDates);
     };
 
+    const handleDateChange2 = (value: number, index: number) => {
+        const updatedSelectedDates2 = [...selectedDates2];
+        updatedSelectedDates2[index] = value;
+        setSelectedDates2(updatedSelectedDates2);
+    };
+
     return (
         <div>
             <div className="max-w-screen-xl mx-44">
@@ -104,8 +111,8 @@ const MedExamination = () => {
                     lstService={ltsService}
                     currentPage={currentPage2}
                     handlePageChange={handlePageChange2}
-                    handleDateChange={handleDateChange}
-                    selectedDates={selectedDates}
+                    handleDateChange={handleDateChange2}
+                    selectedDates={selectedDates2}
                     toggleShowMoreDetails={toggleShowMoreDetails}
                     showMoreDetails={showMoreDetails}
                     doctorLoading={doctorLoading}

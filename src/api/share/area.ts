@@ -1,7 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IProvinces } from "../../interface/Area";
-
-
 export interface RefreshTokenResponse {
     data?: {
         token: string;
@@ -24,7 +21,8 @@ const areaApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        getProvinces: builder.query<IProvinces, void>({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getProvinces: builder.query<any, void>({
             query: () => "/area/provinces",
             providesTags: ["AREA"],
         }),
