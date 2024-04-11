@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiOutlineCaretDown, AiOutlineCaretUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
 import { useGetByIdClinicsQuery } from "../../../api/site/Clinics";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import ListBooking from "../../../components/ListBooking";
 const ClinicsDetail = () => {
     const location = useLocation();
     const { t } = useTranslation();
+    const [showMore, setShowMore] = useState(false);
     const [showMoreDetails, setShowMoreDetails] = useState(Array(10).fill(false));
     const [currentPage, setCurrentPage] = useState(1);
     const [currentPage2, setCurrentPage2] = useState(1);
@@ -69,6 +70,9 @@ const ClinicsDetail = () => {
         }
     };
 
+    const toggleShowMore = () => {
+        setShowMore(!showMore);
+    };
 
     return (
         <div>
@@ -89,11 +93,19 @@ const ClinicsDetail = () => {
                     </div>
                     <div>
                         <p className="font-semibold text-lg">{t('clinicsDetail.descClinics')}</p>
-                        <div className="mx-8"
+                        <div className={`${showMore ? "max-h-full" : "max-h-40 overflow-hidden"} transition-max-h duration-500 ease-in-out ml-3`}
                             dangerouslySetInnerHTML={{
                                 __html: data?.data?.descriptionHtml || ""
                             }}
                         ></div>
+                        <button
+                            className="mt-2 flex text-[#288AD6] font-light"
+                            onClick={toggleShowMore}
+                        >
+                            {showMore
+                                ? <span>{t('clinicsDetail.hidden')}< AiOutlineCaretUp className="inline-block" /></span>
+                                : <span>{t('clinicsDetail.more')}< AiOutlineCaretDown className="inline-block" /></span>}
+                        </button>
                     </div>
                 </div >
             </Spin >

@@ -25,6 +25,7 @@ const ListCategories = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const { data: provinces } = useGetProvincesQuery();
+
     const [searchClinics, { data: clinics, isLoading: clinicsLoading }] = useSearchClinicsMutation();
     const [searchSpecialty, { data: specialty, isLoading: specialtyLoading }] = useSearchAllSpecialtyMutation();
     const [searchDoctor, { data: doctor, isLoading: doctorLoading }] = useSearchDoctorsMutation();
@@ -71,8 +72,25 @@ const ListCategories = () => {
     };
 
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
+        setCurrentPage(page); // Cập nhật currentPage với giá trị mới của trang
+        fetchData(page); // Gọi hàm fetchData với giá trị mới của trang
     };
+
+    const fetchData = (page: number) => {
+        if (data.slug === "clinics") {
+            searchClinics({ search: form.getFieldValue('search'), province: form.getFieldValue('province'), status: '1', page: page - 1, resultLimit: 10 });
+        } else if (data.slug === "specialty") {
+            searchSpecialty({ name: form.getFieldValue('search'), status: '1', page: page - 1, resultLimit: 10 });
+        } else if (data.slug === "doctor") {
+            searchDoctor({ type: 1, name: form.getFieldValue('search'), clinic: "", speciality: "", page: page - 1, resultLimit: 10 })
+        } else if (data.slug === "service") {
+            searchDoctor({ type: 2, name: form.getFieldValue('search'), clinic: "", speciality: "", page: page - 1, resultLimit: 10 })
+        }
+    };
+
+    useEffect(() => {
+        fetchData(currentPage);
+    }, [data.slug, currentPage]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onFinish = (values: any) => {
@@ -116,7 +134,7 @@ const ListCategories = () => {
                                 <Option value="">{t('listCategories.nationally')}</Option>
                                 {provinces &&
                                     provinces?.data?.map((province: IProvinces) => (
-                                        <Option key={province.code} value={province.name}>
+                                        <Option key={province.code} value={province.code}>
                                             {i18n.language === "vi" ? province.name : province.nameEn}
                                         </Option>
                                     ))}
