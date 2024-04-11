@@ -35,7 +35,6 @@ const ServiceBookingManage = () => {
 
     useEffect(() => {
         searchBooking({ idService: id || null, status: "", fromDate: "", toDate: "" });
-        form.submit();
     }, [searchBooking, form, id]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

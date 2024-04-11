@@ -23,7 +23,6 @@ const BookingManage = () => {
 
     useEffect(() => {
         searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
-
     }, [searchBooking, idDoctor]);
 
     const showDeleteConfirm = (id: string[] | Key[]) => {

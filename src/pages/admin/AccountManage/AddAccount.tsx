@@ -27,8 +27,8 @@ const AddAccount = () => {
     const { data: provinces } = useGetProvincesQuery();//Tỉnh thành phố
     const { data: districts, isLoading: loadingDistricts } = useGetDistrictsQuery(selectedProvince);//Quận huyện
     const { data: wards, isLoading: loadingWards } = useGetWardsQuery(selectedDistricts);//Phường Xã
-    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 10 });//Chuyên khoa
-    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 10 });//Phòng khám
+    const { data: specialty, isLoading: loadingSpecialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 500 });//Chuyên khoa
+    const { data: clinics, isLoading: loadingClinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 500 });//Phòng khám
     const [addAccount] = useAddAccountMutation(); //hàm thêm tài khoản
     const [uploadImage, { isLoading }] = useUploadMutation();
 
