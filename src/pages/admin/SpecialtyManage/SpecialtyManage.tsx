@@ -169,8 +169,7 @@ const SpecialtyManage = () => {
                         <div>
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái:</p>
                             <Form.Item name="status">
-                                <Select placeholder="---Select---" className="w-full">
-                                    <Select.Option value="">All</Select.Option>
+                                <Select placeholder="---Select---" className="w-full" allowClear>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {statusData?.data?.map((status: any) => (
                                         <Select.Option key={status.value} value={status.value}>{status.name}</Select.Option>

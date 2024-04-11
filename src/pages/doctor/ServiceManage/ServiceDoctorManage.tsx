@@ -296,7 +296,7 @@ const ServiceBookingManage = () => {
                         <div>
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái đặt lịch:</p>
                             <Form.Item name="status">
-                                <Select placeholder="Trạng thái đặt lịch" className="h-8">
+                                <Select placeholder="Trạng thái đặt lịch" className="h-8" allowClear>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {bookingStatus?.data?.map((role: any) => (
                                         <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>

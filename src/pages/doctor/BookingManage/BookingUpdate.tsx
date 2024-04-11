@@ -117,7 +117,7 @@ const BookingUpdate = () => {
                                 { required: true, message: 'Trường này không được bỏ trống !' },
                             ]}
                         >
-                            <Select placeholder="---Select---" className="w-full"                                >
+                            <Select placeholder="---Select---" className="w-full" allowClear                                >
                                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {whoPay?.data?.map((role: any) => (
                                     <Select.Option key={role.code} value={role.code}>{role.value}</Select.Option>

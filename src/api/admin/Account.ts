@@ -17,11 +17,11 @@ const accountApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getAllAccount: builder.mutation<IAccount, { keyword: string | null; role: string | null; page: number; resultLimit: number }>({
-            query: ({ keyword, role, page, resultLimit }) => ({
+        getAllAccount: builder.mutation<IAccount, { keyword: string | null; role: string | null; status: string | null; page: number; resultLimit: number }>({
+            query: ({ keyword, role, status, page, resultLimit }) => ({
                 url: "/getAll",
                 method: "POST",
-                body: { keyword, role, page, resultLimit }
+                body: { keyword, role, status, page, resultLimit }
             }),
             invalidatesTags: ['ACCOUNT']
         }),

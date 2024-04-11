@@ -24,6 +24,15 @@ const doctorApi = createApi({
             invalidatesTags: ['DOCTOR']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        getAllDoctors: builder.query<any, { type: number | string, name: string | null; clinic: string | null; speciality: string | null; page: number; resultLimit: number }>({
+            query: ({ name, clinic, speciality, page, resultLimit, type }) => ({
+                url: 'public/doctors/all',
+                method: 'GET',
+                params: { name, clinic, speciality, page, resultLimit, type },
+            }),
+            providesTags: ['DOCTOR']
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getByIdDoctor: builder.query<any, number | string>({
             query: (id) => "/public/doctors/get/" + id,
             providesTags: ['DOCTOR']
@@ -82,6 +91,7 @@ export const {
     useGetServiceDoctorQuery,
     useSearchServiceDoctorMutation,
     useCloseBookingMutation,
+    useGetAllDoctorsQuery
 
 } = doctorApi;
 

@@ -1,13 +1,12 @@
 import { Button, Table, Tag, Form, Select, DatePicker } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useExportManageMutation, useGetStatusBookingQuery, useSearchManageMutation } from "../../api/admin/Booking";
 import { useGetAllSpecialtyQuery } from '../../api/admin/Specialty';
 import { useGetAllClinicsQuery } from '../../api/site/Clinics';
-import { useSearchDoctorsMutation } from '../../api/admin/Doctor';
+import { useGetAllDoctorsQuery } from '../../api/admin/Doctor';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
 import { Notifn } from '../../utils/Notification';
 
 
@@ -15,14 +14,18 @@ const { RangePicker } = DatePicker;
 
 const Manage = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate()
+  const [selectType, setSelectType] = useState<string>("");
+  const [selectClinic, setSelectClinic] = useState<string>("");
+  const [selectSpecialty, setSelectSpecialty] = useState<string>("");
+
+  console.log(selectType, selectClinic, selectSpecialty)
 
   const [search, { data, isLoading }] = useSearchManageMutation();
   const [exportData, { isLoading: loadingExport }] = useExportManageMutation();
   const { data: bookingStatus } = useGetStatusBookingQuery();
-  const { data: specialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 10 });//Chuyên khoa
-  const { data: clinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 10 });//Phòng khám
-  const [searchDoctor, { data: doctor }] = useSearchDoctorsMutation();
+  const { data: specialty } = useGetAllSpecialtyQuery({ name: "", status: "", page: 0, resultLimit: 500 });//Chuyên khoa
+  const { data: clinics } = useGetAllClinicsQuery({ search: "", province: "", status: "", page: 0, resultLimit: 500 });//Phòng khám
+  const { data: doctor, isLoading: loadingDoctor } = useGetAllDoctorsQuery({ type: selectType, name: "", clinic: selectClinic, speciality: selectSpecialty, page: 0, resultLimit: 100 });
 
   useEffect(() => {
     search({
@@ -38,8 +41,7 @@ const Manage = () => {
       page: 0,
       resultLimit: 10
     });
-    searchDoctor({ type: 1, name: "", clinic: "", speciality: "", page: 0, resultLimit: 100 })
-  }, [search, searchDoctor]);
+  }, [form, search]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSearch = (values: any) => {
@@ -253,6 +255,18 @@ const Manage = () => {
       })
   }
 
+  const handleTypeChange = (value: string) => {
+    setSelectType(value); // Cập nhật mã tỉnh/thành phố được chọn
+  };
+
+  const handleClinicChange = (value: string) => {
+    setSelectClinic(value); // Cập nhật mã tỉnh/thành phố được chọn
+  };
+
+  const handleSpecialtyChange = (value: string) => {
+    setSelectSpecialty(value); // Cập nhật mã tỉnh/thành phố được chọn
+  };
+
   return (
     <div className="">
       <div className="flex justify-between mb-6">
@@ -276,7 +290,7 @@ const Manage = () => {
             <div>
               <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái đặt lịch:</p>
               <Form.Item name="status">
-                <Select placeholder="Trạng thái đặt lịch" className="h-8">
+                <Select placeholder="Trạng thái đặt lịch" className="h-8" allowClear>
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {bookingStatus?.data?.map((role: any) => (
                     <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>
@@ -287,8 +301,7 @@ const Manage = () => {
             <div>
               <p className="font-medium text-[17px] my-1.5 text-gray-700">Phòng khám:</p>
               <Form.Item name="clinicId">
-                <Select placeholder="---Select---">
-                  <Select.Option value="">All</Select.Option>
+                <Select placeholder="---Phòng khám---" allowClear onChange={handleClinicChange}>
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {clinics?.data?.data?.map((role: any) => (
                     <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
@@ -297,10 +310,10 @@ const Manage = () => {
               </Form.Item>
             </div>
             <div>
-              <p className="font-medium text-[17px] my-1.5 text-gray-700">Chuyên khoa:</p>
+              <p className="font-medium text-[17px] my-1.5 text-gray-700" >Chuyên khoa:</p>
               <Form.Item name="specialityId">
-                <Select placeholder="---Select---">
-                  <Select.Option value="">All</Select.Option>
+                <Select placeholder="---Chuyên khoa---" allowClear onChange={handleSpecialtyChange}>
+
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {specialty?.data?.data?.map((role: any) => (
                     <Select.Option key={role.id} value={role.id}>{role.name}</Select.Option>
@@ -311,18 +324,16 @@ const Manage = () => {
             <div>
               <p className="font-medium text-[17px] my-1.5 text-gray-700">Kiểu:</p>
               <Form.Item name="type">
-                <Select placeholder="---Select---">
-                  <Select.Option key={""} value="">All</Select.Option>
+                <Select placeholder="---Kiểu---" allowClear onChange={handleTypeChange}>
                   <Select.Option key={"1"} value="1">Bác sĩ</Select.Option>
                   <Select.Option key={"2"} value="2">Dịch vụ</Select.Option>
                 </Select>
               </Form.Item>
             </div>
             <div>
-              <p className="font-medium text-[17px] my-1.5 text-gray-700">Bác sĩ:</p>
+              <p className="font-medium text-[17px] my-1.5 text-gray-700">Bác sĩ/Dịch vụ:</p>
               <Form.Item name="doctorId">
-                <Select placeholder="---Select---">
-                  <Select.Option value="">All</Select.Option>
+                <Select placeholder="---Select---" allowClear loading={loadingDoctor}>
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {doctor?.data?.data?.map((role: any) => (
                     <Select.Option key={role.id} value={role.id}>{role.doctorName}</Select.Option>

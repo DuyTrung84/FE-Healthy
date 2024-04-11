@@ -10,6 +10,7 @@ import { useDeleteAccountMutation, useGetAllAccountMutation, useGetRoleQuery } f
 import { Option } from "antd/es/mentions";
 import { useEffect } from "react";
 import { RiServiceLine } from "react-icons/ri";
+import { useGetStatusQuery } from "../../../api/share/upload";
 
 const { confirm } = Modal;
 const AccountManage = () => {
@@ -17,10 +18,10 @@ const AccountManage = () => {
     const [searchAccount, { data, isLoading }] = useGetAllAccountMutation();
     const [deleteAccount] = useDeleteAccountMutation();
     const { data: selectRole, isLoading: loadingRole } = useGetRoleQuery();
-
+    const { data: statusData } = useGetStatusQuery()
 
     useEffect(() => {
-        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
+        searchAccount({ keyword: null, role: null, status: null, page: 0, resultLimit: 10 });
     }, [searchAccount]);
 
     const showDeleteConfirm = (id: string | undefined, status: string) => {
@@ -39,7 +40,7 @@ const AccountManage = () => {
                     try {
                         await deleteAccount({ id, status });
                         Notifn("success", "Thành công", "Đã chuyển trạng thái tài khoản thành công!");
-                        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
+                        searchAccount({ keyword: null, role: null, status: null, page: 0, resultLimit: 10 });
                         form.submit();
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi khoá");
@@ -53,6 +54,7 @@ const AccountManage = () => {
         searchAccount({
             keyword: values.keyword,
             role: values.role,
+            status: values.status,
             page: 0,
             resultLimit: 10
         });
@@ -60,13 +62,14 @@ const AccountManage = () => {
 
     const handleReset = () => {
         form.resetFields();
-        searchAccount({ keyword: null, role: null, page: 0, resultLimit: 10 });
+        searchAccount({ keyword: null, role: null, status: null, page: 0, resultLimit: 10 });
     };
 
     const handlePaginationChange = (currentPage: number, pageSize?: number) => {
         searchAccount({
             keyword: form.getFieldValue('keyword'),
             role: form.getFieldValue('role'),
+            status: form.getFieldValue('status'),
             page: currentPage - 1, // Trừ 1 vì API thường sử dụng index bắt đầu từ 0
             resultLimit: pageSize || 10, // Số lượng mục trên mỗi trang
         });
@@ -202,11 +205,21 @@ const AccountManage = () => {
                         <div>
                             <p className="font-medium text-[17px] my-1.5 text-gray-700">Vai trò:</p>
                             <Form.Item name="role">
-                                <Select placeholder="---Select---" className="w-full" loading={loadingRole}>
-                                    <Select.Option value="">All</Select.Option>
+                                <Select placeholder="---Select---" className="w-full" loading={loadingRole} allowClear>
                                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                     {selectRole?.data?.map((role: any) => (
                                         <Option key={role.value} value={role.value}>{role.name}</Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái:</p>
+                            <Form.Item name="status">
+                                <Select placeholder="---Select---" className="w-full" allowClear>
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    {statusData?.data?.map((status: any) => (
+                                        <Select.Option key={status.value} value={status.value}>{status.name}</Select.Option>
                                     ))}
                                 </Select>
                             </Form.Item>
