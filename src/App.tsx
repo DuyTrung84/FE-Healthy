@@ -73,10 +73,12 @@ function App() {
             </Route>
             <Route element={<IsCheckDoctor />}>
               <Route path="/doctor" element={<LayoutDoctor />}>
-                <Route path='quan-ly-lich-kham' element={<BookingManage />} />
-                <Route path='them-lich-kham' element={<BookingAdd />} />
-                <Route path='sua-lich-kham/:id' element={<BookingUpdate />} />
-                <Route path='dich-vu/:id' element={<ServiceDoctorManage />} />
+                <Route path='quan-ly-lich-kham/bac-si/:idDoctor' element={<BookingManage />} />
+                <Route path='quan-ly-lich-kham/dich-vu/:idDoctor' element={<BookingManage />} />
+                <Route path='them-lich-kham/:idDoctor' element={<BookingAdd />} />
+                <Route path='sua-lich-kham/:id/:idDoctor' element={<BookingUpdate />} />
+                <Route path='lich-da-dat/dich-vu/:id' element={<ServiceDoctorManage />} />
+                <Route path='lich-da-dat/bac-si/:id' element={<ServiceDoctorManage />} />
               </Route>
             </Route>
             <Route element={<IsCheckAdmin />}>

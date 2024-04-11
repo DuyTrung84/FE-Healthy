@@ -12,7 +12,7 @@ const { RangePicker } = DatePicker;
 const BookingUpdate = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const { id } = useParams();
+    const { id, idDoctor } = useParams();
 
     const [updateService, { isLoading }] = useUpdateBookingMutation();
     const { data: bookingData, isLoading: bookingById } = useGetBookingByIdQuery(id || "")
@@ -65,7 +65,8 @@ const BookingUpdate = () => {
             bookingExpiredTime: mergedBookingExpiredTime,
             startTime: mergedStartTime,
             endTime: mergedEndTime,
-            status: 1
+            status: 1,
+            idDoctor: idDoctor
         })
             .unwrap()
             .then(() => {

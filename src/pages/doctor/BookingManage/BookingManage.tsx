@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { Button, Table, Space, Modal, Form, DatePicker, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AiOutlineEdit } from "react-icons/ai";
@@ -13,6 +13,7 @@ const { confirm } = Modal;
 const { RangePicker } = DatePicker;
 
 const BookingManage = () => {
+    const { idDoctor } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [idTime, setIdTime] = useState<Key[]>([]);
@@ -21,9 +22,9 @@ const BookingManage = () => {
     const [deleteBooking] = useDeleteBookingMutation();
 
     useEffect(() => {
-        searchBooking({ fromDate: "", toDate: "" });
-        form.submit();
-    }, [searchBooking, form]);
+        searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
+
+    }, [searchBooking, idDoctor]);
 
     const showDeleteConfirm = (id: string[] | Key[]) => {
         if (id !== undefined) {
@@ -36,9 +37,9 @@ const BookingManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-                        deleteBooking({ idsToDelete: id })
+                        await deleteBooking({ idDoctor: idDoctor, idsToDelete: id })
                         Notifn("success", "Thành công", "Xoá lịch khám thành công thành công!");
-                        searchBooking({ fromDate: "", toDate: "" });
+                        await searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
                         form.submit()
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi xoá");
@@ -53,6 +54,7 @@ const BookingManage = () => {
         const fromDate = dayjs(values.name[0]).format('YYYY-MM-DD');
         const toDate = dayjs(values.name[1]).format('YYYY-MM-DD');
         searchBooking({
+            idDoctor: idDoctor || "",
             fromDate: fromDate,
             toDate: toDate,
         });
@@ -60,7 +62,7 @@ const BookingManage = () => {
 
     const handleReset = () => {
         form.resetFields();
-        searchBooking({ fromDate: "", toDate: "" });
+        searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,10 +99,11 @@ const BookingManage = () => {
             render: (_text: any, _record: any) => (
                 <Space size="middle">
                     <MdAddCard
+                        title="Tạo lịch khám"
                         className={`text-2xl ${_record.isCreate === 0 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-500 hover:text-blue-400 cursor-pointer'}`}
                         onClick={() => {
                             if (_record.isCreate === 1) {
-                                navigate(`/doctor/them-lich-kham`, { state: _record.date });
+                                navigate(`/doctor/them-lich-kham/${idDoctor}`, { state: _record.date });
                             }
                         }}
                     />
@@ -145,7 +148,7 @@ const BookingManage = () => {
                 render: (_text: any, _record: any) => (
                     <Space size="middle" className="text-xl">
                         {_record.isEditable === 1 ? (
-                            <Link to={`/doctor/sua-lich-kham/${_record.id}`}>
+                            <Link to={`/doctor/sua-lich-kham/${_record.id}/${idDoctor}`}>
                                 <AiOutlineEdit className="text-yellow-400 hover:text-yellow-300" />
                             </Link>
                         ) : (
@@ -199,7 +202,7 @@ const BookingManage = () => {
             <div className="flex justify-between mb-6">
                 <h2 className="text-2xl font-semibold">Quản lý lịch khám</h2>
                 <Button type="primary" className="bg-blue-600">
-                    <Link to="/doctor/them-lich-kham">Tạo lịch khám</Link>
+                    <Link to={`/doctor/them-lich-kham/${idDoctor}`}>Tạo lịch khám</Link>
                 </Button>
             </div>
             <Form onFinish={handleSearch} form={form}>

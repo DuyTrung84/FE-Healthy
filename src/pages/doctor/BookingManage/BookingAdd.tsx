@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { EnterOutlined } from "@ant-design/icons";
 import { Button, Col, DatePicker, Form, InputNumber, Row, Select } from 'antd';
 
@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 const { RangePicker } = DatePicker;
 
 const BookingAdd = () => {
+    const { idDoctor } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const location = useLocation();
@@ -23,9 +24,7 @@ const BookingAdd = () => {
     useEffect(() => {
         form.setFieldsValue({
             date: location?.state ? dayjs(location?.state) : undefined
-
         });
-
     }, [location, form])
 
 
@@ -72,7 +71,8 @@ const BookingAdd = () => {
             bookingExpiredTime: mergedBookingExpiredTime,
             startTime: mergedStartTime,
             endTime: mergedEndTime,
-            status: 1
+            status: 1,
+            idDoctor: idDoctor
         })
             .unwrap()
             .then(() => {

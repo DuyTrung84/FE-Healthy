@@ -38,11 +38,11 @@ const bookingApi = createApi({
             providesTags: ['BOOKING']
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        searchBooking: builder.mutation<any, { fromDate: string, toDate: string }>({
-            query: ({ fromDate, toDate }) => ({
+        searchBooking: builder.mutation<any, { idDoctor: string, fromDate: string, toDate: string }>({
+            query: ({ idDoctor, fromDate, toDate }) => ({
                 url: `admin/doctors/getSchedules`,
                 method: 'GET',
-                params: { fromDate, toDate },
+                params: { idDoctor, fromDate, toDate },
             }),
             invalidatesTags: ['BOOKING']
         }),
@@ -68,10 +68,10 @@ const bookingApi = createApi({
         }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         deleteBooking: builder.mutation<void, any>({
-            query: ({ idsToDelete }) => ({
+            query: ({ idDoctor, idsToDelete }) => ({
                 url: `admin/doctors/deleteSchedules`,
                 method: "POST",
-                body: { idsToDelete }
+                body: { idDoctor, idsToDelete }
             }),
             invalidatesTags: ['BOOKING']
         }),
