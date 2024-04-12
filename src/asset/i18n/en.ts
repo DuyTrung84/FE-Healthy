@@ -60,7 +60,8 @@ const enTranslation = {
         "btnLogin": "Login",
         "noAccount": "Don't have an account?",
         "signup": "Sign up now!",
-        "or": "Or"
+        "or": "Or",
+        "noPowers": "You don't have permission to schedule!!",
     },
     "clinicsDetail": {
         "more": "View more",

@@ -203,6 +203,10 @@ const MakeAppt = () => {
                         </Form.Item>
                     </Form>
                 </div>
+            ) : role === "DOCTOR" || role === "ADMIN" ? (
+                <div className="max-w-screen-md mx-auto my-8">
+                    <Button type="primary" danger className=" text-center w-full items-center flex justify-center cursor-not-allowed">{t('makeAppt.noPowers')}</Button>
+                </div>
             ) : (
                 <div className="max-w-screen-md mx-auto my-8">
                     <Button onClick={showModal} type="primary" className="bg-blue-500 w-full text-white items-center flex justify-center" size="large">

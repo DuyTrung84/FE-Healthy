@@ -60,7 +60,8 @@ const viTranslation = {
         btnLogin: "Đăng nhập",
         noAccount: "Chưa có tài khoản?",
         signup: "Đăng ký ngay!!",
-        or: "Hoặc"
+        or: "Hoặc",
+        noPowers: "Bạn không có quyền đặt lịch!!!",
     },
     clinicsDetail: {
         more: "Xem thêm",
