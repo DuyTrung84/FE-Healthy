@@ -87,7 +87,7 @@ const ClinicsUpdate = () => {
             await addClinic(request)
                 .unwrap()
                 .then((response) => {
-                    const responseData = response?.data?.data;
+                    const responseData = response?.data;
                     const formData = new FormData();
                     if (responseData) {
                         formData.append('id', responseData);

@@ -8,13 +8,15 @@ import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { IAccount } from "../../../interface/Account";
 import { useDeleteAccountMutation, useGetAllAccountMutation, useGetRoleQuery } from "../../../api/admin/Account";
 import { Option } from "antd/es/mentions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RiServiceLine } from "react-icons/ri";
 import { useGetStatusQuery } from "../../../api/share/upload";
 
 const { confirm } = Modal;
 const AccountManage = () => {
     const [form] = Form.useForm();
+    const [selectPage, setSelectPage] = useState(1);
+
     const [searchAccount, { data, isLoading }] = useGetAllAccountMutation();
     const [deleteAccount] = useDeleteAccountMutation();
     const { data: selectRole, isLoading: loadingRole } = useGetRoleQuery();
@@ -40,8 +42,8 @@ const AccountManage = () => {
                     try {
                         await deleteAccount({ id, status });
                         Notifn("success", "Thành công", "Đã chuyển trạng thái tài khoản thành công!");
-                        searchAccount({ keyword: null, role: null, status: null, page: 0, resultLimit: 10 });
-                        form.submit();
+                        searchAccount({ keyword: form.getFieldValue('keyword'), role: form.getFieldValue('role'), status: form.getFieldValue('status'), page: selectPage, resultLimit: 10 });
+
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi khoá");
                     }
@@ -66,6 +68,7 @@ const AccountManage = () => {
     };
 
     const handlePaginationChange = (currentPage: number, pageSize?: number) => {
+        setSelectPage(currentPage - 1)
         searchAccount({
             keyword: form.getFieldValue('keyword'),
             role: form.getFieldValue('role'),

@@ -8,12 +8,14 @@ import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { useDeleteClinicsMutation, useSearchClinicsMutation } from "../../../api/site/Clinics";
 import { IClinics } from "../../../interface/Clinics";
 import { useGetStatusQuery } from "../../../api/share/upload";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGetProvincesQuery } from "../../../api/share/area";
 
 const { confirm } = Modal;
 const ClinicsManage = () => {
     const [form] = Form.useForm();
+    const [selectPage, setSelectPage] = useState(1);
+
     const [searchClinics, { data, isLoading }] = useSearchClinicsMutation();
     const [deleteClinics] = useDeleteClinicsMutation();
     const { data: statusData } = useGetStatusQuery();
@@ -40,8 +42,7 @@ const ClinicsManage = () => {
                     try {
                         await deleteClinics({ id, status });
                         Notifn("success", "Thành công", "Đã đổi trạng thái phòng khám thành công");
-                        searchClinics({ search: "", province: "", status: "", page: 0, resultLimit: 10 });
-                        form.submit();
+                        searchClinics({ search: form.getFieldValue('search'), province: form.getFieldValue('province'), status: form.getFieldValue('status'), page: selectPage, resultLimit: 10 });
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }
@@ -67,6 +68,7 @@ const ClinicsManage = () => {
     };
 
     const handlePaginationChange = (currentPage: number, pageSize?: number) => {
+        setSelectPage(currentPage - 1)
         searchClinics({
             search: form.getFieldValue('search'),
             province: form.getFieldValue('province'),

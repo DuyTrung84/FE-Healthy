@@ -8,12 +8,13 @@ import { Notifn } from "../../../utils/Notification";
 import { ISpecialty } from "../../../interface/Specialty";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import { useGetStatusQuery } from "../../../api/share/upload";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 const { confirm } = Modal;
 const SpecialtyManage = () => {
     const [form] = Form.useForm();
+    const [selectPage, setSelectPage] = useState(1);
 
     const [searchSpecialty, { data, isLoading }] = useSearchAllSpecialtyMutation();
     const [deleteSpecialty] = useDeleteSpecialtyMutation();
@@ -39,8 +40,7 @@ const SpecialtyManage = () => {
                     try {
                         await deleteSpecialty({ id, status });
                         Notifn("success", "Thành công", "Đổi trạng thái thành công!!");
-                        searchSpecialty({ name: "", status: "", page: 0, resultLimit: 10 });
-                        form.submit();
+                        searchSpecialty({ name: form.getFieldValue('name'), status: form.getFieldValue('status'), page: selectPage - 1, resultLimit: 10 });
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }
@@ -65,6 +65,7 @@ const SpecialtyManage = () => {
     };
 
     const handlePaginationChange = (currentPage: number, pageSize?: number) => {
+        setSelectPage(currentPage)
         searchSpecialty({
             name: form.getFieldValue('name'),
             status: form.getFieldValue('status'),

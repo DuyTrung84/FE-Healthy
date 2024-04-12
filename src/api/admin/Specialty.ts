@@ -9,7 +9,7 @@ const specialtyApi = createApi({
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {
-                console.log(token);
+
                 headers.set('authorization', `Bearer ${token}`);
             }
             return headers

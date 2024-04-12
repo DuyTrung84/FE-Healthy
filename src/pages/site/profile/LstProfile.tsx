@@ -71,6 +71,7 @@ const LstProfile = () => {
                         .unwrap()
                         .then(() => {
                             Notifn("success", "Thành công", "Xoá hồ sơ thành công!!")
+                            setSelectedIds([])
                         })
                         .catch((error) => {
                             Notifn("error", "Lỗi", error.data.message || error.data);

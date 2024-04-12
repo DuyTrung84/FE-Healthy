@@ -24,8 +24,8 @@ const AppointmentHist = () => {
     const [cancel, { isLoading: cancelLoading }] = useCancelAppointmentMutation()
 
     useEffect(() => {
-        search({ fromDate: "", toDate: "", status: "", page: currentPage - 1, resultLimit: 10 })
-    }, [search, currentPage])
+        fetchData(currentPage);
+    }, [])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleSearch = (values: any) => {
@@ -84,7 +84,6 @@ const AppointmentHist = () => {
 
     const fetchData = (page: number) => {
         const date = form.getFieldValue('name')
-
         const fromDate = date && date[0] ? dayjs(date[0]).format('YYYY-MM-DD') : '';
         const toDate = date && date[1] ? dayjs(date[1]).format('YYYY-MM-DD') : '';
         search({
@@ -93,10 +92,6 @@ const AppointmentHist = () => {
             page: page - 1, resultLimit: 10
         });
     };
-
-    useEffect(() => {
-        fetchData(currentPage);
-    }, [currentPage]);
 
     const countLines = (text: string): number => {
         return text.split('\n').length;
@@ -115,7 +110,7 @@ const AppointmentHist = () => {
                         <RangePicker placeholder={['Từ ngày', 'Đến ngày']} />
                     </Form.Item>
                     <Form.Item name="status" className="w-44">
-                        <Select placeholder="Trạng thái đặt lịch" className="w-96">
+                        <Select placeholder="Trạng thái đặt lịch" className="w-96" allowClear>
                             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             {bookingStatus?.data?.map((role: any) => (
                                 <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>

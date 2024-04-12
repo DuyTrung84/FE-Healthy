@@ -1,13 +1,12 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthSignin, useSigninMutation } from '../../api/share/Auth';
 import { Notifn } from '../../utils/Notification';
 
 
 const Signin = () => {
     const [signin, { isLoading }] = useSigninMutation();
-    const navigate = useNavigate()
     const onFinish = async (values: AuthSignin) => {
         try {
             const { email, password } = values;
@@ -26,12 +25,12 @@ const Signin = () => {
                 localStorage.setItem('role', role!);
                 Notifn("success", "Thành công", "Đăng nhập thành công");
                 if (role === "ADMIN") {
-                    navigate("/admin");
+                    window.location.href = "/admin";
                 } else if (role === "DOCTOR") {
-                    navigate("/doctor");
+                    window.location.href = "/doctor"
                 }
                 else if (role === "USER") {
-                    navigate("/");
+                    window.location.href = "/"
                 }
             } else {
                 throw new Error('Không có dữ liệu token hoặc refreshToken');
