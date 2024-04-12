@@ -65,7 +65,7 @@ const AddAccount = () => {
                     descriptionHtml: values.descriptionHtml,
                     note: values.note,
                     specialitiesId: values.specialitiesId,
-                    wards: values.wards,
+                    ward: values.ward,
                     address: values.address,
                 } : null // Nếu không phải vai trò "DOCTOR", gán giá trị undefined cho doctorInfoDTO
             };
