@@ -259,7 +259,7 @@ const AddAccount = () => {
                             </Col>
                             <Col span={12}>
                                 <Form.Item
-                                    name="wards"
+                                    name="ward"
                                     label="Phường/Xã"
                                     rules={[
                                         { required: selectedRole === "DOCTOR", message: 'Trường này không được bỏ trống !' },
