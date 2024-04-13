@@ -5,7 +5,7 @@ const uploadApi = createApi({
     reducerPath: "upload",
     tagTypes: ["UPLOAD"],
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_API_BASE,
+        baseUrl: import.meta.env.VITE_API_BASE + "/api/v1",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {

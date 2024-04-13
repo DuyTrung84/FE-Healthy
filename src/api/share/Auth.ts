@@ -23,7 +23,7 @@ const authApi = createApi({
     reducerPath: "auth",
     tagTypes: ["AUTH"],
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_API_BASE + "/auth",
+        baseUrl: import.meta.env.VITE_API_BASE + "/api/v1/auth",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {

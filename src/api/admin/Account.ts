@@ -6,7 +6,7 @@ const accountApi = createApi({
     reducerPath: "account",
     tagTypes: ["ACCOUNT"],
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_API_BASE + "/admin/user",
+        baseUrl: import.meta.env.VITE_API_BASE + "/api/v1/admin/user",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {

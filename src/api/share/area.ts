@@ -11,7 +11,7 @@ const areaApi = createApi({
     reducerPath: "area",
     tagTypes: ["AREA"],
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_API_BASE,
+        baseUrl: import.meta.env.VITE_API_BASE + "/api/v1",
         prepareHeaders: (headers) => {
             const rfToken = localStorage.getItem("rfToken");
             if (rfToken) {

@@ -4,7 +4,7 @@ const profileApi = createApi({
     reducerPath: "profiles",
     tagTypes: ["PROFILES"],
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_API_BASE + "/user/profiles/",
+        baseUrl: import.meta.env.VITE_API_BASE + "/api/v1/user/profiles/",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {
