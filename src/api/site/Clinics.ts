@@ -5,7 +5,7 @@ const clinicsApi = createApi({
     reducerPath: "clinics",
     tagTypes: ["CLINICS"],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://103.148.57.141:8888/api/v1",
+        baseUrl: import.meta.env.VITE_API_BASE,
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {

@@ -4,7 +4,7 @@ const paymentApi = createApi({
     reducerPath: "payment",
     tagTypes: ["PAYMENT"],
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://103.148.57.141:8888/api/v1/payment/",
+        baseUrl: import.meta.env.VITE_API_BASE + "/payment/",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {
