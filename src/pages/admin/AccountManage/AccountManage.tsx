@@ -51,7 +51,7 @@ const AccountManage = () => {
             });
         }
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const handleSearch = (values: any) => {
         searchAccount({
             keyword: values.keyword,

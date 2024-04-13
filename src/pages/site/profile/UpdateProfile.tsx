@@ -49,7 +49,7 @@ const UpdateProfile = () => {
     };
 
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const onFinish = async (values: any) => {
         delete values.imageObjectId;
         values.id = id;

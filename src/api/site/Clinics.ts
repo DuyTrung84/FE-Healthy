@@ -15,8 +15,8 @@ const clinicsApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getAllClinics: builder.query<IClinics, { search?: string | null; province?: string | null; status?: string | null; page?: number; resultLimit?: number }>({
+
+        getAllClinics: builder.query<any, { search?: string | null; province?: string | null; status?: string | null; page?: number; resultLimit?: number }>({
             query: ({ search, status, page, resultLimit, province }) => ({
                 url: 'public/clinics/all',
                 method: 'GET',
@@ -24,8 +24,8 @@ const clinicsApi = createApi({
             }),
             providesTags: ['CLINICS']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        searchClinics: builder.mutation<IClinics, { search: string | null; province: string | null; status: string | null; page: number; resultLimit: number }>({
+
+        searchClinics: builder.mutation<any, { search: string | null; province: string | null; status: string | null; page: number; resultLimit: number }>({
             query: ({ search, status, page, resultLimit, province }) => ({
                 url: 'public/clinics/all',
                 method: 'GET',
@@ -43,7 +43,7 @@ const clinicsApi = createApi({
             providesTags: ['CLINICS']
         }),
         addClinics: builder.mutation({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (packages: any) => ({
                 url: "/admin/clinics/create",
                 method: "POST",
@@ -51,9 +51,9 @@ const clinicsApi = createApi({
             }),
             invalidatesTags: ['CLINICS']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         updateClinics: builder.mutation<any, any>({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: ({ id, ...packages }: any) => ({
                 url: `admin/clinics/update/${id}`,
                 method: "PUT",
@@ -69,7 +69,7 @@ const clinicsApi = createApi({
             }),
             invalidatesTags: ['CLINICS']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getHistoryBooking: builder.mutation<any, { fromDate?: string | null; toDate?: string | null; status: string | null; page: number; resultLimit: number }>({
             query: ({ fromDate, toDate, status, page, resultLimit }) => ({
                 url: 'user/booking/userGetBookingHistory',

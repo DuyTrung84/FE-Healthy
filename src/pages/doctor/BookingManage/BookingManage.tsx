@@ -48,7 +48,7 @@ const BookingManage = () => {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const handleSearch = (values: any) => {
         const fromDate = dayjs(values.name[0]).format('YYYY-MM-DD');
         const toDate = dayjs(values.name[1]).format('YYYY-MM-DD');
@@ -64,7 +64,7 @@ const BookingManage = () => {
         searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const columns: ColumnsType<any> = [
         {
             title: 'STT',
@@ -94,7 +94,7 @@ const BookingManage = () => {
         {
             title: 'Action',
             key: 'action',
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             render: (_text: any, _record: any) => (
                 <Space size="middle">
                     <MdAddCard
@@ -112,7 +112,7 @@ const BookingManage = () => {
 
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const expandedRowRender = (record: any) => {
         const columns = [
             { title: 'Thời gian bắt đầu', dataIndex: 'startTime', key: 'startTime' },
@@ -143,7 +143,7 @@ const BookingManage = () => {
             {
                 title: 'Action',
                 key: 'action',
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 render: (_text: any, _record: any) => (
                     <Space size="middle" className="text-xl">
                         {_record.isEditable === 1 ? (
@@ -167,7 +167,7 @@ const BookingManage = () => {
                 ),
             },
         ];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         const schedulesData = record.schedules.map((item: any) => ({
             ...item,
             key: item.id,
@@ -181,7 +181,7 @@ const BookingManage = () => {
                 onChange: (selectedRowKeys) => {
                     setIdTime(selectedRowKeys)
                 },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 getCheckboxProps: (record: any) => ({
                     disabled: record.isEditable === 0, // Column configuration not to be checked
                     name: record.isEditable,
@@ -190,7 +190,7 @@ const BookingManage = () => {
         />;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const newData = data?.data.map((item: any, index: any) => ({
         ...item,
         key: index.toString(),

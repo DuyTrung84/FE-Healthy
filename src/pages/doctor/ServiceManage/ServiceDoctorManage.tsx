@@ -23,7 +23,7 @@ const ServiceBookingManage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>("");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [fileList, setFileList] = useState<any>([]); // Định nghĩa state fileList
     console.log(fileList)
 
@@ -37,7 +37,7 @@ const ServiceBookingManage = () => {
         searchBooking({ idService: id || null, status: "", fromDate: "", toDate: "" });
     }, [searchBooking, form, id]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const showCancelConfirm = (values: any) => {
         if (values !== undefined) {
             confirm({
@@ -64,7 +64,7 @@ const ServiceBookingManage = () => {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const handleSearch = (values: any) => {
         const fromDate = dayjs(values.name[0]).format('YYYY-MM-DD');
         const toDate = dayjs(values.name[1]).format('YYYY-MM-DD');
@@ -99,7 +99,7 @@ const ServiceBookingManage = () => {
         setIsModalOpen2(false);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const columns: ColumnsType<any> = [
         {
             title: 'STT',
@@ -128,9 +128,9 @@ const ServiceBookingManage = () => {
         },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const expandedRowRender = (record: any) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         const columns: any = [
             { title: 'Thời gian bắt đầu', dataIndex: 'timeStart', key: 'timeStart', width: 100 },
             { title: 'Thời gian kết thúc', dataIndex: 'timeEnd', key: 'timeEnd', width: 100 },
@@ -157,13 +157,13 @@ const ServiceBookingManage = () => {
                         <Tag color={color}>{text}</Tag>
                     );
                 },
-            },// eslint-disable-next-line @typescript-eslint/no-explicit-any
+            },
             { title: 'Họ tên bệnh nhân', key: 'fullName', render: (_text: any, record: any) => (<p>{record.patientProfile.fullName}</p>) },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             { title: 'SDT bệnh nhân', key: 'phoneNumber', render: (_text: any, record: any) => (<p>{record.patientProfile.phoneNumber}</p>) },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             { title: 'Email bệnh nhân', key: 'email', render: (_text: any, record: any) => (<p>{record.patientProfile.email}</p>) },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             { title: 'Năm sinh', key: 'birthdate', render: (_text: any, record: any) => (<p>{record.patientProfile.birthdate}</p>) },
             { title: 'Lý do khám', key: 'reasonBooking', dataIndex: 'reasonBooking', width: 200 },
             { title: 'Lý do huỷ', key: 'reasonCancel', dataIndex: 'reasonCancel' },
@@ -172,7 +172,7 @@ const ServiceBookingManage = () => {
                 key: 'action',
                 fixed: 'right',
                 width: 100,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 render: (_text: any, _record: any) => (
                     <Space size="middle" className="text-xl">
                         {_record.status === 1 ? (
@@ -192,7 +192,7 @@ const ServiceBookingManage = () => {
                 ),
             },
         ];
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         const schedulesData = record.bookingResponse.map((item: any) => ({
             ...item,
             key: item.id,
@@ -205,7 +205,7 @@ const ServiceBookingManage = () => {
         />;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const newData = data?.data.map((item: any, index: any) => ({
         ...item,
         key: index.toString(),
@@ -228,7 +228,7 @@ const ServiceBookingManage = () => {
         setFileList(newFileList);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const showCloseConfirm = (values: any) => {
         if (values !== undefined) {
             confirm({
@@ -242,7 +242,7 @@ const ServiceBookingManage = () => {
                     try {
                         const formData = new FormData();
                         if (fileList) {
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                             fileList.forEach((file: any) => {
                                 formData.append('files', file.originFileObj);
                             });

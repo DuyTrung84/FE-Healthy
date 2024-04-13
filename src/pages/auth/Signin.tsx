@@ -36,7 +36,7 @@ const Signin = () => {
                 throw new Error('Không có dữ liệu token hoặc refreshToken');
             }
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             Notifn("error", "Lỗi", (error as any).data || 'Có lỗi xảy ra');
         }
     };

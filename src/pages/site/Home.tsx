@@ -12,9 +12,9 @@ import { Spin } from 'antd';
 const Home = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [ltsService, setLstService] = useState<any>([]); //lưu data danh sách dịch vụ
     const [dataLoaded, setDataLoaded] = useState(false);
 
@@ -52,7 +52,7 @@ const Home = () => {
     const newSpecialty = specialty?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "specialty" })) || [];
 
     const newClinics = clinics ? clinics?.data?.data?.map((item: LstCategories) => ({ ...item, cateCode: "clinics", })) : [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 
     const newDoctor = lstDoctor?.data?.data ? lstDoctor.data.data.map((item: LstCategories) => ({ ...item, cateCode: "doctor", name: item.doctorName, descriptionHtml: item.specialityName })) : [];
 

@@ -4,7 +4,6 @@ import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { EditOutlined, ExclamationCircleFilled, MoreOutlined } from "@ant-design/icons";
 import { Notifn } from "../../../utils/Notification";
 import { MenuItemType } from "antd/es/menu/hooks/useItems";
-import { IAccount } from "../../../interface/Account";
 import { useEffect, useState } from "react";
 import { Key } from 'antd/es/table/interface';
 import { useDeleterServiceDoctorMutation, useGetAllServiceMutation } from '../../../api/admin/Service';
@@ -49,7 +48,7 @@ const ServiceManage = () => {
     };
 
 
-    const columns: ColumnsType<IAccount> = [
+    const columns: ColumnsType<any> = [
         {
             title: 'STT',
             key: 'index',
@@ -134,7 +133,7 @@ const ServiceManage = () => {
         },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const dataSourceWithKeys = Array.isArray(data?.data) ? data?.data.map((item: any) => ({ ...item, key: item.id })) : [];
     return (
         <div className="">
@@ -155,7 +154,6 @@ const ServiceManage = () => {
                     onChange: (selectedRowKeys) => {
                         setIdService(selectedRowKeys)
                     },
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     getCheckboxProps: (record: any) => ({
                         disabled: record.status === 0, // Column configuration not to be checked
                         name: record.status,

@@ -20,7 +20,7 @@ const ListCategories = () => {
     const { t, i18n } = useTranslation();
     const data = location.state;
     const [currentPage, setCurrentPage] = useState(1);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [selectData, setSelectData] = useState<any>();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -92,7 +92,7 @@ const ListCategories = () => {
         fetchData(currentPage);
     }, [data.slug, currentPage]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const onFinish = (values: any) => {
         if (data.slug === "clinics") {
             searchClinics({ search: values.search, province: values.province, status: '1', page: currentPage - 1, resultLimit: 10 });

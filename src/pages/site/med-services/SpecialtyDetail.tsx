@@ -16,9 +16,9 @@ const MedExamination = () => {
     const [currentPage2, setCurrentPage2] = useState(1);
     const [selectedDates, setSelectedDates] = useState<number[]>(Array(10).fill(0));
     const [selectedDates2, setSelectedDates2] = useState<number[]>(Array(10).fill(0));
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [lstDoctor, setLstDoctor] = useState<any>([]); //lưu data danh sách bác sĩ
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const [ltsService, setLstService] = useState<any>([]); //lưu data danh sách dịch vụ
 
     const { data: getDetail } = useGetByIdSpecialtyQuery(id || "");

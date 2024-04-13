@@ -53,7 +53,7 @@ const MakeAppt = () => {
                 throw new Error('Không có dữ liệu token hoặc refreshToken');
             }
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             Notifn("error", "Lỗi", (error as any).data || 'Có lỗi xảy ra');
         }
     };
@@ -140,7 +140,7 @@ const MakeAppt = () => {
                         >
                             <Radio.Group>
                                 {profiles?.data && profiles.data.length > 0 ? (
-                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                                     profiles.data.map((item: any) => (
                                         <Radio key={item.id} value={item.id} style={{ margin: '0 8px 8px 0' }}>
                                             <Card style={{ width: 320 }} loading={loadingProfile}>

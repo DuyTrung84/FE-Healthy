@@ -16,7 +16,7 @@ const uploadApi = createApi({
     }),
     endpoints: (builder) => ({
         upload: builder.mutation({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (image: any) => ({
                 url: "/upload",
                 method: "POST",
@@ -25,7 +25,7 @@ const uploadApi = createApi({
             invalidatesTags: ['UPLOAD']
         }),
         uploadMultipart: builder.mutation({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (image: any) => ({
                 url: "/upload/nfiles",
                 method: "POST",
@@ -33,17 +33,17 @@ const uploadApi = createApi({
             }),
             invalidatesTags: ['UPLOAD']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getAccount: builder.query<IAccount, void>({
             query: () => "/account/me",
             providesTags: ["UPLOAD"],
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getStatus: builder.query<any, void>({
             query: () => "/public/objectStatus",
             providesTags: ["UPLOAD"],
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getPayment: builder.query<any, void>({
             query: () => "/public/payment",
             providesTags: ["UPLOAD"],

@@ -40,7 +40,7 @@ const ClinicsChildren = () => {
             <Spin spinning={isLoading}>
                 <div className='grid grid-cols-1 gap-8 my-8'>
                     {data && Array.isArray(data.data) && data.data
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                         .filter(clinic => clinic.name.toLowerCase().includes(searchTerm.toLowerCase())).map((clinic: any) => (
                             <div key={clinic.id} className='flex gap-8 items-center cursor-pointer hover:scale-95' onClick={() => handleNavigate(clinic.id, clinic.name)}>
                                 <img src={clinic.imageUrl} alt={clinic.name} className='rounded-lg w-40 h-36 object-cover object-center' />

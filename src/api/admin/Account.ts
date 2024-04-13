@@ -25,7 +25,7 @@ const accountApi = createApi({
             }),
             invalidatesTags: ['ACCOUNT']
         }),
-        addAccount: builder.mutation<IAccount, IAccount>({
+        addAccount: builder.mutation<any, any>({
             query: (account: IAccount) => ({
                 url: "/create",
                 method: "POST",

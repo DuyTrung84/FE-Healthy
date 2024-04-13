@@ -75,22 +75,19 @@ const UpdateDoctor = () => {
         try {
             delete values.imageObjectId;
             updateDoctor({ ...values, userId: id })
+                .unwrap()
                 .then(response => {
-                    if (response?.data) {
-                        const responseData = response?.data?.data;
-                        const formData = new FormData();
-                        if (fileImg) {
-                            formData.append('image', fileImg);
-                        }
-                        if (responseData) {
-                            formData.append('id', responseData);
-                        }
-                        uploadImage(formData);
-                        Notifn("success", "Thành công", "Thêm thành công");
-                        navigate("/admin/quan-ly-tai-khoan");
-                    } else {
-                        Notifn("error", "Lỗi", response?.error?.data?.message);
+                    const responseData = response?.data?.data;
+                    const formData = new FormData();
+                    if (fileImg) {
+                        formData.append('image', fileImg);
                     }
+                    if (responseData) {
+                        formData.append('id', responseData);
+                    }
+                    uploadImage(formData);
+                    Notifn("success", "Thành công", "Thêm thành công");
+                    navigate("/admin/quan-ly-tai-khoan");
                 })
                 .catch(error => {
                     // Xử lý lỗi khi gọi API addAccount

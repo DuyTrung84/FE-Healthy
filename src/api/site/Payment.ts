@@ -15,9 +15,9 @@ const paymentApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         createFreeOrder: builder.mutation<any, any>({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (payment: any) => ({
                 url: "createFreeOrder",
                 method: "POST",
@@ -25,9 +25,9 @@ const paymentApi = createApi({
             }),
             invalidatesTags: ['PAYMENT']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         createPayment: builder.mutation<any, any>({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (payment: any) => ({
                 url: "createPayment",
                 method: "POST",
@@ -35,7 +35,7 @@ const paymentApi = createApi({
             }),
             invalidatesTags: ['PAYMENT']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         resultPayment: builder.mutation<any, any>({
             query: (result) => ({
                 url: 'checkPaymentResult',
@@ -44,9 +44,9 @@ const paymentApi = createApi({
             }),
             invalidatesTags: ['PAYMENT']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         cancelAppointment: builder.mutation<any, any>({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (payment: any) => ({
                 url: "cancelAppointment",
                 method: "POST",

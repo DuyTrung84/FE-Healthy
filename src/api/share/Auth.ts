@@ -33,7 +33,7 @@ const authApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         signup: builder.mutation<{ message: string; status: string; errors: any }, AuthSignup>({
             query: (account) => ({
                 url: "register",

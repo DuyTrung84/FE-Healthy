@@ -37,7 +37,7 @@ const AddProfile = () => {
             setIsImageUploading(false); // Hoàn thành upload
         }, 2000); // Thời gian loading là 2 giây
     };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const onFinish = async (values: any) => {
         delete values.imageObjectId;
         values.birthdate = dayjs(values.birthdate).format('YYYY-MM-DD');

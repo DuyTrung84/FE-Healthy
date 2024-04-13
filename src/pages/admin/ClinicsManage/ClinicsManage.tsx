@@ -51,7 +51,7 @@ const ClinicsManage = () => {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const handleSearch = (values: any) => {
         searchClinics({
             search: values.search,
@@ -158,7 +158,7 @@ const ClinicsManage = () => {
         },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const expandIcon = ({ expanded, onExpand, record }: { expanded: any, onExpand: any, record: any }) => {
         if (!record.children || record.children.length === 0) {
             return null;

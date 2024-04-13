@@ -21,7 +21,7 @@ const areaApi = createApi({
         },
     }),
     endpoints: (builder) => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getProvinces: builder.query<any, void>({
             query: () => "/area/provinces",
             providesTags: ["AREA"],

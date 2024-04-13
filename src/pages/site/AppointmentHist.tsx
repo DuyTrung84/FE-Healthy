@@ -27,7 +27,7 @@ const AppointmentHist = () => {
         fetchData(currentPage);
     }, [])
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const handleSearch = (values: any) => {
         const fromDate = values.name && values.name[0] ? dayjs(values.name[0]).format('YYYY-MM-DD') : '';
         const toDate = values.name && values.name[1] ? dayjs(values.name[1]).format('YYYY-MM-DD') : '';
@@ -45,7 +45,7 @@ const AppointmentHist = () => {
         search({ fromDate: "", toDate: "", status: "", page: 0, resultLimit: 10 });
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const toggleItemContent = (itemId: any) => {
         setExpandedItems(prevState => ({
             ...prevState,
@@ -62,7 +62,7 @@ const AppointmentHist = () => {
         setIsModalOpen(false);
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const onFinish = async (values: any) => {
         await cancel({ ...values, idBooking: selectedAppointmentId })
             .unwrap()

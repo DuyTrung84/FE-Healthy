@@ -24,7 +24,7 @@ import serviceApi, { serviceApiReducer } from '../api/admin/Service';
 import paymentApi, { paymentApiReducer } from '../api/site/Payment';
 
 // Định nghĩa kiểu cho RootState
-interface RootState {
+export interface RootState {
     [authApi.reducerPath]: ReturnType<typeof authApiReducer>;
     [areaApi.reducerPath]: ReturnType<typeof areaApiReducer>;
     [specialtyApi.reducerPath]: ReturnType<typeof specialtyApiReducer>;

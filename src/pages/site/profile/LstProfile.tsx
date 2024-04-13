@@ -50,7 +50,7 @@ const LstProfile = () => {
         if (selectAll) {
             setSelectedIds([]);
         } else {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             const allIds = data.map((item: any) => item.id);
             setSelectedIds(allIds);
         }
@@ -105,7 +105,7 @@ const LstProfile = () => {
                 itemLayout="horizontal"
                 loadMore={null}
                 dataSource={data.slice(0, displayCount)}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 renderItem={(item: any) => (
                     <div className='flex items-center gap-4'>
                         <Checkbox

@@ -43,7 +43,7 @@ const Manage = () => {
     });
   }, [form, search]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const handleSearch = (values: any) => {
     const fromDate = values?.date ? dayjs(values.date[0]).format('YYYY-MM-DD') : "";
     const toDate = values?.date ? dayjs(values.date[1]).format('YYYY-MM-DD') : "";
@@ -104,7 +104,7 @@ const Manage = () => {
       resultLimit: pageSize || 10, // Số lượng mục trên mỗi trang
     });
   };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const columns: ColumnsType<any> = [
     {
       title: 'STT',

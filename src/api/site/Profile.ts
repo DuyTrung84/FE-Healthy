@@ -15,23 +15,23 @@ const profileApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getAllProfile: builder.query<any, void>({
             query: () => "getAll",
             providesTags: ['PROFILES']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getProfileById: builder.query<any, number | string>({
             query: (id) => `getById/${id}`,
             providesTags: ['PROFILES']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         getProfileById2: builder.mutation<any, number | string>({
             query: (id) => `getById/${id}`,
             invalidatesTags: ['PROFILES']
         }),
         addProfile: builder.mutation({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (profile: any) => ({
                 url: "create",
                 method: "POST",
@@ -39,9 +39,9 @@ const profileApi = createApi({
             }),
             invalidatesTags: ['PROFILES']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         updateProfile: builder.mutation<any, any>({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             query: (packages: any) => ({
                 url: `update`,
                 method: "PUT",
@@ -49,7 +49,7 @@ const profileApi = createApi({
             }),
             invalidatesTags: ['PROFILES']
         }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         deleteProfile: builder.mutation<void, any>({
             query: ({ idsToDelete }) => ({
                 url: `delete`,

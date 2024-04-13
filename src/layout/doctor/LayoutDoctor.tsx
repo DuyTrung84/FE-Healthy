@@ -19,7 +19,7 @@ const LayoutDoctor = () => {
     const { data, error } = useGetAccountQuery();
     const id = data?.data?.id;
     const { data: ServiceDotoor } = useGetServiceDoctorQuery();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const filteredServices = ServiceDotoor?.data?.filter((service: any) => service.type === 2);
 
     useEffect(() => {
@@ -50,7 +50,7 @@ const LayoutDoctor = () => {
             path: '',
             items: [
                 { key: 'doctor1', icon: <FaUserDoctor />, label: 'Bác sĩ', path: `quan-ly-lich-kham/bac-si/${id}` },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 ...filteredServices?.map((service: any, index: number) => ({
                     key: index,
                     label: service.doctorName,
@@ -64,7 +64,7 @@ const LayoutDoctor = () => {
             label: 'Quản lý lịch đã đặt',
             items: [
                 { key: 'doctor2', icon: <FaUserDoctor />, label: 'Bác sĩ', path: `lich-da-dat/bac-si/${id}` },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 ...filteredServices?.map((service: any) => ({
                     key: service.id.toString(),
                     label: service.doctorName,
