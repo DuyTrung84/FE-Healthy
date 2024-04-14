@@ -61,18 +61,30 @@ const ClinicsAdd = () => {
                 ...values,
                 status: 1
             };
-            const response = await addClinic(request);
-            const responseData = response?.data?.data;
-            const formData = new FormData();
-            if (fileImg) {
-                formData.append('image', fileImg);
-            }
-            if (responseData) {
-                formData.append('id', responseData);
-            }
-            await uploadImage(formData)
-            Notifn("success", "Thành công", "Thêm thành công");
-            navigate("/admin/quan-ly-phong-kham");
+            await addClinic(request)
+                .unwrap()
+                .then((response) => {
+                    const responseData = response?.data?.data;
+                    const formData = new FormData();
+                    if (fileImg) {
+                        formData.append('image', fileImg);
+                    }
+                    if (responseData) {
+                        formData.append('id', responseData);
+                    }
+                    uploadImage(formData)
+                        .unwrap()
+                        .then(() => {
+                            Notifn("success", "Thành công", "Thêm thành công");
+                            navigate("/admin/quan-ly-phong-kham");
+                        })
+                        .catch(error => {
+                            Notifn("error", "Lỗi", error.message || error.data.message);
+                        })
+                })
+                .catch(error => {
+                    Notifn("error", "Lỗi", error.message || error.data.message);
+                })
         } catch (error) {
             console.error('Error adding specialty:', error);
             Notifn("error", "Lỗi", "Thêm không thành công");
