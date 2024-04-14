@@ -38,7 +38,7 @@ const specialtyApi = createApi({
             query: (id) => "/public/specialities/get/" + id,
             providesTags: ['SPECIALTY']
         }),
-        addSpecialty: builder.mutation<ISpecialty, ISpecialty>({
+        addSpecialty: builder.mutation<any, any>({
             query: (specialty: ISpecialty) => ({
                 url: "/admin/specialities/create",
                 method: "POST",
@@ -46,7 +46,7 @@ const specialtyApi = createApi({
             }),
             invalidatesTags: ['SPECIALTY']
         }),
-        updateSpecialty: builder.mutation<ISpecialty, ISpecialty>({
+        updateSpecialty: builder.mutation<any, any>({
             query: (specialty: ISpecialty) => ({
                 url: `admin/specialities/update/${specialty.id}`,
                 method: "PUT",
