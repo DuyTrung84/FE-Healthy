@@ -49,12 +49,18 @@ const ServiceBookingManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await cancel({ ...values, idBooking: selectedAppointmentId })
-                        Notifn("success", "Thành công", "Huỷ lịch khám thành công!");
-                        hiddenModal();
-                        searchBooking({ idService: id || null, status: "", fromDate: "", toDate: "" });
-                        form.submit();
-                        form2.resetFields();
+                        await cancel({ ...values })
+                            .unwrap()
+                            .then(() => {
+                                Notifn("success", "Thành công", "Huỷ lịch khám thành công!");
+                                hiddenModal();
+                                searchBooking({ idService: id || null, status: "", fromDate: "", toDate: "" });
+                                form.submit();
+                                form2.resetFields();
+                            })
+                            .catch(error => {
+                                Notifn("error", "Lỗi", error.message || error.data.message);
+                            })
                     } catch (error) {
                         console.log(error)
                         Notifn("error", "Lỗi", "Lỗi huỷ");
@@ -132,8 +138,8 @@ const ServiceBookingManage = () => {
     const expandedRowRender = (record: any) => {
 
         const columns: any = [
-            { title: 'Thời gian bắt đầu', dataIndex: 'timeStart', key: 'timeStart', width: 100 },
-            { title: 'Thời gian kết thúc', dataIndex: 'timeEnd', key: 'timeEnd', width: 100 },
+            { title: 'Thời gian bắt đầu', dataIndex: 'timeStart', key: 'timeStart', width: 200 },
+            { title: 'Thời gian kết thúc', dataIndex: 'timeEnd', key: 'timeEnd', width: 200 },
             {
                 title: 'Trạng thái',
                 dataIndex: 'status',
@@ -157,16 +163,34 @@ const ServiceBookingManage = () => {
                         <Tag color={color}>{text}</Tag>
                     );
                 },
+                width: 200
             },
-            { title: 'Họ tên bệnh nhân', key: 'fullName', render: (_text: any, record: any) => (<p>{record.patientProfile.fullName}</p>) },
-
-            { title: 'SDT bệnh nhân', key: 'phoneNumber', render: (_text: any, record: any) => (<p>{record.patientProfile.phoneNumber}</p>) },
-
-            { title: 'Email bệnh nhân', key: 'email', render: (_text: any, record: any) => (<p>{record.patientProfile.email}</p>) },
-
-            { title: 'Năm sinh', key: 'birthdate', render: (_text: any, record: any) => (<p>{record.patientProfile.birthdate}</p>) },
-            { title: 'Lý do khám', key: 'reasonBooking', dataIndex: 'reasonBooking', width: 200 },
-            { title: 'Lý do huỷ', key: 'reasonCancel', dataIndex: 'reasonCancel' },
+            { title: 'Họ tên bệnh nhân', key: 'fullName', render: (_text: any, record: any) => (<p>{record.patientProfile.fullName}</p>), width: 200 },
+            { title: 'SDT bệnh nhân', key: 'phoneNumber', render: (_text: any, record: any) => (<p>{record.patientProfile.phoneNumber}</p>), width: 200 },
+            { title: 'Email bệnh nhân', key: 'email', render: (_text: any, record: any) => (<p>{record.patientProfile.email}</p>), width: 200 },
+            { title: 'Năm sinh', key: 'birthdate', render: (_text: any, record: any) => (<p>{record.patientProfile.birthdate}</p>), width: 200 },
+            {
+                title: 'Lý do đặt lịch',
+                dataIndex: 'reasonBooking',
+                key: 'reasonBooking',
+                render: (_text: any, record: any) => (
+                    <p title={record.reasonBooking} className="line-clamp-3">
+                        {record.reasonBooking}
+                    </p>
+                ),
+                width: 400
+            },
+            {
+                title: 'Lý do huỷ',
+                dataIndex: 'reasonCancel',
+                key: 'reasonCancel',
+                render: (_text: any, record: any) => (
+                    <p title={record.reasonCancel} className="line-clamp-3">
+                        {record.reasonCancel}
+                    </p>
+                ),
+                width: 300
+            },
             {
                 title: 'Action',
                 key: 'action',
@@ -175,12 +199,12 @@ const ServiceBookingManage = () => {
 
                 render: (_text: any, _record: any) => (
                     <Space size="middle" className="text-xl">
-                        {_record.status === 1 ? (
+                        {_record.isCancel === 1 ? (
                             <FaRegClosedCaptioning className="cursor-pointer text-red-500 hover:text-red-400" title="Huỷ lịch khám" onClick={() => showModal(_record.id)} />
                         ) : (
                             <FaRegClosedCaptioning className="text-red-500 cursor-not-allowed opacity-50" />
                         )}
-                        {_record.status === 1 ? (
+                        {_record.isDone === 1 ? (
                             <FaClipboardCheck onClick={() => showModal2(_record.id)}
                                 className="cursor-pointer text-green-500 hover:text-green-400"
                                 title="Đã khám xong"
@@ -201,7 +225,7 @@ const ServiceBookingManage = () => {
             columns={columns}
             dataSource={schedulesData}
             pagination={false}
-            scroll={{ x: 1400 }}
+            scroll={{ x: 2200 }}
         />;
     };
 
@@ -282,7 +306,7 @@ const ServiceBookingManage = () => {
     return (
         <div className="">
             <div className="flex justify-between mb-6">
-                <h2 className="text-2xl font-semibold">Quản lý dịch vụ</h2>
+                <h2 className="text-2xl font-semibold">Quản lý lịch hẹn đã đặt</h2>
             </div>
             <Form onFinish={handleSearch} form={form}>
                 <div>

@@ -138,7 +138,7 @@ const ServiceManage = () => {
     return (
         <div className="">
             <div className="flex justify-between">
-                <h2 className="text-2xl font-semibold">Quản lý dịch vụ (Bác sĩ: {data?.message})</h2>
+                <h2 className="text-2xl font-semibold">Quản lý lịch hẹn đã đặt (Bác sĩ: {data?.message})</h2>
                 <Button type="primary" className="bg-blue-600">
                     <Link to={`/admin/them-nhat-dich-vu/${idDoctor}`}>Tạo dịch vụ</Link>
                 </Button>

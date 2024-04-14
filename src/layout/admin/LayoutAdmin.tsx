@@ -107,7 +107,7 @@ const LayoutAdmin = () => {
                         <p>Xin chào! {data?.data?.name}</p>
                         <div className='border-l px-4'>
                             <Space wrap size={16} className='mr-2'>
-                                <Avatar size={34} src={`http://${data?.data?.avatar}`} />
+                                <Avatar size={34} src={`${data?.data?.avatar}`} />
                             </Space>
                             <Dropdown menu={{ items }} trigger={['click']}>
                                 <a onClick={(e) => e.preventDefault()}>

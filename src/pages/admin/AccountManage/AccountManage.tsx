@@ -167,7 +167,7 @@ const AccountManage = () => {
                             key: 'manage',
                             label: (
                                 <a href={`quan-ly-dich-vu/${record.id}`}>
-                                    <p className=""><RiServiceLine className="inline-block mr-2 text-xl" />Quản lý dịch vụ</p>
+                                    <p className=""><RiServiceLine className="inline-block mr-2 text-xl" />Quản lý lịch hẹn đã đặt</p>
                                 </a>
                             ),
                         },
