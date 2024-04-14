@@ -32,6 +32,7 @@ const ServiceBookingManage = () => {
     const [upload] = useUploadMultipartMutation()
 
     useEffect(() => {
+        form.resetFields();
         searchBooking({ idService: id || null, status: "", fromDate: "", toDate: "" });
     }, [searchBooking, form, id]);
 

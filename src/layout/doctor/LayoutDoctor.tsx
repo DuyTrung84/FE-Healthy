@@ -2,7 +2,7 @@
 import { DownOutlined, FundProjectionScreenOutlined, LoginOutlined, RollbackOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Layout, Menu, MenuProps, Space, theme } from 'antd';
 
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useRefreshTokenMutation } from '../../api/share/area';
 import { useGetAccountQuery } from '../../api/share/upload';
 import { useEffect } from 'react';
@@ -15,12 +15,17 @@ const { Header, Content, Sider } = Layout;
 
 const LayoutDoctor = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [refreshToken] = useRefreshTokenMutation();
     const { data, error } = useGetAccountQuery();
     const id = data?.data?.id;
     const { data: ServiceDotoor } = useGetServiceDoctorQuery();
 
     const filteredServices = ServiceDotoor?.data?.filter((service: any) => service.type === 2);
+
+    const isMenuActive = (menuItemPath: any) => {
+        return location.pathname === menuItemPath;
+    };
 
     useEffect(() => {
         if (error) {
@@ -95,7 +100,8 @@ const LayoutDoctor = () => {
             >
                 <div className="flex justify-center items-center"> {/* Thêm các lớp để căn giữa */}
                     <img src="/src/asset/img/logoDA.png" className="w-14 my-4" alt="" />
-                </div>                <Menu
+                </div>
+                <Menu
                     theme="light"
                     mode="inline"
                     defaultSelectedKeys={['1']}
@@ -105,13 +111,21 @@ const LayoutDoctor = () => {
                             <Menu.SubMenu key={menuItem.key} icon={menuItem.icon} title={menuItem.label}>
                                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                 {menuItem.items.map((subItem: any) => (
-                                    <Menu.Item key={subItem.key} icon={subItem.icon}>
+                                    <Menu.Item
+                                        key={subItem.key}
+                                        icon={subItem.icon}
+                                        className={isMenuActive(subItem.path) ? 'active-menu-item' : ''}
+                                    >
                                         <Link to={subItem.path} title={subItem.label}>{subItem.label}</Link>
                                     </Menu.Item>
                                 ))}
                             </Menu.SubMenu>
                         ) : (
-                            <Menu.Item key={menuItem.key} icon={menuItem.icon}>
+                            <Menu.Item
+                                key={menuItem.key}
+                                icon={menuItem.icon}
+                                className={isMenuActive(menuItem.path) ? 'active-menu-item' : ''}
+                            >
                                 <Link to={menuItem.path || ""} title={menuItem.label}>{menuItem.label}</Link>
                             </Menu.Item>
                         )

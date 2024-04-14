@@ -22,8 +22,9 @@ const BookingManage = () => {
     const [deleteBooking] = useDeleteBookingMutation();
 
     useEffect(() => {
+        form.resetFields();
         searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
-    }, [searchBooking, idDoctor]);
+    }, [searchBooking, idDoctor, form]);
 
     const showDeleteConfirm = (id: string[] | Key[]) => {
         if (id !== undefined) {
@@ -50,8 +51,8 @@ const BookingManage = () => {
 
 
     const handleSearch = (values: any) => {
-        const fromDate = values?.date ? dayjs(values.date[0]).format('YYYY-MM-DD') : "";
-        const toDate = values?.date ? dayjs(values.date[1]).format('YYYY-MM-DD') : "";
+        const fromDate = dayjs(values.name[0]).format('YYYY-MM-DD');
+        const toDate = dayjs(values.name[1]).format('YYYY-MM-DD');
         searchBooking({
             idDoctor: idDoctor || "",
             fromDate: fromDate,
