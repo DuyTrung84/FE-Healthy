@@ -68,7 +68,7 @@ const ClinicsManage = () => {
     };
 
     const handlePaginationChange = (currentPage: number, pageSize?: number) => {
-        setSelectPage(currentPage - 1)
+        setSelectPage(currentPage)
         searchClinics({
             search: form.getFieldValue('search'),
             province: form.getFieldValue('province'),

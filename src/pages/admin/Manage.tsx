@@ -198,13 +198,13 @@ const Manage = () => {
       width: 200
     },
     {
-      title: 'Số hoá đơn',
+      title: 'Mã hoá đơn',
       dataIndex: 'vnpSoHoaDon',
       key: 'vnpSoHoaDon',
       width: 200
     },
     {
-      title: 'Số giao dịch',
+      title: 'Mã giao dịch',
       dataIndex: 'vnpSoGiaoDich',
       key: 'vnpSoGiaoDich',
       width: 200
@@ -276,21 +276,21 @@ const Manage = () => {
         <div>
           <div className="mb-8 grid grid-cols-3 gap-x-10 gap-y-5 mx-8">
             <div>
-              <p className="font-medium text-[17px] my-1.5 text-gray-700">Khoảng ngày</p>
+              <p className="font-medium text-[17px] my-1.5 text-gray-700">Ngày đặt lịch</p>
               <Form.Item name="date">
                 <RangePicker className="w-full" />
               </Form.Item>
             </div>
             <div>
-              <p className="font-medium text-[17px] my-1.5 text-gray-700">Khoảng thời gian</p>
+              <p className="font-medium text-[17px] my-1.5 text-gray-700">Thời gian khám</p>
               <Form.Item name="time">
                 <RangePicker showTime />
               </Form.Item>
             </div>
             <div>
-              <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái đặt lịch:</p>
+              <p className="font-medium text-[17px] my-1.5 text-gray-700">Trạng thái lịch khám:</p>
               <Form.Item name="status">
-                <Select placeholder="Trạng thái đặt lịch" className="h-8" allowClear>
+                <Select placeholder="Trạng thái lịch khám" className="h-8" allowClear>
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {bookingStatus?.data?.map((role: any) => (
                     <Select.Option key={role.value} value={role.value}>{role.name}</Select.Option>
@@ -322,9 +322,9 @@ const Manage = () => {
               </Form.Item>
             </div>
             <div>
-              <p className="font-medium text-[17px] my-1.5 text-gray-700">Kiểu:</p>
+              <p className="font-medium text-[17px] my-1.5 text-gray-700">Loại khám:</p>
               <Form.Item name="type">
-                <Select placeholder="---Kiểu---" allowClear onChange={handleTypeChange}>
+                <Select placeholder="---Loại khám---" allowClear onChange={handleTypeChange}>
                   <Select.Option key={"1"} value="1">Bác sĩ</Select.Option>
                   <Select.Option key={"2"} value="2">Dịch vụ</Select.Option>
                 </Select>
