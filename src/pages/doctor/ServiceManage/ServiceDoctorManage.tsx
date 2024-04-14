@@ -25,8 +25,6 @@ const ServiceBookingManage = () => {
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>("");
 
     const [fileList, setFileList] = useState<any>([]); // Định nghĩa state fileList
-    console.log(fileList)
-
     const [searchBooking, { data, isLoading }] = useSearchServiceDoctorMutation();
     const [cancel, { isLoading: cancelLoading }] = useCancelAppointmentMutation();
     const { data: bookingStatus } = useGetStatusBookingQuery();
@@ -49,7 +47,7 @@ const ServiceBookingManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await cancel({ ...values })
+                        await cancel({ ...values, idBooking: selectedAppointmentId })
                             .unwrap()
                             .then(() => {
                                 Notifn("success", "Thành công", "Huỷ lịch khám thành công!");
@@ -62,7 +60,6 @@ const ServiceBookingManage = () => {
                                 Notifn("error", "Lỗi", error.message || error.data.message);
                             })
                     } catch (error) {
-                        console.log(error)
                         Notifn("error", "Lỗi", "Lỗi huỷ");
                     }
                 },
@@ -295,7 +292,6 @@ const ServiceBookingManage = () => {
                                 Notifn("error", "Lỗi", error.message || error.data.message);
                             })
                     } catch (error) {
-                        console.log(error)
                         Notifn("error", "Lỗi", "Lỗi huỷ");
                     }
                 },
