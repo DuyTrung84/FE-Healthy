@@ -54,18 +54,30 @@ const UpdateSpecialty = () => {
                 Notifn("success", "Thành công", "Cập nhật thành công");
                 navigate("/admin/quan-ly-chuyen-khoa");
             } else {
-                const response = await updateSpecialty({ ...values, id: id });
-                const responseData = response?.data?.data;
-                const formData = new FormData();
-                if (fileImg) {
-                    formData.append('image', fileImg);
-                }
-                if (responseData) {
-                    formData.append('id', responseData);
-                }
-                await uploadImage(formData);
-                Notifn("success", "Thành công", "Cập nhật thành công");
-                navigate("/admin/quan-ly-chuyen-khoa");
+                await updateSpecialty({ ...values, id: id })
+                    .unwrap()
+                    .then((response) => {
+                        const responseData = response?.data?.data;
+                        const formData = new FormData();
+                        if (fileImg) {
+                            formData.append('image', fileImg);
+                        }
+                        if (responseData) {
+                            formData.append('id', responseData);
+                        }
+                        uploadImage(formData)
+                            .unwrap()
+                            .then(() => {
+                                Notifn("success", "Thành công", "Cập nhật thành công");
+                                navigate("/admin/quan-ly-chuyen-khoa");
+                            })
+                            .catch(error => {
+                                Notifn("error", "Lỗi", error.message || error.data.message);
+                            })
+                    })
+                    .catch(error => {
+                        Notifn("error", "Lỗi", error.message || error.data.message);
+                    })
             }
         } catch (error) {
             console.error('Error adding specialty:', error);
