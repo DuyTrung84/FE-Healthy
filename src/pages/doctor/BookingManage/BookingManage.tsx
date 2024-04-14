@@ -22,8 +22,9 @@ const BookingManage = () => {
     const [deleteBooking] = useDeleteBookingMutation();
 
     useEffect(() => {
+        form.resetFields();
         searchBooking({ idDoctor: idDoctor || "", fromDate: "", toDate: "" });
-    }, [searchBooking, idDoctor]);
+    }, [searchBooking, idDoctor, form]);
 
     const showDeleteConfirm = (id: string[] | Key[]) => {
         if (id !== undefined) {
