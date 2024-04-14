@@ -47,7 +47,7 @@ const ServiceBookingManage = () => {
                 okType: 'danger',
                 async onOk() {
                     try {
-                        await cancel({ ...values })
+                        await cancel({ ...values, idBooking: selectedAppointmentId })
                             .unwrap()
                             .then(() => {
                                 Notifn("success", "Thành công", "Huỷ lịch khám thành công!");
