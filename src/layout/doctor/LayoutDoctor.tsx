@@ -47,7 +47,6 @@ const LayoutDoctor = () => {
             key: 'account-management',
             icon: <MdOutlineDateRange />,
             label: 'Quản lý lịch  khám',
-            path: '',
             items: [
                 { key: 'doctor1', icon: <FaUserDoctor />, label: 'Bác sĩ', path: `quan-ly-lich-kham/bac-si/${id}` },
 

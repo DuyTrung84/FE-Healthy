@@ -55,7 +55,7 @@ const LayoutAdmin = () => {
         {
             key: 'booked-calendar',
             icon: <CiBookmarkCheck />,
-            label: 'Lịch hẹn đã đặt',
+            label: 'Quản lý lịch hẹn',
             path: 'lich-da-dat',
         },
     ];
