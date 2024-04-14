@@ -50,8 +50,8 @@ const BookingManage = () => {
 
 
     const handleSearch = (values: any) => {
-        const fromDate = dayjs(values.name[0]).format('YYYY-MM-DD');
-        const toDate = dayjs(values.name[1]).format('YYYY-MM-DD');
+        const fromDate = values?.date ? dayjs(values.date[0]).format('YYYY-MM-DD') : "";
+        const toDate = values?.date ? dayjs(values.date[1]).format('YYYY-MM-DD') : "";
         searchBooking({
             idDoctor: idDoctor || "",
             fromDate: fromDate,

@@ -84,7 +84,7 @@ const BookingUpdate = () => {
     return (
         <Spin spinning={bookingById}>
             <button onClick={() => navigate(-1)}>Quay lại <EnterOutlined /></button>
-            <h2 className="my-6 mx-16 text-2xl font-semibold">Tạo lịch khám</h2>
+            <h2 className="my-6 mx-16 text-2xl font-semibold">Cập nhật lịch khám</h2>
             <Form className="mx-40"
                 form={form}
                 name="basic"
