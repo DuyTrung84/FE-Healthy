@@ -1,7 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { EnterOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select, Spin, Upload } from 'antd';
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { Option } from "antd/es/mentions";
 import { useEffect, useState } from "react";
 import { useUploadMutation } from "../../../api/share/upload";
@@ -32,7 +31,6 @@ const UpdateDoctor = () => {
     const [updateDoctor] = useUpdateDoctorMutation(); //hàm thêm tài khoản
     const [uploadImage, { isLoading }] = useUploadMutation();
 
-    console.log(doctorData)
 
     useEffect(() => {
         form.setFieldsValue({
@@ -299,12 +297,8 @@ const UpdateDoctor = () => {
                         </Col>
                     </Row>
                     <Form.Item labelAlign="left">
-                        <Button type="primary" htmlType="submit" className="bg-blue-500">
-                            {isLoading ? (
-                                <AiOutlineLoading3Quarters className="animate-spin" />
-                            ) : (
-                                "Thêm"
-                            )}
+                        <Button type="primary" htmlType="submit" className="bg-blue-500" loading={isLoading}>
+                            Cập nhật
                         </Button>
                     </Form.Item>
                 </Form>

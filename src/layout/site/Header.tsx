@@ -113,7 +113,7 @@ const Header = () => {
                             {localStorage.getItem('role') === 'USER' ? (
                                 <Dropdown menu={{ items }} trigger={['click']} className='cursor-pointer'>
                                     <a onClick={(e) => e.preventDefault()}>
-                                        <Avatar size={34} src={`http://${data?.data?.avatar}`} />
+                                        <Avatar size={34} src={`${data?.data?.avatar}`} />
                                     </a>
                                 </Dropdown>
                             ) : localStorage.getItem('role') === 'ADMIN' ? (

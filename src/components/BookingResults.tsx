@@ -61,7 +61,7 @@ const BookingResults = () => {
                     title={data?.message || "Lỗi"}
                     subTitle="Đặt lịch khám không thành công!!"
                     extra={[
-                        <Button type="default" key="console" onClick={() => navigate(-3)}>
+                        <Button type="default" key="console" onClick={() => navigate(-4)}>
                             Đặt lại lịch
                         </Button>,
                     ]}

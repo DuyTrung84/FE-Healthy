@@ -42,7 +42,7 @@ const ClinicsManage = () => {
                     try {
                         await deleteClinics({ id, status });
                         Notifn("success", "Thành công", "Đã đổi trạng thái phòng khám thành công");
-                        searchClinics({ search: form.getFieldValue('search'), province: form.getFieldValue('province'), status: form.getFieldValue('status'), page: selectPage, resultLimit: 10 });
+                        searchClinics({ search: form.getFieldValue('search'), province: form.getFieldValue('province'), status: form.getFieldValue('status'), page: selectPage - 1, resultLimit: 10 });
                     } catch (error) {
                         Notifn("error", "Lỗi", "Lỗi đổi trạng thái");
                     }
