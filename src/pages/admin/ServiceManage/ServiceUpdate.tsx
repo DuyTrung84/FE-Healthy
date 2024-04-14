@@ -11,7 +11,6 @@ import { useGetByIdServiceQuery, useUpdateServiceMutation } from "../../../api/a
 
 const ServiceUpdate = () => {
     const { id } = useParams();
-    console.log(id)
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
@@ -19,7 +18,6 @@ const ServiceUpdate = () => {
     const [isImageUploading, setIsImageUploading] = useState(false);
 
     const { data, isLoading: loadingData } = useGetByIdServiceQuery(id || "");
-    console.log(data);
     const [updateService] = useUpdateServiceMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
 
@@ -70,7 +68,6 @@ const ServiceUpdate = () => {
                     })
             })
             .catch((error) => {
-                console.log(error);
                 Notifn("error", "Lỗi", error.data.message || error.data);
             });
     };

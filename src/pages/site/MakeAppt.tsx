@@ -60,7 +60,6 @@ const MakeAppt = () => {
 
     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */ }
     const onSubmit = (values: any) => {
-        console.log({ ...values, idSchedule: id });
         if (bookingData?.data?.whoPay === "1") {
             paymentFree({ ...values, idSchedule: id })
                 .unwrap()
@@ -76,7 +75,6 @@ const MakeAppt = () => {
             payment({ ...values, idSchedule: id })
                 .unwrap()
                 .then((response) => {
-                    console.log(response?.data.url);
                     window.location.href = response.data.url;
                 })
                 .catch((error) => {

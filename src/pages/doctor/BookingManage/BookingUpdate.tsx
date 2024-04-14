@@ -74,7 +74,6 @@ const BookingUpdate = () => {
                 navigate(-1)
             })
             .catch((error) => {
-                console.log(error);
                 Notifn("error", "Lỗi", error.data.message || error.data);
             });
     };

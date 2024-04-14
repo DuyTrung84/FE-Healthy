@@ -58,7 +58,6 @@ const UpdateProfile = () => {
         updateProfile(values)
             .unwrap()
             .then((response) => {
-                console.log(response)
                 const imageId = response?.data;
                 const formData = new FormData();
                 if (fileImg) {
@@ -79,7 +78,6 @@ const UpdateProfile = () => {
                     })
             })
             .catch((error) => {
-                console.log(error);
                 Notifn("warning", "Cảnh báo", error.data.message || error.data);
             });
     };

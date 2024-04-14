@@ -16,7 +16,6 @@ const AddProfile = () => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
     const [fileImg, setFile] = useState<File | null>(null);//Lưu file ảnh
     const [isImageUploading, setIsImageUploading] = useState(false);
-    console.log(fileImg)
 
     const [addProfile, { isLoading: addLoading }] = useAddProfileMutation();
     const [uploadImage, { isLoading }] = useUploadMutation();
@@ -44,7 +43,6 @@ const AddProfile = () => {
         addProfile(values)
             .unwrap()
             .then((response) => {
-                console.log(response)
                 const imageId = response?.data;
                 const formData = new FormData();
                 if (fileImg) {
@@ -61,7 +59,6 @@ const AddProfile = () => {
                     })
             })
             .catch((error) => {
-                console.log(error);
                 Notifn("warning", "Cảnh báo", error.data.message || error.data);
             });
     };

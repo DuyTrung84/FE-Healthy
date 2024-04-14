@@ -23,9 +23,7 @@ const ServiceBookingManage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpen2, setIsModalOpen2] = useState(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>("");
-
     const [fileList, setFileList] = useState<any>([]); // Định nghĩa state fileList
-    console.log(fileList)
 
     const [searchBooking, { data, isLoading }] = useSearchServiceDoctorMutation();
     const [cancel, { isLoading: cancelLoading }] = useCancelAppointmentMutation();
@@ -62,7 +60,6 @@ const ServiceBookingManage = () => {
                                 Notifn("error", "Lỗi", error.message || error.data.message);
                             })
                     } catch (error) {
-                        console.log(error)
                         Notifn("error", "Lỗi", "Lỗi huỷ");
                     }
                 },
@@ -295,7 +292,6 @@ const ServiceBookingManage = () => {
                                 Notifn("error", "Lỗi", error.message || error.data.message);
                             })
                     } catch (error) {
-                        console.log(error)
                         Notifn("error", "Lỗi", "Lỗi huỷ");
                     }
                 },

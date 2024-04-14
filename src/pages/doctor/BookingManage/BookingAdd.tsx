@@ -15,7 +15,6 @@ const BookingAdd = () => {
     const [form] = Form.useForm();
     const location = useLocation();
     const [expiryTime, setExpiryTime] = useState<dayjs.Dayjs | null>(null); // Thêm state mới để lưu giá trị thời gian hết hạn
-    console.log(expiryTime)
 
     const [addService, { isLoading }] = useAddBookingMutation();
     const { data: whoPay } = useGetWhoPayQuery()
@@ -80,7 +79,6 @@ const BookingAdd = () => {
                 navigate(-1)
             })
             .catch((error) => {
-                console.log(error);
                 Notifn("error", "Lỗi", error.data.message || error.data);
             });
     };

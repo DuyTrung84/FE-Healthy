@@ -11,7 +11,6 @@ import { useAddServiceMutation } from "../../../api/admin/Service";
 
 const ServiceAdd = () => {
     const { idDoctor } = useParams();
-    console.log(idDoctor)
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [imageUrl, setImageUrl] = useState<string | null>(null);//Lưu link ảnh
@@ -53,7 +52,6 @@ const ServiceAdd = () => {
                     })
             })
             .catch((error) => {
-                console.log(error);
                 Notifn("error", "Lỗi", error.data.message || error.data);
             });
     };

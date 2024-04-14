@@ -18,8 +18,6 @@ const Manage = () => {
   const [selectClinic, setSelectClinic] = useState<string>("");
   const [selectSpecialty, setSelectSpecialty] = useState<string>("");
 
-  console.log(selectType, selectClinic, selectSpecialty)
-
   const [search, { data, isLoading }] = useSearchManageMutation();
   const [exportData, { isLoading: loadingExport }] = useExportManageMutation();
   const { data: bookingStatus } = useGetStatusBookingQuery();

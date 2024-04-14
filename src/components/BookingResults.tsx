@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 const BookingResults = () => {
     const location = useLocation();
-    console.log(location.state)
+
     const navigate = useNavigate()
     const searchParams = new URLSearchParams(location.search);
 
@@ -23,7 +23,6 @@ const BookingResults = () => {
     const vnp_SecureHash = searchParams.get('vnp_SecureHash');
 
     const [reasult, { data, isLoading, isError }] = useResultPaymentMutation();
-    console.log(isError)
 
     useEffect(() => {
         if (!location.state || !location.state.isFree) {
