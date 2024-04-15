@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Select, Upload } from 'antd'
+import { Button, DatePicker, Form, Input, message, Select, Upload } from 'antd'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { useAddProfileMutation } from '../../../api/site/Profile';
 import dayjs from 'dayjs';
@@ -85,7 +85,16 @@ const AddProfile = () => {
                         ]}
                     >
                         <Upload
-                            beforeUpload={(file) => { handleUpload(file) }}
+                            beforeUpload={(file) => {
+                                const isLt25MB = file.size / 1024 / 1024 < 25;
+                                if (!isLt25MB) {
+                                    message.error('Ảnh phải nhỏ hơn 25MB!');
+                                } else {
+                                    handleUpload(file)
+                                }
+
+                            }}
+
                             showUploadList={false}
                             listType="picture-circle" // Thay đổi kiểu hiển thị thành avatar
                             accept="image/*"
